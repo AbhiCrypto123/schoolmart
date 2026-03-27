@@ -1,0 +1,941 @@
+// src/pages/admin/CMSEditor.jsx
+// Form-field based CMS editor — proper inputs for every block type
+import { useEffect, useState } from 'react';
+import { getAllPages, getPage, updateBlock, addBlock, deleteBlock, uploadFile } from '../../services/api';
+import { ChevronDown, ChevronRight, Trash2, Plus, Eye, EyeOff, Save, GripVertical, Image, Link2, Type, List, ToggleLeft, Upload, Layers } from 'lucide-react';
+import ProductManager from './ProductManager';
+
+// ── Reusable form field helpers ───────────────────────────────────────────────
+const Field = ({ label, children, hint }) => (
+  <div className="space-y-1">
+    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">{label}</label>
+    {children}
+    {hint && <p className="text-[10px] text-gray-400">{hint}</p>}
+  </div>
+);
+
+const TextInput = ({ value, onChange, placeholder }) => (
+  <input type="text" value={value || ''} onChange={e => onChange(e.target.value)} placeholder={placeholder}
+    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-400 outline-none bg-white" />
+);
+
+const TextArea = ({ value, onChange, rows = 3, placeholder }) => (
+  <textarea value={value || ''} onChange={e => onChange(e.target.value)} rows={rows} placeholder={placeholder}
+    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-400 outline-none bg-white resize-y" />
+);
+
+const Toggle = ({ label, value, onChange }) => (
+  <label className="flex items-center gap-3 cursor-pointer select-none">
+    <div
+      onClick={() => onChange(!value)}
+      className={`relative w-10 h-5 rounded-full transition-colors ${value ? 'bg-blue-500' : 'bg-gray-300'}`}
+    >
+      <div className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${value ? 'translate-x-5' : ''}`} />
+    </div>
+    <span className="text-sm text-gray-600 font-medium">{label}</span>
+  </label>
+);
+
+const SectionTitle = ({ children }) => (
+  <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-widest mt-4 mb-2 border-b border-gray-100 pb-1">{children}</h4>
+);
+
+// ── Block-specific form renderers ─────────────────────────────────────────────
+const BlockForms = {
+
+  topbar: ({ data, set }) => (
+    <div className="space-y-3">
+      <Field label="Email"><TextInput value={data.email} onChange={v => set('email', v)} placeholder="info@schoolmart.in" /></Field>
+      <Field label="Phone 1"><TextInput value={data.phone1} onChange={v => set('phone1', v)} placeholder="+91 9966109191" /></Field>
+      <Field label="Phone 2"><TextInput value={data.phone2} onChange={v => set('phone2', v)} placeholder="+91 9866091111" /></Field>
+      <SectionTitle>Social Links</SectionTitle>
+      <Field label="Facebook"><TextInput value={data.socials?.facebook} onChange={v => set('socials', { ...data.socials, facebook: v })} placeholder="https://facebook.com/..." /></Field>
+      <Field label="Twitter/X"><TextInput value={data.socials?.twitter} onChange={v => set('socials', { ...data.socials, twitter: v })} placeholder="https://twitter.com/..." /></Field>
+      <Field label="Instagram"><TextInput value={data.socials?.instagram} onChange={v => set('socials', { ...data.socials, instagram: v })} placeholder="https://instagram.com/..." /></Field>
+      <Field label="LinkedIn"><TextInput value={data.socials?.linkedin} onChange={v => set('socials', { ...data.socials, linkedin: v })} placeholder="https://linkedin.com/..." /></Field>
+    </div>
+  ),
+
+  ticker: ({ data, set }) => (
+    <div className="space-y-3">
+      <Field label="Label"><TextInput value={data.label} onChange={v => set('label', v)} placeholder="Latest Updates" /></Field>
+      <Field label="Ticker Items" hint="One item per line">
+        <TextArea
+          value={(data.items || []).join('\n')}
+          onChange={v => set('items', v.split('\n').map(s => s.trim()).filter(Boolean))}
+          rows={6}
+          placeholder={"Item 1\nItem 2\nItem 3"}
+        />
+      </Field>
+    </div>
+  ),
+
+  hero: ({ data, set }) => (
+    <div className="space-y-3">
+      <Field label="Badge Text"><TextInput value={data.badge} onChange={v => set('badge', v)} placeholder="Price · Quality · Range Promise" /></Field>
+      <Field label="Headline 1"><TextInput value={data.headline1} onChange={v => set('headline1', v)} placeholder="FURNITURE" /></Field>
+      <Field label="Headline 2"><TextInput value={data.headline2} onChange={v => set('headline2', v)} placeholder="QUICK DELIVERY" /></Field>
+      <Field label="Sub-line 1"><TextInput value={data.subline1} onChange={v => set('subline1', v)} placeholder="Order Now" /></Field>
+      <Field label="Sub-line 2"><TextInput value={data.subline2} onChange={v => set('subline2', v)} placeholder="Kindergarten · Highschools · Labs · Libraries" /></Field>
+      <SectionTitle>Button 1</SectionTitle>
+      <Field label="Label"><TextInput value={data.cta1?.label} onChange={v => set('cta1', { ...data.cta1, label: v })} placeholder="Shop Furniture →" /></Field>
+      <Field label="Link (path)"><TextInput value={data.cta1?.path} onChange={v => set('cta1', { ...data.cta1, path: v })} placeholder="/furniture" /></Field>
+      <SectionTitle>Button 2</SectionTitle>
+      <Field label="Label"><TextInput value={data.cta2?.label} onChange={v => set('cta2', { ...data.cta2, label: v })} placeholder="View Catalogue" /></Field>
+      <Field label="Link (path)"><TextInput value={data.cta2?.path} onChange={v => set('cta2', { ...data.cta2, path: v })} placeholder="/catalogues" /></Field>
+    </div>
+  ),
+
+  page_hero: ({ data, set }) => (
+    <div className="space-y-3">
+      <Field label="Page Title"><TextInput value={data.title} onChange={v => set('title', v)} placeholder="Page Title" /></Field>
+      <Field label="Sub-title"><TextInput value={data.subtitle} onChange={v => set('subtitle', v)} placeholder="Page subtitle..." /></Field>
+      <Field label="Background Gradient" hint="Tailwind from-to classes"><TextInput value={data.bgGradient} onChange={v => set('bgGradient', v)} placeholder="from-blue-900 to-blue-700" /></Field>
+      <Field label="Image URL"><TextInput value={data.img} onChange={v => set('img', v)} placeholder="https://..." /></Field>
+      {data.img && <img src={data.img} alt="preview" className="w-full h-24 object-cover rounded-lg opacity-80 mt-1" onError={e => e.target.style.display='none'} />}
+    </div>
+  ),
+
+  cta_whatsapp: ({ data, set }) => (
+    <div className="space-y-3">
+      <Field label="Badge Text"><TextInput value={data.badge} onChange={v => set('badge', v)} placeholder="Direct Consultation" /></Field>
+      <Field label="Headline"><TextInput value={data.headline} onChange={v => set('headline', v)} placeholder="Ready to scale your campus?" /></Field>
+      <Field label="Description"><TextArea value={data.description} onChange={v => set('description', v)} rows={3} /></Field>
+      <Field label="WhatsApp Number" hint="Country code + number, no spaces or +"><TextInput value={data.whatsappNumber} onChange={v => set('whatsappNumber', v)} placeholder="919966109191" /></Field>
+      <Field label="Phone (display)"><TextInput value={data.phone} onChange={v => set('phone', v)} placeholder="+91 9966109191" /></Field>
+    </div>
+  ),
+
+  partners: ({ data, set }) => (
+    <div className="space-y-3">
+      <Field label="Section Heading"><TextInput value={data.heading} onChange={v => set('heading', v)} placeholder="Trusted by Leading Schools" /></Field>
+      <Field label="Sub-heading"><TextInput value={data.subheading} onChange={v => set('subheading', v)} placeholder="4000+ partner schools across India" /></Field>
+      <SectionTitle>Stats</SectionTitle>
+      {(data.stats || []).map((stat, i) => (
+        <div key={i} className="flex gap-2 items-center bg-gray-50 rounded-lg p-2">
+          <TextInput value={stat.value} onChange={v => { const s = [...data.stats]; s[i] = { ...s[i], value: v }; set('stats', s); }} placeholder="4000+" />
+          <TextInput value={stat.label} onChange={v => { const s = [...data.stats]; s[i] = { ...s[i], label: v }; set('stats', s); }} placeholder="Partner Schools" />
+          <button onClick={() => set('stats', data.stats.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600 shrink-0"><Trash2 size={14} /></button>
+        </div>
+      ))}
+      <button onClick={() => set('stats', [...(data.stats || []), { value: '', label: '', color: 'text-blue-600' }])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline"><Plus size={13} /> Add Stat</button>
+      <SectionTitle>Partner Schools (Name only)</SectionTitle>
+      {(data.clients || []).map((c, i) => (
+        <div key={i} className="flex gap-2 items-center">
+          <TextInput value={c.name} onChange={v => { const cl = [...data.clients]; cl[i] = { ...cl[i], name: v }; set('clients', cl); }} placeholder="School Name" />
+          <button onClick={() => set('clients', data.clients.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600 shrink-0"><Trash2 size={14} /></button>
+        </div>
+      ))}
+      <button onClick={() => set('clients', [...(data.clients || []), { name: '', icon: 'GraduationCap', color: 'text-blue-600' }])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline"><Plus size={13} /> Add Partner</button>
+    </div>
+  ),
+
+  tiles: ({ data, set }) => (
+    <div className="space-y-3">
+      <SectionTitle>Masonry Tiles ({(data.tiles || []).length})</SectionTitle>
+      {(data.tiles || []).map((tile, i) => (
+        <div key={i} className="border border-gray-200 rounded-xl p-3 space-y-2 bg-gray-50/50">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-500">Tile {i + 1}</span>
+            <button onClick={() => set('tiles', data.tiles.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={13} /></button>
+          </div>
+          <TextInput value={tile.title} onChange={v => { const t = [...data.tiles]; t[i] = { ...t[i], title: v }; set('tiles', t); }} placeholder="Tile Title (uppercase)" />
+          <TextInput value={tile.subtitle} onChange={v => { const t = [...data.tiles]; t[i] = { ...t[i], subtitle: v }; set('tiles', t); }} placeholder="Subtitle" />
+          <TextInput value={tile.path} onChange={v => { const t = [...data.tiles]; t[i] = { ...t[i], path: v }; set('tiles', t); }} placeholder="/path" />
+          <TextInput value={tile.img} onChange={v => { const t = [...data.tiles]; t[i] = { ...t[i], img: v }; set('tiles', t); }} placeholder="Image URL" />
+          {tile.img && <img src={tile.img} alt="" className="w-full h-16 object-cover rounded-lg opacity-80" onError={e => e.target.style.display='none'} />}
+        </div>
+      ))}
+      <button onClick={() => set('tiles', [...(data.tiles || []), { title: '', subtitle: '', path: '/', img: '', height: 'h-56' }])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline mt-1"><Plus size={13} /> Add Tile</button>
+    </div>
+  ),
+
+  solutions: ({ data, set }) => (
+    <div className="space-y-3">
+      <Field label="Section Heading"><TextInput value={data.heading} onChange={v => set('heading', v)} placeholder="Explore Our Solutions" /></Field>
+      <Field label="View All Link"><TextInput value={data.viewAllPath} onChange={v => set('viewAllPath', v)} placeholder="/catalogues" /></Field>
+      <SectionTitle>Solution Cards ({(data.items || []).length})</SectionTitle>
+      {(data.items || []).map((item, i) => (
+        <div key={i} className="border border-gray-200 rounded-xl p-3 space-y-2 bg-gray-50/50">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-500">Card {i + 1}</span>
+            <button onClick={() => set('items', data.items.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={13} /></button>
+          </div>
+          <TextInput value={item.title} onChange={v => { const t = [...data.items]; t[i] = { ...t[i], title: v }; set('items', t); }} placeholder="Card Title" />
+          <TextArea rows={2} value={item.description} onChange={v => { const t = [...data.items]; t[i] = { ...t[i], description: v }; set('items', t); }} placeholder="Short description..." />
+          <TextInput value={item.path} onChange={v => { const t = [...data.items]; t[i] = { ...t[i], path: v }; set('items', t); }} placeholder="/path" />
+          <TextInput value={item.img} onChange={v => { const t = [...data.items]; t[i] = { ...t[i], img: v }; set('items', t); }} placeholder="Image URL" />
+          <div className="flex gap-2">
+            <TextInput value={item.badge?.label} onChange={v => { const t = [...data.items]; t[i] = { ...t[i], badge: { ...t[i].badge, label: v } }; set('items', t); }} placeholder="Badge label" />
+            <input type="color" value={item.badge?.color || '#000000'}
+              onChange={e => { const t = [...data.items]; t[i] = { ...t[i], badge: { ...t[i].badge, color: e.target.value } }; set('items', t); }}
+              className="w-10 h-9 rounded cursor-pointer border border-gray-200 p-0.5" title="Badge color" />
+          </div>
+          {item.img && <img src={item.img} alt="" className="w-full h-14 object-cover rounded-lg opacity-80" onError={e => e.target.style.display='none'} />}
+        </div>
+      ))}
+      <button onClick={() => set('items', [...(data.items || []), { title: '', description: '', path: '/', img: '', badge: { label: '', color: '#3B82F6' } }])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline"><Plus size={13} /> Add Card</button>
+    </div>
+  ),
+
+  feature_cards: ({ data, set }) => (
+    <div className="space-y-3">
+      <Field label="Section Heading"><TextInput value={data.heading} onChange={v => set('heading', v)} placeholder="Our Furniture Range" /></Field>
+      <SectionTitle>Cards ({(data.cards || []).length})</SectionTitle>
+      {(data.cards || []).map((card, i) => (
+        <div key={i} className="border border-gray-200 rounded-xl p-3 space-y-2 bg-gray-50/50">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-500">Card {i + 1}</span>
+            <button onClick={() => set('cards', data.cards.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={13} /></button>
+          </div>
+          <TextInput value={card.title} onChange={v => { const t = [...data.cards]; t[i] = { ...t[i], title: v }; set('cards', t); }} placeholder="Card Title" />
+          <TextArea rows={2} value={card.description} onChange={v => { const t = [...data.cards]; t[i] = { ...t[i], description: v }; set('cards', t); }} placeholder="Description..." />
+          <TextInput value={card.img} onChange={v => { const t = [...data.cards]; t[i] = { ...t[i], img: v }; set('cards', t); }} placeholder="Image URL" />
+          <TextInput value={card.path} onChange={v => { const t = [...data.cards]; t[i] = { ...t[i], path: v }; set('cards', t); }} placeholder="/path" />
+          {card.img && <img src={card.img} alt="" className="w-full h-14 object-cover rounded-lg opacity-80" onError={e => e.target.style.display='none'} />}
+        </div>
+      ))}
+      <button onClick={() => set('cards', [...(data.cards || []), { title: '', description: '', img: '', path: '/' }])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline"><Plus size={13} /> Add Card</button>
+    </div>
+  ),
+
+  sidebar_trending: ({ data, set }) => (
+    <div className="space-y-2">
+      <Field label="Trending Items" hint="One item per line">
+        <TextArea value={(data.items || []).join('\n')} onChange={v => set('items', v.split('\n').map(s => s.trim()).filter(Boolean))} rows={6} placeholder={"Schools for Sale / Lease\nFundraising\nPartnerships"} />
+      </Field>
+    </div>
+  ),
+
+  sidebar_resources: ({ data, set }) => (
+    <div className="space-y-2">
+      <Field label="Resource Links" hint="One item per line">
+        <TextArea value={(data.items || []).join('\n')} onChange={v => set('items', v.split('\n').map(s => s.trim()).filter(Boolean))} rows={10} placeholder={"Complete guide to digitization\nProduct catalog 2025\n..."} />
+      </Field>
+    </div>
+  ),
+
+  sidebar_banners: ({ data, set }) => (
+    <div className="space-y-3">
+      <SectionTitle>Banner Buttons ({(data.banners || []).length})</SectionTitle>
+      {(data.banners || []).map((b, i) => (
+        <div key={i} className="border border-gray-200 rounded-xl p-3 space-y-2 bg-gray-50/50">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-500">Banner {i + 1}</span>
+            <button onClick={() => set('banners', data.banners.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={13} /></button>
+          </div>
+          <div className="flex gap-2">
+            <TextInput value={b.label} onChange={v => { const t = [...data.banners]; t[i] = { ...t[i], label: v }; set('banners', t); }} placeholder="Label" />
+            <input type="color" value={b.color || '#000000'} onChange={e => { const t = [...data.banners]; t[i] = { ...t[i], color: e.target.value }; set('banners', t); }} className="w-10 h-9 rounded cursor-pointer border border-gray-200 p-0.5" />
+          </div>
+          <TextInput value={b.sublabel} onChange={v => { const t = [...data.banners]; t[i] = { ...t[i], sublabel: v }; set('banners', t); }} placeholder="Sub label" />
+          <TextInput value={b.path} onChange={v => { const t = [...data.banners]; t[i] = { ...t[i], path: v }; set('banners', t); }} placeholder="/path" />
+        </div>
+      ))}
+      <button onClick={() => set('banners', [...(data.banners || []), { label: '', sublabel: '', color: '#0057A8', path: '/' }])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline"><Plus size={13} /> Add Banner</button>
+    </div>
+  ),
+
+  navbar: ({ data, set }) => (
+    <div className="space-y-3">
+      <SectionTitle>Logo</SectionTitle>
+      <Field label="Site Name"><TextInput value={data.logo?.title} onChange={v => set('logo', { ...data.logo, title: v })} placeholder="SCHOOL MART" /></Field>
+      <Field label="Tagline"><TextInput value={data.logo?.tagline} onChange={v => set('logo', { ...data.logo, tagline: v })} placeholder="everything a school needs" /></Field>
+      <SectionTitle>Category Icons (name only)</SectionTitle>
+      {(data.categories || []).map((cat, i) => (
+        <div key={i} className="flex gap-2 items-center">
+          <TextInput value={cat.name} onChange={v => { const t = [...data.categories]; t[i] = { ...t[i], name: v }; set('categories', t); }} placeholder="FURNITURE" />
+          <TextInput value={cat.path} onChange={v => { const t = [...data.categories]; t[i] = { ...t[i], path: v }; set('categories', t); }} placeholder="/furniture" />
+          <button onClick={() => set('categories', data.categories.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600 shrink-0"><Trash2 size={14} /></button>
+        </div>
+      ))}
+      <button onClick={() => set('categories', [...(data.categories || []), { name: '', path: '/', icon: 'BookOpen' }])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline"><Plus size={13} /> Add Category</button>
+    </div>
+  ),
+
+  about_hero: ({ data, set }) => (
+    <div className="space-y-3">
+      <Field label="Title"><TextInput value={data.title} onChange={v => set('title', v)} /></Field>
+      <Field label="Subtitle"><TextInput value={data.subtitle} onChange={v => set('subtitle', v)} /></Field>
+      <Field label="Description"><TextArea value={data.description} onChange={v => set('description', v)} rows={4} /></Field>
+      <Field label="Image URL"><TextInput value={data.img} onChange={v => set('img', v)} /></Field>
+      {data.img && <img src={data.img} alt="" className="w-full h-24 object-cover rounded-lg opacity-80" onError={e => e.target.style.display='none'} />}
+    </div>
+  ),
+
+  stats: ({ data, set }) => (
+    <div className="space-y-2">
+      {(data.stats || []).map((s, i) => (
+        <div key={i} className="flex gap-2 items-center">
+          <TextInput value={s.value} onChange={v => { const t = [...data.stats]; t[i] = { ...t[i], value: v }; set('stats', t); }} placeholder="4000+" />
+          <TextInput value={s.label} onChange={v => { const t = [...data.stats]; t[i] = { ...t[i], label: v }; set('stats', t); }} placeholder="Partner Schools" />
+          <button onClick={() => set('stats', data.stats.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600 shrink-0"><Trash2 size={14} /></button>
+        </div>
+      ))}
+      <button onClick={() => set('stats', [...(data.stats || []), { value: '', label: '' }])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline"><Plus size={13} /> Add Stat</button>
+    </div>
+  ),
+
+  mission_vision: ({ data, set }) => (
+    <div className="space-y-3">
+      <Field label="Mission Statement"><TextArea value={data.mission} onChange={v => set('mission', v)} rows={3} /></Field>
+      <Field label="Vision Statement"><TextArea value={data.vision} onChange={v => set('vision', v)} rows={3} /></Field>
+    </div>
+  ),
+
+  contact_info: ({ data, set }) => (
+    <div className="space-y-3">
+      <Field label="Heading"><TextInput value={data.heading} onChange={v => set('heading', v)} placeholder="Get in Touch" /></Field>
+      <Field label="Sub-heading"><TextInput value={data.subheading} onChange={v => set('subheading', v)} /></Field>
+      <Field label="Email"><TextInput value={data.email} onChange={v => set('email', v)} placeholder="info@schoolmart.in" /></Field>
+      <Field label="Phone 1"><TextInput value={data.phone1} onChange={v => set('phone1', v)} /></Field>
+      <Field label="Phone 2"><TextInput value={data.phone2} onChange={v => set('phone2', v)} /></Field>
+      <Field label="Address"><TextArea value={data.address} onChange={v => set('address', v)} rows={2} /></Field>
+      <Field label="WhatsApp Number"><TextInput value={data.whatsappNumber} onChange={v => set('whatsappNumber', v)} /></Field>
+      <Field label="Google Maps Embed URL"><TextArea value={data.mapEmbedUrl} onChange={v => set('mapEmbedUrl', v)} rows={3} /></Field>
+    </div>
+  ),
+
+  text_content: ({ data, set }) => (
+    <div className="space-y-3">
+      <Field label="Heading"><TextInput value={data.heading} onChange={v => set('heading', v)} /></Field>
+      <Field label="Body Text"><TextArea value={data.body} onChange={v => set('body', v)} rows={6} /></Field>
+    </div>
+  ),
+
+  catalogues_list: ({ data, set }) => (
+    <div className="space-y-3">
+      {(data.catalogues || []).map((c, i) => (
+        <div key={i} className="border border-gray-200 rounded-xl p-3 space-y-2 bg-gray-50/50">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-500">Catalogue {i + 1}</span>
+            <button onClick={() => set('catalogues', data.catalogues.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={13} /></button>
+          </div>
+          <TextInput value={c.title} onChange={v => { const t = [...data.catalogues]; t[i] = { ...t[i], title: v }; set('catalogues', t); }} placeholder="Catalogue Title" />
+          <TextArea rows={2} value={c.description} onChange={v => { const t = [...data.catalogues]; t[i] = { ...t[i], description: v }; set('catalogues', t); }} placeholder="Description..." />
+          <div className="flex gap-2 items-center">
+            <TextInput value={c.fileUrl} onChange={v => { const t = [...data.catalogues]; t[i] = { ...t[i], fileUrl: v }; set('catalogues', t); }} placeholder="Download URL or #" />
+            <label className="cursor-pointer bg-gray-100 p-2 rounded-lg border border-gray-200 hover:bg-sm-blue hover:text-white transition-colors shrink-0">
+               <Upload size={14} />
+               <input type="file" className="hidden" accept=".pdf,.doc,.docx" onChange={async (e) => {
+                 if(e.target.files?.[0]) {
+                   try {
+                     const res = await uploadFile(e.target.files[0]);
+                     const t = [...data.catalogues];
+                     t[i] = { ...t[i], fileUrl: res.url };
+                     set('catalogues', t);
+                     alert('Upload successful!');
+                   } catch(err) {
+                     alert(err.message);
+                   }
+                 }
+               }}/>
+            </label>
+          </div>
+          <TextInput value={c.img} onChange={v => { const t = [...data.catalogues]; t[i] = { ...t[i], img: v }; set('catalogues', t); }} placeholder="Thumbnail Image URL" />
+          {c.img && <img src={c.img} alt="" className="w-full h-14 object-cover rounded-lg opacity-80" onError={e => e.target.style.display='none'} />}
+        </div>
+      ))}
+      <button onClick={() => set('catalogues', [...(data.catalogues || []), { title: '', description: '', fileUrl: '#', img: '' }])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline"><Plus size={13} /> Add Catalogue</button>
+    </div>
+  ),
+
+  guides_list: ({ data, set }) => (
+    <div className="space-y-3">
+      {(data.guides || []).map((g, i) => (
+        <div key={i} className="border border-gray-200 rounded-xl p-3 space-y-2 bg-gray-50/50">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-500">Guide {i + 1}</span>
+            <button onClick={() => set('guides', data.guides.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={13} /></button>
+          </div>
+          <TextInput value={g.title} onChange={v => { const t = [...data.guides]; t[i] = { ...t[i], title: v }; set('guides', t); }} placeholder="Guide Title" />
+          <TextArea rows={2} value={g.description} onChange={v => { const t = [...data.guides]; t[i] = { ...t[i], description: v }; set('guides', t); }} placeholder="Description..." />
+          <TextInput value={g.img} onChange={v => { const t = [...data.guides]; t[i] = { ...t[i], img: v }; set('guides', t); }} placeholder="Image URL" />
+          <TextInput value={g.path} onChange={v => { const t = [...data.guides]; t[i] = { ...t[i], path: v }; set('guides', t); }} placeholder="/path or external URL" />
+        </div>
+      ))}
+      <button onClick={() => set('guides', [...(data.guides || []), { title: '', description: '', img: '', path: '#' }])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline"><Plus size={13} /> Add Guide</button>
+    </div>
+  ),
+
+  catalogues_page_content: ({ data, set }) => (
+    <div className="space-y-6">
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Top Library Hero</h4>
+        <Field label="Badge"><TextInput value={data.libraryHero?.badge} onChange={v => set('libraryHero', { ...data.libraryHero, badge: v })} /></Field>
+        <Field label="Title HTML (supports <br/> and span)"><TextArea value={data.libraryHero?.titleHtml} onChange={v => set('libraryHero', { ...data.libraryHero, titleHtml: v })} rows={2} /></Field>
+        <Field label="Subtitle"><TextArea value={data.libraryHero?.subtitle} onChange={v => set('libraryHero', { ...data.libraryHero, subtitle: v })} rows={2} /></Field>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Dark Action Strip</h4>
+        <Field label="Title"><TextInput value={data.actionStrip?.title} onChange={v => set('actionStrip', { ...data.actionStrip, title: v })} /></Field>
+        <Field label="Description"><TextArea value={data.actionStrip?.subtitle} onChange={v => set('actionStrip', { ...data.actionStrip, subtitle: v })} rows={2} /></Field>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Button 1 Text"><TextInput value={data.actionStrip?.btn1Text} onChange={v => set('actionStrip', { ...data.actionStrip, btn1Text: v })} /></Field>
+          <Field label="Button 2 Text"><TextInput value={data.actionStrip?.btn2Text} onChange={v => set('actionStrip', { ...data.actionStrip, btn2Text: v })} /></Field>
+        </div>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Resource Tiles (3 items max)</h4>
+        {(data.resourceTiles || []).map((t, i) => (
+          <div key={i} className="flex gap-2">
+            <TextInput value={t} onChange={v => { const ts = [...data.resourceTiles]; ts[i] = v; set('resourceTiles', ts); }} />
+            <button onClick={() => set('resourceTiles', data.resourceTiles.filter((_,j) => j !== i))} className="text-red-400 p-2"><Trash2 size={13}/></button>
+          </div>
+        ))}
+        {(!data.resourceTiles || data.resourceTiles.length < 3) && <button onClick={() => set('resourceTiles', [...(data.resourceTiles||[]), 'New Tile'])} className="text-blue-500 text-xs font-bold">+ Add Tile</button>}
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Strip Menu Links (comma separated)</h4>
+        <TextArea value={(data.menuStrip || []).join(', ')} onChange={v => set('menuStrip', v.split(',').map(s=>s.trim()))} rows={2} />
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Bottom Grid Section</h4>
+        <Field label="Title HTML"><TextInput value={data.infoGrid?.titleHtml} onChange={v => set('infoGrid', { ...data.infoGrid, titleHtml: v })} /></Field>
+        <Field label="Image URL"><TextInput value={data.infoGrid?.img} onChange={v => set('infoGrid', { ...data.infoGrid, img: v })} /></Field>
+        <Field label="4 Info Points (comma separated)"><TextArea value={(data.infoGrid?.points || []).join(', ')} onChange={v => set('infoGrid', { ...data.infoGrid, points: v.split(',').map(s=>s.trim())})} rows={2} /></Field>
+      </div>
+    </div>
+  ),
+
+  environments_page_content: ({ data, set }) => (
+    <div className="space-y-6">
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Hero Section</h4>
+        <Field label="Badge"><TextInput value={data.hero?.badge} onChange={v => set('hero', { ...data.hero, badge: v })} /></Field>
+        <Field label="Title HTML"><TextArea value={data.hero?.titleHtml} onChange={v => set('hero', { ...data.hero, titleHtml: v })} rows={2} /></Field>
+        <Field label="Subtitle"><TextArea value={data.hero?.subtitle} onChange={v => set('hero', { ...data.hero, subtitle: v })} rows={2} /></Field>
+        <Field label="Hero Image"><TextInput value={data.heroImage} onChange={v => set('heroImage', v)} /></Field>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Dark Action Card</h4>
+        <Field label="Title HTML"><TextArea value={data.actionCard?.titleHtml} onChange={v => set('actionCard', { ...data.actionCard, titleHtml: v })} rows={2} /></Field>
+        <Field label="Button Text"><TextInput value={data.actionCard?.btnText} onChange={v => set('actionCard', { ...data.actionCard, btnText: v })} /></Field>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Sub Blocks (Icons: Leaf, Wind, Sun, Layers)</h4>
+        {(data.subBlocks || []).map((sb, i) => (
+          <div key={i} className="flex gap-2">
+            <TextInput value={sb.title} onChange={v => { const ts = [...data.subBlocks]; ts[i] = { ...ts[i], title: v }; set('subBlocks', ts); }} placeholder="Title" />
+            <TextInput value={sb.subtitle} onChange={v => { const ts = [...data.subBlocks]; ts[i] = { ...ts[i], subtitle: v }; set('subBlocks', ts); }} placeholder="Subtitle" />
+            <TextInput value={sb.icon} onChange={v => { const ts = [...data.subBlocks]; ts[i] = { ...ts[i], icon: v }; set('subBlocks', ts); }} placeholder="Icon" className="w-24" />
+            <button onClick={() => set('subBlocks', data.subBlocks.filter((_,j) => j !== i))} className="text-red-400 p-2"><Trash2 size={13}/></button>
+          </div>
+        ))}
+        <button onClick={() => set('subBlocks', [...(data.subBlocks||[]), { title: '', subtitle: '', icon: 'Sparkles' }])} className="text-blue-500 text-xs font-bold">+ Add Sub Block</button>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Masonry Images Grid</h4>
+        {(data.masonryItems || []).map((m, i) => (
+          <div key={i} className="flex flex-col gap-2 p-3 border border-gray-100 rounded-lg bg-white relative">
+            <button onClick={() => set('masonryItems', data.masonryItems.filter((_,j) => j !== i))} className="absolute top-2 right-2 text-red-400 hover:text-red-600"><Trash2 size={13}/></button>
+            <div className="grid grid-cols-2 gap-2">
+              <TextInput value={m.t} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], t: v }; set('masonryItems', ts); }} placeholder="Title (e.g. Natural Light)" />
+              <TextInput value={m.c} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], c: v }; set('masonryItems', ts); }} placeholder="Category (e.g. Optics)" />
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="col-span-2"><TextInput value={m.img} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], img: v }; set('masonryItems', ts); }} placeholder="Image URL" /></div>
+              <TextInput value={m.h} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], h: v }; set('masonryItems', ts); }} placeholder="Height (e.g. h-[220px])" />
+            </div>
+          </div>
+        ))}
+        <button onClick={() => set('masonryItems', [...(data.masonryItems||[]), { t: '', c: '', img: '', h: 'h-[250px]' }])} className="text-blue-500 text-xs font-bold">+ Add Image block</button>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Bottom Info Grid</h4>
+        <Field label="Title HTML"><TextInput value={data.infoGrid?.titleHtml} onChange={v => set('infoGrid', { ...data.infoGrid, titleHtml: v })} /></Field>
+        <Field label="Image URL"><TextInput value={data.infoGrid?.img} onChange={v => set('infoGrid', { ...data.infoGrid, img: v })} /></Field>
+        <Field label="4 Info Points (comma separated)"><TextArea value={(data.infoGrid?.points || []).join(', ')} onChange={v => set('infoGrid', { ...data.infoGrid, points: v.split(',').map(s=>s.trim())})} rows={2} /></Field>
+      </div>
+    </div>
+  ),
+
+  guides_page_content: ({ data, set }) => (
+    <div className="space-y-6">
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Top Hero</h4>
+        <Field label="Badge"><TextInput value={data.hero?.badge} onChange={v => set('hero', { ...data.hero, badge: v })} /></Field>
+        <Field label="Title HTML"><TextArea value={data.hero?.titleHtml} onChange={v => set('hero', { ...data.hero, titleHtml: v })} rows={2} /></Field>
+        <Field label="Subtitle"><TextArea value={data.hero?.subtitle} onChange={v => set('hero', { ...data.hero, subtitle: v })} rows={2} /></Field>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Action Cards (3 Max)</h4>
+        {(data.actionStrip || []).map((as, i) => (
+          <div key={i} className="flex flex-col gap-2 p-3 bg-white border border-gray-100 rounded-lg relative">
+            <button onClick={() => set('actionStrip', data.actionStrip.filter((_,j) => j !== i))} className="absolute top-2 right-2 text-red-400 hover:text-red-600"><Trash2 size={13}/></button>
+            <TextArea value={as.titleHtml} onChange={v => { const ts = [...data.actionStrip]; ts[i] = { ...ts[i], titleHtml: v }; set('actionStrip', ts); }} placeholder="Title HTML" rows={2} />
+            <div className="flex gap-2">
+              <TextInput value={as.btnText || ''} onChange={v => { const ts = [...data.actionStrip]; ts[i] = { ...ts[i], btnText: v }; set('actionStrip', ts); }} placeholder="Button Text (if any)" />
+              <TextInput value={as.icon || ''} onChange={v => { const ts = [...data.actionStrip]; ts[i] = { ...ts[i], icon: v }; set('actionStrip', ts); }} placeholder="Icon (e.g. Award)" />
+              <select value={as.color} onChange={e => { const ts = [...data.actionStrip]; ts[i] = { ...ts[i], color: e.target.value }; set('actionStrip', ts); }} className="border px-2 rounded">
+                 <option value="light">Light</option>
+                 <option value="dark">Dark</option>
+              </select>
+            </div>
+          </div>
+        ))}
+        <button onClick={() => set('actionStrip', [...(data.actionStrip||[]), { titleHtml: '', btnText: '', icon: '', color: 'light' }])} className="text-blue-500 text-xs font-bold">+ Add Card</button>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Strip Menu Links (comma separated)</h4>
+        <TextArea value={(data.menuStrip || []).join(', ')} onChange={v => set('menuStrip', v.split(',').map(s=>s.trim()))} rows={2} />
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Vertical Resources</h4>
+        {(data.resourceList || []).map((r, i) => (
+          <div key={i} className="flex gap-2">
+            <TextInput value={r.t} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], t: v }; set('resourceList', ts); }} placeholder="Title" />
+            <TextInput value={r.c} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], c: v }; set('resourceList', ts); }} placeholder="Category" className="w-32" />
+            <TextInput value={r.img} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], img: v }; set('resourceList', ts); }} placeholder="Image" />
+            <TextInput value={r.h} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], h: v }; set('resourceList', ts); }} placeholder="Height (e.g. h-[300px])" className="w-24" />
+            <button onClick={() => set('resourceList', data.resourceList.filter((_,j) => j !== i))} className="text-red-400 p-2"><Trash2 size={13}/></button>
+          </div>
+        ))}
+        <button onClick={() => set('resourceList', [...(data.resourceList||[]), { t: '', c: '', img: '', h: 'h-[300px]' }])} className="text-blue-500 text-xs font-bold">+ Add Resource</button>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Bottom Grid Section</h4>
+        <Field label="Title HTML"><TextInput value={data.infoGrid?.titleHtml} onChange={v => set('infoGrid', { ...data.infoGrid, titleHtml: v })} /></Field>
+        <Field label="Image URL"><TextInput value={data.infoGrid?.img} onChange={v => set('infoGrid', { ...data.infoGrid, img: v })} /></Field>
+        <Field label="4 Info Points (comma separated)"><TextArea value={(data.infoGrid?.points || []).join(', ')} onChange={v => set('infoGrid', { ...data.infoGrid, points: v.split(',').map(s=>s.trim())})} rows={2} /></Field>
+      </div>
+    </div>
+  ),
+
+  inner_page_hero: ({ data, set }) => (
+    <div className="space-y-6">
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <Field label="Theme Identifier (e.g. Furniture, Sports)"><TextInput value={data.theme} onChange={v => set('theme', v)} placeholder="Furniture" /></Field>
+        <Field label="Badge"><TextInput value={data.badge} onChange={v => set('badge', v)} placeholder="2025 Collection" /></Field>
+        <Field label="Icon Logo Name (e.g. Sofa, Shield)"><TextInput value={data.badgeIcon} onChange={v => set('badgeIcon', v)} placeholder="Sofa" /></Field>
+        <Field label="Title HTML"><TextArea value={data.titleHtml} onChange={v => set('titleHtml', v)} rows={3} /></Field>
+        <Field label="Subtitle"><TextArea value={data.subtitle} onChange={v => set('subtitle', v)} rows={2} /></Field>
+        <Field label="Main Hero Image"><TextInput value={data.img} onChange={v => set('img', v)} /></Field>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+         <h4 className="font-bold text-gray-800 text-sm">Dark Block</h4>
+         <Field label="Title"><TextInput value={data.darkBlock?.title} onChange={v => set('darkBlock', { ...data.darkBlock, title: v })} /></Field>
+         <Field label="Subtitle"><TextInput value={data.darkBlock?.subtitle} onChange={v => set('darkBlock', { ...data.darkBlock, subtitle: v })} /></Field>
+      </div>
+    </div>
+  ),
+
+  sidebar_categories: ({ data, set }) => (
+    <div className="space-y-3">
+      <SectionTitle>Sidebar Tabs ({(data.categories || []).length})</SectionTitle>
+      {(data.categories || []).map((cat, i) => (
+        <div key={i} className="flex gap-2 items-center">
+          <TextInput value={cat} onChange={v => { const t = [...data.categories]; t[i] = v; set('categories', t); }} placeholder="e.g. CLASSROOM" />
+          <button onClick={() => set('categories', data.categories.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600 shrink-0"><Trash2 size={14} /></button>
+        </div>
+      ))}
+      <button onClick={() => set('categories', [...(data.categories || []), 'New Category'])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline"><Plus size={13} /> Add Category Tab</button>
+    </div>
+  ),
+
+  contact_page_content: ({ data, set }) => (
+    <div className="space-y-6">
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Left Hero</h4>
+        <Field label="Badge"><TextInput value={data.hero?.badge} onChange={v => set('hero', { ...data.hero, badge: v })} /></Field>
+        <Field label="Title HTML"><TextArea value={data.hero?.titleHtml} onChange={v => set('hero', { ...data.hero, titleHtml: v })} rows={3} /></Field>
+        <Field label="Subtitle"><TextArea value={data.hero?.subtitle} onChange={v => set('hero', { ...data.hero, subtitle: v })} rows={2} /></Field>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Email"><TextInput value={data.hero?.email} onChange={v => set('hero', { ...data.hero, email: v })} /></Field>
+          <Field label="Phone"><TextInput value={data.hero?.phone} onChange={v => set('hero', { ...data.hero, phone: v })} /></Field>
+        </div>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Quote Box Text</h4>
+        <Field label="Title"><TextInput value={data.quoteBox?.title} onChange={v => set('quoteBox', { ...data.quoteBox, title: v })} /></Field>
+        <Field label="Subtitle"><TextInput value={data.quoteBox?.subtitle} onChange={v => set('quoteBox', { ...data.quoteBox, subtitle: v })} /></Field>
+        <Field label="Button Text"><TextInput value={data.quoteBox?.btnText} onChange={v => set('quoteBox', { ...data.quoteBox, btnText: v })} /></Field>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Access Cards (Max 4)</h4>
+        {(data.accessCards || []).map((card, i) => (
+          <div key={i} className="flex flex-col gap-2 p-3 bg-white border border-gray-100 rounded-lg relative">
+            <button onClick={() => set('accessCards', data.accessCards.filter((_,j) => j !== i))} className="absolute top-2 right-2 text-red-400 hover:text-red-600"><Trash2 size={13}/></button>
+            <div className="flex gap-2">
+              <TextInput value={card.t} onChange={v => { const ts = [...data.accessCards]; ts[i] = { ...ts[i], t: v }; set('accessCards', ts); }} placeholder="Title" />
+              <TextInput value={card.i} onChange={v => { const ts = [...data.accessCards]; ts[i] = { ...ts[i], i: v }; set('accessCards', ts); }} placeholder="Icon (Video/Calendar/MapPin/Clock)" />
+            </div>
+            <TextInput value={card.d} onChange={v => { const ts = [...data.accessCards]; ts[i] = { ...ts[i], d: v }; set('accessCards', ts); }} placeholder="Description" />
+            <TextInput value={card.c} onChange={v => { const ts = [...data.accessCards]; ts[i] = { ...ts[i], c: v }; set('accessCards', ts); }} placeholder="Color Classes (e.g. bg-blue-50 text-blue-600)" />
+          </div>
+        ))}
+        <button onClick={() => set('accessCards', [...(data.accessCards||[]), { t: '', i: 'Sparkles', d: '', c: 'bg-gray-50 text-gray-600' }])} className="text-blue-500 text-xs font-bold">+ Add Card</button>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">FAQ Section</h4>
+        <div className="grid grid-cols-2 gap-3 mb-2">
+           <Field label="Heading"><TextInput value={data.faq?.title} onChange={v => set('faq', { ...data.faq, title: v })} /></Field>
+           <Field label="Subheading"><TextInput value={data.faq?.subtitle} onChange={v => set('faq', { ...data.faq, subtitle: v })} /></Field>
+        </div>
+        {(data.faq?.items || []).map((faq, i) => (
+          <div key={i} className="flex flex-col gap-2 p-3 bg-white border border-gray-100 rounded-lg relative">
+            <button onClick={() => { const ts = [...(data.faq?.items||[])]; ts.splice(i, 1); set('faq', { ...data.faq, items: ts }); }} className="absolute text-red-400 hover:text-red-600 top-2 right-2"><Trash2 size={13}/></button>
+            <TextInput value={faq.q} onChange={v => { const ts = [...data.faq.items]; ts[i] = { ...ts[i], q: v }; set('faq', { ...data.faq, items: ts }); }} placeholder="Question" />
+            <TextArea value={faq.a} onChange={v => { const ts = [...data.faq.items]; ts[i] = { ...ts[i], a: v }; set('faq', { ...data.faq, items: ts }); }} placeholder="Answer" rows={2} />
+          </div>
+        ))}
+        <button onClick={() => set('faq', { ...data.faq, items: [...(data.faq?.items||[]), { q: '', a: '' }] })} className="text-blue-500 text-xs font-bold">+ Add FAQ Item</button>
+      </div>
+    </div>
+  ),
+
+  sidebar_categories: ({ data, set }) => (
+    <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+      <h4 className="font-bold text-gray-800 text-sm">Category Sidebar Tabs</h4>
+      <p className="text-[10px] text-gray-500 font-medium">Add the subcategories/filters you want to display on the left sidebar.</p>
+      {(data.categories || []).map((cat, i) => (
+        <div key={i} className="flex gap-2">
+          <TextInput 
+            value={cat} 
+            onChange={v => { 
+                const cs = [...data.categories]; 
+                cs[i] = v; 
+                set('categories', cs); 
+            }} 
+            placeholder="e.g. CLASSROOM" 
+          />
+          <button onClick={() => set('categories', data.categories.filter((_, j) => j !== i))} className="text-red-400 p-2 hover:bg-red-50 rounded"><Trash2 size={13}/></button>
+        </div>
+      ))}
+      <button 
+        onClick={() => set('categories', [...(data.categories || []), 'New Tab'])} 
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline"
+      >
+        <Plus size={13} /> Add Tab
+      </button>
+    </div>
+  ),
+};
+
+// Fallback: generic key-value editor for unknown block types
+const GenericForm = ({ data, set }) => (
+  <div className="space-y-3">
+    {Object.entries(data || {}).map(([key, val]) => (
+      <Field key={key} label={key.replace(/_/g, ' ')}>
+        {typeof val === 'boolean'
+          ? <Toggle label={val ? 'Enabled' : 'Disabled'} value={val} onChange={v => set(key, v)} />
+          : typeof val === 'object'
+          ? <TextArea rows={4} value={JSON.stringify(val, null, 2)} onChange={v => { try { set(key, JSON.parse(v)); } catch {} }} />
+          : <TextInput value={String(val)} onChange={v => set(key, v)} />
+        }
+      </Field>
+    ))}
+  </div>
+);
+
+// ── Single block editor ────────────────────────────────────────────────────────
+function BlockEditor({ slug, block, onSaved }) {
+  const [localData, setLocalData] = useState(block.data || {});
+  const [visible, setVisible] = useState(block.isVisible !== false);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [expanded, setExpanded] = useState(true);
+
+  const setField = (key, value) => setLocalData(prev => ({ ...prev, [key]: value }));
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      await updateBlock(slug, block._id, { data: localData, isVisible: visible });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+      onSaved();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const remove = async () => {
+    if (!confirm(`Delete the "${block.blockType}" block?`)) return;
+    await deleteBlock(slug, block._id);
+    onSaved();
+  };
+
+  const FormComponent = BlockForms[block.blockType];
+
+  const BLOCK_LABELS = {
+    topbar: '📋 Top Bar', navbar: '🔗 Navigation Bar', ticker: '📢 News Ticker',
+    hero: '🖼️ Hero / Banner', page_hero: '🖼️ Page Hero', cta_whatsapp: '💬 WhatsApp CTA',
+    tiles: '🟦 Masonry Tiles', solutions: '🔵 Solutions / Circles', feature_cards: '📦 Top Highlight Cards (Static)',
+    partners: '🤝 School Partners', sidebar_trending: '🔥 Trending Sidebar', sidebar_resources: '📚 Resources Sidebar',
+    sidebar_banners: '🟧 Sidebar Banners', sidebar_categories: '📑 Sidebar Tabs', about_hero: '👋 About Hero', stats: '📊 Statistics',
+    mission_vision: '🎯 Mission & Vision', contact_info: '📞 Contact Info', text_content: '📝 Text Content',
+    catalogues_list: '📁 Catalogues List', guides_list: '📖 Guides List',
+  };
+
+  return (
+    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+      {/* Block Header */}
+      <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100 bg-gray-50/60">
+        <span className="font-black text-gray-800 text-lg flex-1">{BLOCK_LABELS[block.blockType] || block.blockType}</span>
+        <div className="flex items-center gap-2">
+          <button onClick={() => { setVisible(v => !v); }} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${visible ? 'text-blue-600 bg-blue-50 hover:bg-blue-100' : 'text-gray-400 bg-gray-50 hover:bg-gray-100'}`} title={visible ? 'Visible on site' : 'Hidden from site'}>
+            {visible ? <><Eye size={14} /> Visible</> : <><EyeOff size={14} /> Hidden</>}
+          </button>
+          <button onClick={remove} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-red-500 bg-red-50 hover:bg-red-100 transition-colors" title="Delete block">
+            <Trash2 size={14} /> Delete
+          </button>
+        </div>
+      </div>
+
+      {/* Block Body */}
+      <div className="p-6">
+        {FormComponent
+          ? <FormComponent data={localData} set={setField} />
+          : <GenericForm data={localData} set={setField} />
+        }
+
+        <div className="mt-8 flex items-center justify-between pt-5 border-t border-gray-100">
+          <Toggle label="Show block on website" value={visible} onChange={setVisible} />
+          <button onClick={save} disabled={saving}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-black uppercase tracking-wider transition-all disabled:opacity-60 shadow-lg ${saved ? 'bg-green-500 text-white shadow-green-500/30' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/30'}`}>
+            <Save size={16} />
+            {saving ? 'Saving...' : saved ? 'Saved!' : 'Save Changes'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Page editor ───────────────────────────────────────────────────────────────
+const BLOCK_TYPE_OPTIONS = [
+  'topbar', 'navbar', 'ticker', 'hero', 'page_hero', 'inner_page_hero', 'cta_whatsapp', 'tiles', 'solutions',
+  'feature_cards', 'partners', 'sidebar_trending', 'sidebar_resources', 'sidebar_banners', 'sidebar_categories',
+  'about_hero', 'stats', 'mission_vision', 'contact_info', 'text_content', 'catalogues_page_content', 'environments_page_content', 'guides_page_content', 'contact_page_content', 'catalogues_list', 'guides_list',
+];
+
+function PageEditor({ slug }) {
+  const [page, setPage] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [newBlockType, setNewBlockType] = useState('');
+  const [adding, setAdding] = useState(false);
+  const [activeBlockId, setActiveBlockId] = useState(null);
+
+  const load = () => {
+    setLoading(true);
+    getPage(slug).then(p => {
+      setPage(p);
+      if (p?.blocks?.length > 0 && !activeBlockId) {
+        setActiveBlockId(p.blocks.sort((a,b) => a.order - b.order)[0]._id);
+      }
+      setLoading(false);
+    }).catch(err => {
+      console.error(err);
+      setLoading(false);
+    });
+  };
+
+  useEffect(() => { load(); }, [slug]);
+
+  const addNewBlock = async () => {
+    if (!newBlockType) return;
+    setAdding(true);
+    try {
+      await addBlock(slug, { blockType: newBlockType, order: (page?.blocks?.length || 0), data: {} });
+      setNewBlockType('');
+      load();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setAdding(false);
+    }
+  };
+
+  const BLOCK_LABELS = {
+    topbar: '📋 Top Bar', navbar: '🔗 Navigation', ticker: '📢 Ticker',
+    hero: '🖼️ Hero Banner', page_hero: '🖼️ Page Hero', inner_page_hero: '🖼️ Inner Page Hero', cta_whatsapp: '💬 WhatsApp',
+    tiles: '🟦 Grids/Tiles', solutions: '🔵 Circles', feature_cards: '📦 Top Highlight Cards',
+    partners: '🤝 Partners', sidebar_trending: '🔥 Trending', sidebar_resources: '📚 Resources',
+    sidebar_banners: '🟧 Sidebar Banners', sidebar_categories: '📑 Sidebar Tabs', about_hero: '👋 About Hero', stats: '📊 Statistics',
+    mission_vision: '🎯 Mission', contact_info: '📞 Contact', text_content: '📝 Text',
+    catalogues_page_content: '📄 Catalogues Header', environments_page_content: '🌿 Environments Masonry', guides_page_content: '📚 Guides Header', contact_page_content: '✉️ Contact Detailed', catalogues_list: '📁 Catalogues List', guides_list: '📖 Guides List',
+  };
+
+  if (loading) return <div className="flex justify-center py-16"><div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full" /></div>;
+  if (!page) return <div className="py-12 text-center text-red-400 bg-red-50 rounded-2xl"><p className="font-bold">Page not found in database</p><p className="text-xs mt-1">Run <code className="bg-red-100 px-1 rounded">npm run seed</code> from the backend folder</p></div>;
+
+  const sortedBlocks = [...(page.blocks || [])].sort((a, b) => a.order - b.order);
+  const activeBlock = sortedBlocks.find(b => b._id === activeBlockId) || sortedBlocks[0];
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">{page.pageTitle}</h3>
+          <p className="text-sm text-gray-400 font-medium">{sortedBlocks.length} sections on this page</p>
+        </div>
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-6 items-start">
+        {/* Left Sidebar: Block List */}
+        <div className="w-full lg:w-64 shrink-0 space-y-3">
+          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+            <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
+              <h4 className="text-xs font-black uppercase tracking-widest text-gray-500">Page Sections</h4>
+            </div>
+            <div className="divide-y divide-gray-50 max-h-[60vh] overflow-y-auto">
+              {sortedBlocks.map((b, i) => (
+                <button
+                  key={b._id}
+                  onClick={() => setActiveBlockId(b._id)}
+                  className={`w-full text-left px-4 py-3 flex items-center justify-between transition-colors group ${activeBlockId === b._id ? 'bg-blue-50/50' : 'hover:bg-gray-50'}`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="text-[10px] font-bold text-gray-400 w-4">{i + 1}.</span>
+                    <span className={`text-sm truncate font-semibold ${activeBlockId === b._id ? 'text-blue-700' : 'text-gray-700 group-hover:text-gray-900'}`}>
+                      {BLOCK_LABELS[b.blockType] || b.blockType}
+                    </span>
+                  </div>
+                  {!b.isVisible && <EyeOff size={12} className="text-gray-400 shrink-0 ml-2" title="Hidden" />}
+                  {activeBlockId === b._id && <ChevronRight size={14} className="text-blue-500 shrink-0 ml-2" />}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Add block form */}
+          <div className="bg-white border border-dashed border-gray-300 rounded-2xl p-4 flex flex-col gap-3">
+            <select
+              value={newBlockType}
+              onChange={e => setNewBlockType(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50 focus:ring-2 focus:ring-blue-400 outline-none"
+            >
+              <option value="">+ Add Section...</option>
+              {BLOCK_TYPE_OPTIONS
+                 .filter(t => !(['furniture', 'architecture', 'digital', 'sports', 'libraries', 'labs', 'mathematics', 'science', 'design'].includes(slug) && t === 'feature_cards'))
+                 .map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+            <button
+              onClick={addNewBlock}
+              disabled={adding || !newBlockType}
+              className="w-full flex justify-center items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-bold rounded-xl hover:bg-black disabled:opacity-50 transition-colors"
+            >
+              <Plus size={14} /> {adding ? 'Adding...' : 'Add'}
+            </button>
+          </div>
+        </div>
+
+        {/* Right Content: Active Block Editor */}
+        <div className="flex-1 min-w-0 w-full">
+          {activeBlock ? (
+            <BlockEditor key={activeBlock._id} slug={slug} block={activeBlock} onSaved={load} />
+          ) : (
+            <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+              <p className="text-4xl mb-2">👈</p>
+              <p className="text-gray-500 font-medium">Select a section from the left to edit</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Dynamic Inner Page Cards Manager (if applicable page) */}
+      {['furniture', 'architecture', 'digital', 'sports', 'libraries', 'labs', 'mathematics', 'science', 'design'].includes(slug) && (
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden mt-8">
+          <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+            <div>
+              <h3 className="font-black text-gray-800 text-base flex items-center gap-2">
+                <span className="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shadow-sm">
+                  <Layers size={16} />
+                </span>
+                Manage Catalog Products ({page?.pageTitle || slug})
+              </h3>
+              <p className="text-[11px] text-gray-400 font-medium mt-1 uppercase tracking-wider">
+                These are the dynamic products that appear under the sidebar tabs at the bottom of the page.
+              </p>
+            </div>
+          </div>
+          <div className="p-6 bg-slate-50/30">
+            {(() => {
+              const liveCats = page?.blocks?.find(b => b.blockType === 'sidebar_categories')?.data?.categories || [];
+              return <ProductManager fixedPage={page?.pageTitle} liveCategories={liveCats} />;
+            })()}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Main CMS Editor ───────────────────────────────────────────────────────────
+const PAGE_ICONS = {
+  home: '🏠', furniture: '🪑', architecture: '🏗️', digital: '💻', sports: '🏅',
+  libraries: '📚', environments: '🌿', aboutus: 'ℹ️', 'contact-us': '📞',
+  mathematics: '📐', science: '🔬', labs: '🧪', design: '🎨',
+  manufacturing: '🏭', corporate: '🏢', catalogues: '📁', guides: '📖',
+};
+
+export default function CMSEditor() {
+  const [pages, setPages] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Support ?page= deep-link from dashboard
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const p = params.get('page');
+    if (p) setSelected(p);
+  }, []);
+
+  useEffect(() => {
+    getAllPages().then(setPages).catch(console.error).finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div className="flex justify-center py-20"><div className="animate-spin w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full" /></div>;
+
+  const cataloguePages = ['furniture', 'architecture', 'digital', 'sports', 'libraries', 'labs', 'mathematics', 'science', 'design'];
+
+  return (
+    <div>
+      {/* Page Selector Grid */}
+      {!selected && (
+        <div>
+          <h2 className="text-lg font-black text-gray-800 mb-1">Choose a page to edit</h2>
+          <p className="text-sm text-gray-400 mb-6">Select any page below to edit its content blocks with form fields</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {pages.map(p => (
+              <button key={p.pageSlug} onClick={() => setSelected(p.pageSlug)}
+                className="bg-white rounded-2xl border border-gray-200 p-5 text-left hover:border-blue-400 hover:shadow-md transition-all group"
+              >
+                <span className="text-3xl block mb-2">{PAGE_ICONS[p.pageSlug] || '📄'}</span>
+                <p className="font-black text-gray-800 text-sm group-hover:text-blue-600 transition-colors">{p.pageTitle}</p>
+                <p className="text-[10px] text-gray-400 mt-1">/{p.pageSlug}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Editor */}
+      {selected && (
+        <div>
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 mb-6">
+            <button onClick={() => setSelected(null)} className="text-blue-600 font-bold text-sm hover:underline">← All Pages</button>
+            <span className="text-gray-300">/</span>
+            <span className="text-sm font-bold text-gray-600">{pages.find(p => p.pageSlug === selected)?.pageTitle || selected}</span>
+          </div>
+          <PageEditor slug={selected} />
+        </div>
+      )}
+    </div>
+  );
+}
