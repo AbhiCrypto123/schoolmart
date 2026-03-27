@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { getProducts, createProduct, updateProduct, deleteProduct, getAllPages } from '../../services/api';
 import { Package, Plus, Search, Filter, Edit3, Trash2, Star, Tag, Layers, ChevronDown } from 'lucide-react';
+import ImageUpload from '../../components/admin/ImageUpload';
 
 export default function ProductManager({ fixedPage, liveCategories }) {
   const [products, setProducts] = useState([]);
@@ -194,11 +195,11 @@ export default function ProductManager({ fixedPage, liveCategories }) {
           </div>
         </div>
 
-        <div className="space-y-1">
-          <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Image URL</label>
-          <input value={editing.images?.[0] || ''} onChange={e => setEditing({ ...editing, images: [e.target.value] })} className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://..." />
-          {editing.images?.[0] && <img src={editing.images[0]} alt="Preview" className="h-32 object-contain bg-gray-50 rounded-xl border border-gray-200 mt-2 p-2" onError={e => e.target.style.display='none'} />}
-        </div>
+        <ImageUpload 
+          label="Card Image" 
+          value={editing.images?.[0] || ''} 
+          onChange={url => setEditing({ ...editing, images: [url] })} 
+        />
 
         <div className="flex gap-6 pt-2">
           <label className="flex items-center gap-2 cursor-pointer select-none">

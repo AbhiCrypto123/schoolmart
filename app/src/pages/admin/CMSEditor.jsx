@@ -1,9 +1,10 @@
 // src/pages/admin/CMSEditor.jsx
 // Form-field based CMS editor — proper inputs for every block type
 import { useEffect, useState } from 'react';
-import { getAllPages, getPage, updateBlock, addBlock, deleteBlock, uploadFile } from '../../services/api';
-import { ChevronDown, ChevronRight, Trash2, Plus, Eye, EyeOff, Save, GripVertical, Image, Link2, Type, List, ToggleLeft, Upload, Layers } from 'lucide-react';
+import { getAllPages, getPage, updateBlock, addBlock, deleteBlock } from '../../services/api';
+import { ChevronDown, ChevronRight, Trash2, Plus, Eye, EyeOff, Save, GripVertical, Image as ImageIcon, Link2, Type, List, ToggleLeft, Upload, Layers } from 'lucide-react';
 import ProductManager from './ProductManager';
+import ImageUpload from '../../components/admin/ImageUpload';
 
 // ── Reusable form field helpers ───────────────────────────────────────────────
 const Field = ({ label, children, hint }) => (
@@ -91,8 +92,7 @@ const BlockForms = {
       <Field label="Page Title"><TextInput value={data.title} onChange={v => set('title', v)} placeholder="Page Title" /></Field>
       <Field label="Sub-title"><TextInput value={data.subtitle} onChange={v => set('subtitle', v)} placeholder="Page subtitle..." /></Field>
       <Field label="Background Gradient" hint="Tailwind from-to classes"><TextInput value={data.bgGradient} onChange={v => set('bgGradient', v)} placeholder="from-blue-900 to-blue-700" /></Field>
-      <Field label="Image URL"><TextInput value={data.img} onChange={v => set('img', v)} placeholder="https://..." /></Field>
-      {data.img && <img src={data.img} alt="preview" className="w-full h-24 object-cover rounded-lg opacity-80 mt-1" onError={e => e.target.style.display='none'} />}
+      <ImageUpload label="Hero Image" value={data.img} onChange={v => set('img', v)} />
     </div>
   ),
 
@@ -144,8 +144,7 @@ const BlockForms = {
           <TextInput value={tile.title} onChange={v => { const t = [...data.tiles]; t[i] = { ...t[i], title: v }; set('tiles', t); }} placeholder="Tile Title (uppercase)" />
           <TextInput value={tile.subtitle} onChange={v => { const t = [...data.tiles]; t[i] = { ...t[i], subtitle: v }; set('tiles', t); }} placeholder="Subtitle" />
           <TextInput value={tile.path} onChange={v => { const t = [...data.tiles]; t[i] = { ...t[i], path: v }; set('tiles', t); }} placeholder="/path" />
-          <TextInput value={tile.img} onChange={v => { const t = [...data.tiles]; t[i] = { ...t[i], img: v }; set('tiles', t); }} placeholder="Image URL" />
-          {tile.img && <img src={tile.img} alt="" className="w-full h-16 object-cover rounded-lg opacity-80" onError={e => e.target.style.display='none'} />}
+          <ImageUpload label="Tile Image" value={tile.img} onChange={v => { const t = [...data.tiles]; t[i] = { ...t[i], img: v }; set('tiles', t); }} />
         </div>
       ))}
       <button onClick={() => set('tiles', [...(data.tiles || []), { title: '', subtitle: '', path: '/', img: '', height: 'h-56' }])}
@@ -167,14 +166,13 @@ const BlockForms = {
           <TextInput value={item.title} onChange={v => { const t = [...data.items]; t[i] = { ...t[i], title: v }; set('items', t); }} placeholder="Card Title" />
           <TextArea rows={2} value={item.description} onChange={v => { const t = [...data.items]; t[i] = { ...t[i], description: v }; set('items', t); }} placeholder="Short description..." />
           <TextInput value={item.path} onChange={v => { const t = [...data.items]; t[i] = { ...t[i], path: v }; set('items', t); }} placeholder="/path" />
-          <TextInput value={item.img} onChange={v => { const t = [...data.items]; t[i] = { ...t[i], img: v }; set('items', t); }} placeholder="Image URL" />
           <div className="flex gap-2">
             <TextInput value={item.badge?.label} onChange={v => { const t = [...data.items]; t[i] = { ...t[i], badge: { ...t[i].badge, label: v } }; set('items', t); }} placeholder="Badge label" />
             <input type="color" value={item.badge?.color || '#000000'}
               onChange={e => { const t = [...data.items]; t[i] = { ...t[i], badge: { ...t[i].badge, color: e.target.value } }; set('items', t); }}
               className="w-10 h-9 rounded cursor-pointer border border-gray-200 p-0.5" title="Badge color" />
           </div>
-          {item.img && <img src={item.img} alt="" className="w-full h-14 object-cover rounded-lg opacity-80" onError={e => e.target.style.display='none'} />}
+          <ImageUpload label="Solution Image" value={item.img} onChange={v => { const t = [...data.items]; t[i] = { ...t[i], img: v }; set('items', t); }} />
         </div>
       ))}
       <button onClick={() => set('items', [...(data.items || []), { title: '', description: '', path: '/', img: '', badge: { label: '', color: '#3B82F6' } }])}
@@ -196,7 +194,7 @@ const BlockForms = {
           <TextArea rows={2} value={card.description} onChange={v => { const t = [...data.cards]; t[i] = { ...t[i], description: v }; set('cards', t); }} placeholder="Description..." />
           <TextInput value={card.img} onChange={v => { const t = [...data.cards]; t[i] = { ...t[i], img: v }; set('cards', t); }} placeholder="Image URL" />
           <TextInput value={card.path} onChange={v => { const t = [...data.cards]; t[i] = { ...t[i], path: v }; set('cards', t); }} placeholder="/path" />
-          {card.img && <img src={card.img} alt="" className="w-full h-14 object-cover rounded-lg opacity-80" onError={e => e.target.style.display='none'} />}
+          <ImageUpload label="Card Image" value={card.img} onChange={v => { const t = [...data.cards]; t[i] = { ...t[i], img: v }; set('cards', t); }} />
         </div>
       ))}
       <button onClick={() => set('cards', [...(data.cards || []), { title: '', description: '', img: '', path: '/' }])}
@@ -265,8 +263,7 @@ const BlockForms = {
       <Field label="Title"><TextInput value={data.title} onChange={v => set('title', v)} /></Field>
       <Field label="Subtitle"><TextInput value={data.subtitle} onChange={v => set('subtitle', v)} /></Field>
       <Field label="Description"><TextArea value={data.description} onChange={v => set('description', v)} rows={4} /></Field>
-      <Field label="Image URL"><TextInput value={data.img} onChange={v => set('img', v)} /></Field>
-      {data.img && <img src={data.img} alt="" className="w-full h-24 object-cover rounded-lg opacity-80" onError={e => e.target.style.display='none'} />}
+      <ImageUpload label="Hero Image" value={data.img} onChange={v => set('img', v)} />
     </div>
   ),
 
@@ -340,8 +337,7 @@ const BlockForms = {
                }}/>
             </label>
           </div>
-          <TextInput value={c.img} onChange={v => { const t = [...data.catalogues]; t[i] = { ...t[i], img: v }; set('catalogues', t); }} placeholder="Thumbnail Image URL" />
-          {c.img && <img src={c.img} alt="" className="w-full h-14 object-cover rounded-lg opacity-80" onError={e => e.target.style.display='none'} />}
+          <ImageUpload label="Thumbnail" value={c.img} onChange={v => { const t = [...data.catalogues]; t[i] = { ...t[i], img: v }; set('catalogues', t); }} />
         </div>
       ))}
       <button onClick={() => set('catalogues', [...(data.catalogues || []), { title: '', description: '', fileUrl: '#', img: '' }])}
@@ -415,7 +411,7 @@ const BlockForms = {
         <Field label="Badge"><TextInput value={data.hero?.badge} onChange={v => set('hero', { ...data.hero, badge: v })} /></Field>
         <Field label="Title HTML"><TextArea value={data.hero?.titleHtml} onChange={v => set('hero', { ...data.hero, titleHtml: v })} rows={2} /></Field>
         <Field label="Subtitle"><TextArea value={data.hero?.subtitle} onChange={v => set('hero', { ...data.hero, subtitle: v })} rows={2} /></Field>
-        <Field label="Hero Image"><TextInput value={data.heroImage} onChange={v => set('heroImage', v)} /></Field>
+        <ImageUpload label="Hero Image" value={data.heroImage} onChange={v => set('heroImage', v)} />
       </div>
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
         <h4 className="font-bold text-gray-800 text-sm">Dark Action Card</h4>
@@ -443,9 +439,9 @@ const BlockForms = {
               <TextInput value={m.t} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], t: v }; set('masonryItems', ts); }} placeholder="Title (e.g. Natural Light)" />
               <TextInput value={m.c} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], c: v }; set('masonryItems', ts); }} placeholder="Category (e.g. Optics)" />
             </div>
+            <ImageUpload label="Grid Image" value={m.img} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], img: v }; set('masonryItems', ts); }} />
             <div className="grid grid-cols-3 gap-2">
-              <div className="col-span-2"><TextInput value={m.img} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], img: v }; set('masonryItems', ts); }} placeholder="Image URL" /></div>
-              <TextInput value={m.h} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], h: v }; set('masonryItems', ts); }} placeholder="Height (e.g. h-[220px])" />
+              <TextInput value={m.h} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], h: v }; set('masonryItems', ts); }} placeholder="Height (e.g. h-[220px])" className="col-span-3" />
             </div>
           </div>
         ))}
@@ -454,7 +450,7 @@ const BlockForms = {
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
         <h4 className="font-bold text-gray-800 text-sm">Bottom Info Grid</h4>
         <Field label="Title HTML"><TextInput value={data.infoGrid?.titleHtml} onChange={v => set('infoGrid', { ...data.infoGrid, titleHtml: v })} /></Field>
-        <Field label="Image URL"><TextInput value={data.infoGrid?.img} onChange={v => set('infoGrid', { ...data.infoGrid, img: v })} /></Field>
+        <ImageUpload label="Grid Image" value={data.infoGrid?.img} onChange={v => set('infoGrid', { ...data.infoGrid, img: v })} />
         <Field label="4 Info Points (comma separated)"><TextArea value={(data.infoGrid?.points || []).join(', ')} onChange={v => set('infoGrid', { ...data.infoGrid, points: v.split(',').map(s=>s.trim())})} rows={2} /></Field>
       </div>
     </div>
@@ -492,15 +488,15 @@ const BlockForms = {
       </div>
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
         <h4 className="font-bold text-gray-800 text-sm">Vertical Resources</h4>
-        {(data.resourceList || []).map((r, i) => (
-          <div key={i} className="flex gap-2">
-            <TextInput value={r.t} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], t: v }; set('resourceList', ts); }} placeholder="Title" />
-            <TextInput value={r.c} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], c: v }; set('resourceList', ts); }} placeholder="Category" className="w-32" />
-            <TextInput value={r.img} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], img: v }; set('resourceList', ts); }} placeholder="Image" />
-            <TextInput value={r.h} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], h: v }; set('resourceList', ts); }} placeholder="Height (e.g. h-[300px])" className="w-24" />
-            <button onClick={() => set('resourceList', data.resourceList.filter((_,j) => j !== i))} className="text-red-400 p-2"><Trash2 size={13}/></button>
+          <div key={i} className="flex flex-col gap-2 p-3 bg-white border border-gray-100 rounded-lg relative">
+            <button onClick={() => set('resourceList', data.resourceList.filter((_,j) => j !== i))} className="absolute top-2 right-2 text-red-400 hover:text-red-600"><Trash2 size={13}/></button>
+            <div className="flex gap-2">
+              <TextInput value={r.t} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], t: v }; set('resourceList', ts); }} placeholder="Title" />
+              <TextInput value={r.c} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], c: v }; set('resourceList', ts); }} placeholder="Category" className="w-32" />
+            </div>
+            <ImageUpload label="Resource Image" value={r.img} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], img: v }; set('resourceList', ts); }} />
+            <TextInput value={r.h} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], h: v }; set('resourceList', ts); }} placeholder="Height (e.g. h-[300px])" className="w-full" />
           </div>
-        ))}
         <button onClick={() => set('resourceList', [...(data.resourceList||[]), { t: '', c: '', img: '', h: 'h-[300px]' }])} className="text-blue-500 text-xs font-bold">+ Add Resource</button>
       </div>
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
@@ -520,7 +516,7 @@ const BlockForms = {
         <Field label="Icon Logo Name (e.g. Sofa, Shield)"><TextInput value={data.badgeIcon} onChange={v => set('badgeIcon', v)} placeholder="Sofa" /></Field>
         <Field label="Title HTML"><TextArea value={data.titleHtml} onChange={v => set('titleHtml', v)} rows={3} /></Field>
         <Field label="Subtitle"><TextArea value={data.subtitle} onChange={v => set('subtitle', v)} rows={2} /></Field>
-        <Field label="Main Hero Image"><TextInput value={data.img} onChange={v => set('img', v)} /></Field>
+        <ImageUpload label="Hero Image" value={data.img} onChange={v => set('img', v)} />
       </div>
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
          <h4 className="font-bold text-gray-800 text-sm">Dark Block</h4>
