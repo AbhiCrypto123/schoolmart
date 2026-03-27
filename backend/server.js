@@ -8,6 +8,13 @@ require('dotenv').config();
 
 const app = express();
 
+// Ensure uploads directory exists
+const uploadPath = path.join(__dirname, 'uploads');
+const fs = require('fs');
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
+
 // Middleware
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(cors({ 

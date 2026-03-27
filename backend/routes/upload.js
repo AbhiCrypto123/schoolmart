@@ -44,10 +44,13 @@ router.post('/', upload.single('file'), (req, res) => {
     }
     
     // Construct the public URL
-    // In production, this should use the server's public domain
-    const protocol = req.protocol;
+    // In production (Railway), req.protocol might be 'http' due to the proxy.
+    // We check 'x-forwarded-proto' to correctly identify 'https'.
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
     const host = req.get('host');
     const imageUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+    
+    console.log(`[Upload] File saved: ${req.file.filename}, URL: ${imageUrl}`);
     
     res.json({ 
       url: imageUrl,
