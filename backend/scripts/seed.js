@@ -23,6 +23,7 @@ async function seed() {
       email: 'admin@schoolmart.in',
       password: await bcrypt.hash('Admin@123', 10),
       role: 'admin',
+      isVerified: true,
     });
     console.log('âœ… Admin user created: admin@schoolmart.in / Admin@123');
   }
