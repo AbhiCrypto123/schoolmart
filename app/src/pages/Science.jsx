@@ -61,7 +61,7 @@ const Science = () => {
 
            <div className="lg:col-span-4 flex flex-col gap-3">
               <div className="flex-grow rounded-[25px] overflow-hidden relative shadow-lg group border border-gray-100">
-                 <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80" className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 transition-all duration-700 hover:scale-110" alt="Lab" />
+                 <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80" className="w-full h-full object-cover brightness-90 transition-all duration-700 hover:scale-110" alt="Lab" />
                  <div className="absolute inset-0 bg-emerald-900/10 group-hover:bg-transparent transition-all" />
               </div>
               <div className="bg-[#1A1A1A] rounded-[25px] p-6 text-white flex flex-col justify-between group overflow-hidden relative border border-gray-800 shadow-2xl transition-transform hover:scale-[1.02]">
@@ -136,7 +136,7 @@ const Science = () => {
                          className={`relative overflow-hidden rounded-[25px] shadow-sm group cursor-pointer border border-gray-300 h-[220px] transition-all duration-500 ${selectedItem?.name === work.name ? 'ring-4 ring-emerald-500 shadow-2xl scale-[1.02]' : 'hover:scale-[1.01]'}`}
                          onClick={() => setSelectedItem(selectedItem?.name === work.name ? null : work)}
                        >
-                          <img src={(work.image || work.images?.[0] || "")} alt={work.name} className="w-full h-full object-cover transition-all duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105" />
+                          <img src={(work.image || work.images?.[0] || "")} alt={work.name} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" />
                           <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                           <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
                              <div className="w-10 h-10 rounded-full bg-emerald-500 shadow-xl flex items-center justify-center text-white">

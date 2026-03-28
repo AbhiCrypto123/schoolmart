@@ -53,7 +53,11 @@ const Architecture = () => {
 
            {/* IMAGE BLOCK - RIGHT */}
            <div className="lg:w-[500px] rounded-[30px] overflow-hidden relative shadow-lg group">
-              <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1000&q=80" className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 transition-all duration-1000" alt="Architecture" />
+              <img 
+                src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1200&q=80" 
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105 z-0" 
+                alt="Architecture" 
+              />
               <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-all" />
               <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end backdrop-blur-md bg-white/10 p-4 rounded-2xl border border-white/20">
                  <span className="text-[9px] font-black text-white uppercase tracking-widest">Master Planning Case Studies</span>
@@ -132,7 +136,7 @@ const Architecture = () => {
                          className={`relative overflow-hidden rounded-[30px] shadow-xl group cursor-pointer min-h-[300px] border border-gray-300 transition-all duration-500 ${selectedItem?.name === work.name ? 'ring-4 ring-sm-blue shadow-2xl scale-[1.02]' : 'hover:scale-[1.01]'}`}
                          onClick={() => setSelectedItem(selectedItem?.name === work.name ? null : work)}
                        >
-                          <img src={(work.image || work.images?.[0] || "")} alt={work.name} className="w-full h-full object-cover transition-all duration-1000 grayscale group-hover:grayscale-0 group-hover:scale-105" />
+                          <img src={(work.image || work.images?.[0] || "")} alt={work.name} className="w-full h-full object-cover transition-all duration-700 hover:scale-110" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-100 transition-opacity" />
                           <div className="absolute top-6 right-6">
                              <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity">

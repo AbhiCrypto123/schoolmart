@@ -38,7 +38,7 @@ const Furniture = () => {
         {/* PRODUCT SHOWCASE HERO */}
         <section className="pt-4 pb-6 grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
            <div className="lg:col-span-7 rounded-[25px] overflow-hidden relative shadow-lg group border border-gray-100 min-h-[400px]">
-              <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1200&q=80" alt="Furniture" className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 transition-all duration-1000" />
+              <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1200&q=80" alt="Furniture" className="w-full h-full object-cover brightness-90 transition-all duration-1000" />
               <div className="absolute inset-0 bg-sm-blue/10 mix-blend-multiply opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end backdrop-blur-md bg-white/10 p-6 rounded-[20px] border border-white/20">
                  <div>
@@ -129,7 +129,7 @@ const Furniture = () => {
                          onClick={() => setSelectedItem(selectedItem?.name === item.name ? null : item)}
                        >
                           <div className="h-[220px] overflow-hidden p-2 bg-gray-50">
-                              <img src={(item.image || item.images?.[0] || "")} alt={item.name} className="w-full h-full object-cover rounded-[20px] grayscale brightness-90 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-700 group-hover:scale-110" />
+                              <img src={(item.image || item.images?.[0] || "")} alt={item.name} className="w-full h-full object-cover rounded-[20px] brightness-90 group-hover:brightness-100 transition-all duration-700 group-hover:scale-110" />
                           </div>
                           <div className="p-5 flex flex-col border-t border-gray-100">
                              <div className="flex justify-between items-start mb-2">

@@ -57,7 +57,7 @@ const Corporate = () => {
                </div>
                <div className="flex -space-x-8">
                   {partners.map((p, i) => (
-                    <div key={i} className="w-20 h-20 rounded-full border-8 border-gray-50 overflow-hidden shadow-xl hover:rotate-6 transition-all grayscale hover:grayscale-0 cursor-pointer">
+                    <div key={i} className="w-20 h-20 rounded-full border-8 border-gray-50 overflow-hidden shadow-xl hover:rotate-6 transition-all cursor-pointer">
                        <img src={p.img} alt={p.name} className="w-full h-full object-cover" />
                     </div>
                   ))}
@@ -96,7 +96,7 @@ const Corporate = () => {
 
             <div className="flex-1 w-full order-1 lg:order-2">
                <div className="relative rounded-[70px] overflow-hidden shadow-2xl skew-x-1 group-hover:skew-x-0 transition-transform duration-1000 h-[600px] border-8 border-white">
-                  <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1000&q=80" alt="Corporate Office" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 h-full" />
+                  <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1000&q=80" alt="Corporate Office" className="w-full h-full object-cover transition-all duration-1000 h-full" />
                   <div className="absolute inset-0 bg-sm-blue/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute top-10 right-10 flex gap-2">
                      <span className="px-6 py-2 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-black tracking-widest uppercase shadow-lg text-sm-blue border border-blue-50">Headquarters BLR</span>

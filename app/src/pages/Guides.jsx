@@ -81,7 +81,7 @@ const Guides = () => {
            <div className="columns-1 md:columns-3 gap-4 space-y-4">
               {(d.resourceList || []).map((work, i) => (
                  <div key={i} className={`break-inside-avoid relative overflow-hidden rounded-[25px] shadow-sm group cursor-pointer min-h-[300px] border border-gray-100`}>
-                    <img src={work.img} alt={work.t} className="w-full h-full object-cover transition-all duration-700 grayscale hover:grayscale-0" />
+                    <img src={work.img} alt={work.t} className="w-full h-full object-cover transition-all duration-700" />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 to-transparent" />
                     <h3 className="absolute bottom-4 left-4 text-xs font-black text-white uppercase">{work.t}</h3>
                  </div>

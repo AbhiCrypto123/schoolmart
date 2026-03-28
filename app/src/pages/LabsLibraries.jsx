@@ -129,7 +129,7 @@ const LabsLibraries = () => {
                          className={`relative overflow-hidden rounded-[25px] shadow-sm group cursor-pointer border border-gray-300 h-[220px] transition-all duration-500 bg-gray-50 ${selectedItem?.name === work.name ? 'ring-4 ring-emerald-600 shadow-2xl scale-[1.02]' : 'hover:scale-[1.01]'}`}
                          onClick={() => setSelectedItem(selectedItem?.name === work.name ? null : work)}
                        >
-                          <img src={(work.image || work.images?.[0] || "")} alt={work.name} className="w-full h-full object-cover transition-all duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105" />
+                          <img src={(work.image || work.images?.[0] || "")} alt={work.name} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" />
                           <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                           <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
                              <div className="w-10 h-10 rounded-full bg-emerald-600 shadow-xl flex items-center justify-center text-white">

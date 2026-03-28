@@ -72,7 +72,7 @@ const Environments = () => {
 
            {/* IMAGE CARD - PACKED */}
            <div className="hidden lg:block lg:col-span-1 bg-gray-100 rounded-[20px] overflow-hidden relative shadow-sm border border-gray-100">
-              <img src={d.heroImage} className="w-full h-full object-cover grayscale brightness-90 hover:grayscale-0 transition-all duration-700" alt="Space" />
+              <img src={d.heroImage} className="w-full h-full object-cover brightness-90 transition-all duration-700" alt="Space" />
            </div>
 
            {/* SUB-BLOCKS */}

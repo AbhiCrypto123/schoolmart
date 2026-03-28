@@ -50,7 +50,7 @@ const DigitalInfra = () => {
            </div>
            
            <div className="md:col-span-8 rounded-[25px] overflow-hidden relative shadow-lg group border border-gray-100 min-h-[400px]">
-              <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc51?w=1200&q=80" className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 transition-all duration-700 hover:scale-110" alt="Tech" />
+              <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc51?w=1200&q=80" className="w-full h-full object-cover brightness-90 transition-all duration-700 hover:scale-110" alt="Tech" />
               <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-all" />
               <div className="absolute bottom-8 left-8 p-6 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 text-white max-w-md hidden lg:block">
                  <p className="text-[11px] font-black uppercase tracking-widest mb-2 opacity-60">Success Metric</p>
@@ -129,7 +129,7 @@ const DigitalInfra = () => {
                          onClick={() => setSelectedItem(selectedItem?.name === work.name ? null : work)}
                        >
                           <div className="h-[200px] overflow-hidden p-2">
-                             <img src={(work.image || work.images?.[0] || "")} alt={work.name} className="w-full h-full object-cover rounded-[20px] transition-transform duration-700 grayscale group-hover:grayscale-0 group-hover:scale-110" />
+                             <img src={(work.image || work.images?.[0] || "")} alt={work.name} className="w-full h-full object-cover rounded-[20px] transition-transform duration-700 group-hover:scale-110" />
                           </div>
                           <div className="p-5 flex justify-between items-end border-t border-gray-100 bg-white">
                              <div>

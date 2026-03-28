@@ -21,7 +21,7 @@ const Manufacturing = () => {
             <div className="flex-1 bg-[#1A1A1A] rounded-[20px] p-8 text-white relative overflow-hidden group border border-gray-800 shadow-2xl">
                <img 
                  src="https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?w=1200&q=80" 
-                 className="absolute inset-0 w-full h-full object-cover opacity-30 grayscale group-hover:scale-110 transition-transform duration-[3000ms] z-0"
+                 className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-110 transition-transform duration-[3000ms] z-0"
                  alt=""
                />
                <div className="relative z-10">
@@ -66,7 +66,7 @@ const Manufacturing = () => {
             ].map((card, i) => (
                <div key={i} className="bg-white rounded-[20px] p-4 border border-gray-300 shadow-sm flex flex-col group hover:shadow-xl transition-all h-full">
                   <div className="relative aspect-square rounded-[15px] overflow-hidden mb-4 bg-gray-50 border border-gray-300">
-                     <img src={card.img} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" alt={card.t} />
+                     <img src={card.img} className="w-full h-full object-cover transition-all duration-700" alt={card.t} />
                   </div>
                   <div className="flex-grow">
                      <h3 className="text-[12px] font-black uppercase text-gray-900 mb-1 leading-tight">{card.t}</h3>

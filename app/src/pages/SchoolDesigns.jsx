@@ -138,7 +138,7 @@ const SchoolDesigns = () => {
                          className={`relative overflow-hidden rounded-[30px] shadow-xl group cursor-pointer min-h-[300px] border border-gray-300 transition-all duration-500 ${selectedItem?.name === work.name ? 'ring-4 ring-sm-blue shadow-2xl scale-[1.02]' : 'hover:scale-[1.01]'}`}
                          onClick={() => setSelectedItem(selectedItem?.name === work.name ? null : work)}
                        >
-                          <img src={(work.image || work.images?.[0] || "")} alt={work.name} className="w-full h-full object-cover grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" />
+                          <img src={(work.image || work.images?.[0] || "")} alt={work.name} className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-100 transition-opacity" />
                           <div className="absolute top-6 right-6">
                              <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white border border-white/20">

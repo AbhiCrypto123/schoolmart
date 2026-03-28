@@ -126,7 +126,7 @@ const Mathematics = () => {
                          onClick={() => setSelectedItem(selectedItem?.name === work.name ? null : work)}
                        >
                            <div className="h-[220px] overflow-hidden">
-                              <img src={(work.image || work.images?.[0] || "")} alt={work.name} className="w-full h-full object-cover transition-all duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105" />
+                              <img src={(work.image || work.images?.[0] || "")} alt={work.name} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" />
                            </div>
                           <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                           <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">

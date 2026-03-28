@@ -89,7 +89,7 @@ const Catalogues = () => {
               {catalogues.map((item, i) => (
                  <div key={i} className="break-inside-avoid bg-white p-2 rounded-[25px] border border-gray-100 shadow-sm transition-all duration-500 hover:shadow-2xl group cursor-pointer hover:-translate-y-2 relative overflow-hidden">
                     <div className="relative h-48 rounded-[20px] overflow-hidden mb-4">
-                       <img src={item.img} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale" onError={e => e.target.src='https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=600&q=80'} />
+                       <img src={item.img} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onError={e => e.target.src='https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=600&q=80'} />
                        <div className="absolute top-4 right-4 w-8 h-8 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-gray-900 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
                           <Download size={16} />
                        </div>
@@ -119,7 +119,7 @@ const Catalogues = () => {
            </div>
            
            <div className="order-1 lg:order-2 rounded-[30px] overflow-hidden shadow-2xl h-[400px]">
-              <img src={d.infoGrid?.img || 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1000&q=80'} alt="Info" className="w-full h-full object-cover grayscale brightness-75 hover:grayscale-0 transition-all duration-1000" />
+              <img src={d.infoGrid?.img || 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1000&q=80'} alt="Info" className="w-full h-full object-cover brightness-75 hover:brightness-100 transition-all duration-1000" />
            </div>
         </section>
       </div>
