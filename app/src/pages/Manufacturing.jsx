@@ -11,8 +11,9 @@ const stats = [
 
 const Manufacturing = () => {
   const { blocks, loading } = useCMSPage('manufacturing');
-  const blocksList = blocks?.blocks || [];
-  const heroBlock = blocksList.find(b => b.blockType === 'inner_page_hero')?.data || {};
+  const heroBlock = blocks?.inner_page_hero || {};
+  const statsBlock = blocks?.stats || {};
+  const currentStats = statsBlock.stats || stats;
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-sm-blue font-bold tracking-widest uppercase">Loading Manufacturing...</div>;
 
@@ -52,7 +53,7 @@ const Manufacturing = () => {
 
             {/* STATS STRIP - PACKED */}
             <div className="lg:w-[320px] bg-white rounded-[20px] p-8 grid grid-cols-2 gap-4 border border-gray-100 shadow-sm content-center">
-               {stats.map((s, i) => (
+               {currentStats.map((s, i) => (
                   <div key={i} className="flex flex-col items-center justify-center p-3 bg-gray-50 rounded-2xl border border-gray-50 group hover:border-emerald-200 transition-colors">
                      <span className="text-2xl font-black font-heading text-gray-900 leading-none mb-1">{s.value}</span>
                      <span className="text-[6px] font-black tracking-widest text-emerald-600 uppercase">{s.label}</span>

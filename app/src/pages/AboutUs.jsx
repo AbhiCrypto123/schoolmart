@@ -30,44 +30,42 @@ const AboutUs = () => {
               </p>
            </div>
 
-           {/* STAT STACK (SPAN 4) - PACKED */}
-           <div className="lg:col-span-4 flex flex-col gap-3">
-              <div className="flex-1 bg-sm-blue rounded-[25px] p-8 text-white flex flex-col justify-between group overflow-hidden relative border border-blue-400 shadow-xl transition-all hover:scale-[1.02]">
-                 <div className="flex justify-between items-start">
-                    <h3 className="text-[28px] font-black font-heading leading-none uppercase">1500+</h3>
-                    <Users size={32} className="text-white/30 group-hover:text-white transition-colors" />
-                 </div>
-                 <span className="text-[8px] font-black uppercase tracking-[0.2em]">Schools Equipped Pan-India</span>
-              </div>
-              <div className="flex-1 bg-gray-900 rounded-[25px] p-8 text-white flex flex-col justify-between group overflow-hidden relative border border-gray-800 shadow-2xl transition-all hover:scale-[1.02]">
-                 <div className="flex justify-between items-start">
-                    <h3 className="text-[28px] font-black font-heading leading-none uppercase text-sm-blue">22+</h3>
-                    <Award size={32} className="text-white/20 group-hover:text-sm-blue transition-colors" />
-                 </div>
-                 <span className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400">States & UT Presence</span>
-              </div>
-           </div>
+            {/* STAT STACK (SPAN 4) - PACKED */}
+            <div className="lg:col-span-4 flex flex-col gap-3">
+               {(blocks?.stats?.stats || [
+                 { value: '1500+', label: 'Schools Equipped Pan-India' },
+                 { value: '22+', label: 'States & UT Presence' }
+               ]).map((s, i) => (
+                  <div key={i} className={`flex-1 ${i % 2 === 0 ? 'bg-sm-blue' : 'bg-gray-900'} rounded-[25px] p-8 text-white flex flex-col justify-between group overflow-hidden relative border ${i % 2 === 0 ? 'border-blue-400 shadow-xl' : 'border-gray-800 shadow-2xl'} transition-all hover:scale-[1.02]`}>
+                     <div className="flex justify-between items-start text-white">
+                        <h3 className="text-[28px] font-black font-heading leading-none uppercase">{s.value}</h3>
+                        <Users size={32} className="text-white/30 group-hover:text-white transition-colors" />
+                     </div>
+                     <span className="text-[8px] font-black uppercase tracking-[0.2em]">{s.label}</span>
+                  </div>
+               ))}
+            </div>
         </section>
 
-        {/* Compact Strip Menu — Standardized */}
-        <section className="pb-6 px-2">
-           <div className="flex overflow-x-auto gap-12 pb-2 hide-scrollbar justify-start border-b border-gray-100">
-             {['OUR VISION', 'TEAM LEADERSHIP', 'HISTORY', 'IMPACT', 'CERTIFICATIONS'].map((cat, i) => (
-                <button key={i} className="flex-none text-[8px] font-black text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors py-2 uppercase">{cat}</button>
-             ))}
-           </div>
-        </section>
+         {/* Compact Strip Menu — Standardized */}
+         <section className="pb-6 px-2">
+            <div className="flex overflow-x-auto gap-12 pb-2 hide-scrollbar justify-start border-b border-gray-100">
+              {(blocks?.about_hero?.menuStrip || ['OUR VISION', 'TEAM LEADERSHIP', 'HISTORY', 'IMPACT', 'CERTIFICATIONS']).map((cat, i) => (
+                 <button key={i} className="flex-none text-[8px] font-black text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors py-2 uppercase">{cat}</button>
+              ))}
+            </div>
+         </section>
 
         {/* BENTO STORYTELLING - CLOSELY PACKED */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 py-6">
-           {/* PHILOSOPHY */}
-           <div className="lg:col-span-2 bg-white rounded-[25px] p-10 flex flex-col justify-center border border-gray-100 shadow-sm group hover:shadow-xl transition-all">
-              <div className="w-12 h-1 bg-sm-blue mb-6 rounded-full" />
-              <h3 className="text-2xl font-black text-gray-900 font-heading mb-4 uppercase tracking-tighter">Our <span className="text-sm-blue">Philosophy.</span></h3>
-              <p className="text-gray-500 text-[10px] leading-relaxed max-w-sm font-bold uppercase tracking-widest">
-                 We don't just supply furniture; we engineer productivity, safety, and curiosity into every square inch.
-              </p>
-           </div>
+            {/* PHILOSOPHY */}
+            <div className="lg:col-span-2 bg-white rounded-[25px] p-10 flex flex-col justify-center border border-gray-100 shadow-sm group hover:shadow-xl transition-all">
+               <div className="w-12 h-1 bg-sm-blue mb-6 rounded-full" />
+               <h3 className="text-2xl font-black text-gray-900 font-heading mb-4 uppercase tracking-tighter">Our <span className="text-sm-blue">Philosophy.</span></h3>
+               <p className="text-gray-500 text-[10px] leading-relaxed max-w-sm font-bold uppercase tracking-widest">
+                  {blocks?.mission_vision?.mission || "We don't just supply furniture; we engineer productivity, safety, and curiosity into every square inch."}
+               </p>
+            </div>
 
            {/* TEAM PHOTO */}
            <div className="lg:col-span-2 rounded-[25px] overflow-hidden shadow-2xl group min-h-[300px]">

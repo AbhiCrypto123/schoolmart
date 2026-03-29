@@ -212,23 +212,23 @@ const Navbar = () => {
         {/* Scrolling Ticker */}
         <div className="flex-1 overflow-hidden ml-40 h-full relative">
           <div className="ticker-wrapper h-full flex items-center gap-20 whitespace-nowrap">
-            {[
+            {(navCMS?.ticker?.items || [
               "Digital Transformation Summit: 15 May 2026",
               "New AI-Powered Learning Stations now available for pre-order",
               "Join our upcoming Campus Design Webinar on 15th April 2026",
               "Annual Sports Meet Registrations closing soon",
               "New Sustainable Furniture Catalogue Launched"
-            ].map((text, i) => (
+            ]).map((text, i) => (
               <span key={`original-${i}`} className="text-white text-[10px] font-bold uppercase tracking-widest">{text}</span>
             ))}
             {/* Duplicated for seamless loop */}
-            {[
+            {(navCMS?.ticker?.items || [
               "Digital Transformation Summit: 15 May 2026",
               "New AI-Powered Learning Stations now available for pre-order",
               "Join our upcoming Campus Design Webinar on 15th April 2026",
               "Annual Sports Meet Registrations closing soon",
               "New Sustainable Furniture Catalogue Launched"
-            ].map((text, i) => (
+            ]).map((text, i) => (
               <span key={`duplicate-${i}`} className="text-white text-[10px] font-bold uppercase tracking-widest">{text}</span>
             ))}
           </div>

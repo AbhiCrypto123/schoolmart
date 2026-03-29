@@ -148,6 +148,9 @@ const ResourceTiles = () => {
   const cmsTiles = blocks?.tiles?.tiles;
   const cmsSolutions = blocks?.solutions?.items;
   const cmsTicker = blocks?.ticker;
+  const sidebarTrending = blocks?.sidebar_trending || {};
+  const sidebarResources = blocks?.sidebar_resources || {};
+  const sidebarBanners = blocks?.sidebar_banners || {};
   const activeTiles = (cmsTiles?.length ? cmsTiles : tiles).map((t, i) => ({
     ...t,
     height: t.height || ['h-64','h-48','h-56','h-72','h-52','h-64','h-48','h-60','h-56','h-48','h-52','h-64'][i % 12],
@@ -290,7 +293,7 @@ const ResourceTiles = () => {
                 <h3 className="text-white font-bold text-center uppercase tracking-wide text-xs">TRENDING</h3>
               </div>
               <div className="px-3 py-1">
-                {['Schools for Sale / Lease', 'Fundraising', 'Partnerships', 'Workshops'].map((item) => (
+                {(sidebarTrending.items?.length ? sidebarTrending.items : ['Schools for Sale / Lease', 'Fundraising', 'Partnerships', 'Workshops']).map((item) => (
                   <Link key={item} to="#" className="block text-[10px] font-bold text-gray-700 hover:text-sm-blue py-3 border-b border-gray-200 last:border-0 uppercase tracking-wider">
                     {item}
                   </Link>
@@ -312,7 +315,7 @@ const ResourceTiles = () => {
                 <h3 className="text-white font-bold text-center uppercase tracking-wide text-xs">Resources</h3>
               </div>
               <div className="px-4 py-1">
-                {[
+                {(sidebarResources.items?.length ? sidebarResources.items : [
                   'Complete guide to digitization',
                   'Setting Up A School In India',
                   'Product catalog 2025',
@@ -324,7 +327,7 @@ const ResourceTiles = () => {
                   'Library trends',
                   'JOB OPENINGS',
                   'Join as Influencers',
-                ].map((item) => (
+                ]).map((item) => (
                   <Link key={item} to="#" className="block text-[10px] font-bold text-gray-700 hover:text-sm-blue py-2.5 border-b border-gray-200 last:border-0 uppercase tracking-widest">
                     {item}
                   </Link>

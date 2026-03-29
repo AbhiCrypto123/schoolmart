@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useCMSPage } from '../hooks/useCMSBlock';
 import { getProducts } from '../services/api';
 import { Link } from 'react-router-dom';
-import { FlaskConical, Beaker, Library, Microscope, Archive, ArrowRight, ArrowUpRight, Download, Stars, Eye, FileText, CheckCircle2, Layers } from 'lucide-react';
+import { FlaskConical, Beaker, Atom, Microscope, Dna, Zap, ArrowRight, ArrowUpRight, Download, Eye, FileText, Activity, Layers, CheckCircle2, Stars } from 'lucide-react';
 import InlineQuickView from '../components/InlineQuickView';
 import CMSMedia from '../components/ui/CMSMedia';
 
@@ -28,11 +28,10 @@ const LabsLibraries = () => {
     });
   }, []);
 
-  const blocksList = blocks?.blocks || [];
-  const heroBlock = blocksList.find(b => b.blockType === 'inner_page_hero')?.data || {};
-  const sidebarCategories = blocksList.find(b => b.blockType === 'sidebar_categories')?.data || {};
-  const sidebarResources = blocksList.find(b => b.blockType === 'sidebar_resources')?.data || {};
-  const sidebarTrending = blocksList.find(b => b.blockType === 'sidebar_trending')?.data || {};
+  const heroBlock = blocks?.inner_page_hero || {};
+  const sidebarCategories = blocks?.sidebar_categories || {};
+  const sidebarResources = blocks?.sidebar_resources || {};
+  const sidebarTrending = blocks?.sidebar_trending || {};
   
   const cats = sidebarCategories.categories || [];
   const filteredItems = items.filter(p => !selectedCat || (p.subcategory || '').toUpperCase() === selectedCat.toUpperCase());
@@ -90,33 +89,33 @@ const LabsLibraries = () => {
                  </div>
               </div>
            
-                 {/* Dynamic Resources & Trending Blocks */}
-                 {blocks?.sidebar_resources?.data?.items?.length > 0 && (
-                    <div className="mt-8 p-6 bg-white rounded-[25px] border border-gray-200 shadow-sm">
-                       <span className="text-[8px] font-black text-gray-400 tracking-[0.2em] uppercase mb-4 block">Resources</span>
-                       <div className="space-y-3">
-                          {blocks.sidebar_resources.data.items.map((item, i) => (
-                             <div key={i} className="flex items-center gap-3">
-                                <FileText size={14} className="text-blue-600" />
-                                <span className="text-[9px] font-black uppercase text-gray-900 leading-tight">{item}</span>
-                             </div>
-                          ))}
-                       </div>
-                    </div>
-                 )}
-                 {blocks?.sidebar_trending?.data?.items?.length > 0 && (
-                    <div className="mt-4 p-6 bg-gray-900 rounded-[25px] border border-gray-800 shadow-xl">
-                       <span className="text-[8px] font-black text-blue-400 tracking-[0.2em] uppercase mb-4 block">Trending Now</span>
-                       <div className="space-y-3">
-                          {blocks.sidebar_trending.data.items.map((item, i) => (
-                             <div key={i} className="flex items-center gap-3">
-                                <Stars size={14} className="text-yellow-400" />
-                                <span className="text-[9px] font-black uppercase text-white leading-tight">{item}</span>
-                             </div>
-                          ))}
-                       </div>
-                    </div>
-                 )}</aside>
+                  {/* Dynamic Resources & Trending Blocks */}
+                  {sidebarResources?.items?.length > 0 && (
+                     <div className="mt-8 p-6 bg-white rounded-[25px] border border-gray-200 shadow-sm">
+                        <span className="text-[8px] font-black text-gray-400 tracking-[0.2em] uppercase mb-4 block">Resources</span>
+                        <div className="space-y-3">
+                           {sidebarResources.items.map((item, i) => (
+                              <div key={i} className="flex items-center gap-3">
+                                 <FileText size={14} className="text-blue-600" />
+                                 <span className="text-[9px] font-black uppercase text-gray-900 leading-tight">{item}</span>
+                              </div>
+                           ))}
+                        </div>
+                     </div>
+                  )}
+                  {sidebarTrending?.items?.length > 0 && (
+                     <div className="mt-4 p-6 bg-gray-900 rounded-[25px] border border-gray-800 shadow-xl">
+                        <span className="text-[8px] font-black text-blue-400 tracking-[0.2em] uppercase mb-4 block">Trending Now</span>
+                        <div className="space-y-3">
+                           {sidebarTrending.items.map((item, i) => (
+                              <div key={i} className="flex items-center gap-3">
+                                 <Stars size={14} className="text-yellow-400" />
+                                 <span className="text-[9px] font-black uppercase text-white leading-tight">{item}</span>
+                              </div>
+                           ))}
+                        </div>
+                     </div>
+                  )}</aside>
 
            {/* MAIN CONTENT GALLERY - GOOGLE IMAGES STYLE */}
            <div className="flex-grow">

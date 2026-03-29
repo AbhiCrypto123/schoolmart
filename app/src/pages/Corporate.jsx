@@ -10,8 +10,9 @@ const partners = [
 
 const Corporate = () => {
   const { blocks, loading } = useCMSPage('corporate');
-  const blocksList = blocks?.blocks || [];
-  const heroBlock = blocksList.find(b => b.blockType === 'inner_page_hero')?.data || {};
+  const heroBlock = blocks?.inner_page_hero || {};
+  const partnerBlock = blocks?.partners || {};
+  const currentPartners = partnerBlock.items || partners;
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-sm-blue font-bold tracking-widest uppercase">Loading Corporate...</div>;
 
@@ -65,16 +66,18 @@ const Corporate = () => {
                   <h4 className="text-xl font-black text-gray-900 mb-2 uppercase font-heading tracking-tight leading-none">Our High-Impact Allies.</h4>
                   <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest leading-loose">Serving 50,000+ students monthly.</p>
                </div>
-               <div className="flex -space-x-8">
-                  {partners.map((p, i) => (
-                    <div key={i} className="w-20 h-20 rounded-full border-8 border-gray-50 overflow-hidden shadow-xl hover:rotate-6 transition-all cursor-pointer">
-                       <img src={p.img} alt={p.name} className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                  <div className="w-20 h-20 rounded-full border-8 border-gray-50 bg-sm-blue flex items-center justify-center text-white text-xs font-black shadow-xl hover:-rotate-6 transition-all cursor-pointer">
-                     +150
-                  </div>
-               </div>
+                <div className="flex -space-x-8">
+                   {currentPartners.map((p, i) => (
+                     <div key={i} className="w-20 h-20 rounded-full border-8 border-gray-50 overflow-hidden shadow-xl hover:rotate-6 transition-all cursor-pointer">
+                        <img src={typeof p === 'string' ? p : p.img} alt={typeof p === 'string' ? `Partner ${i}` : p.name} className="w-full h-full object-cover" />
+                     </div>
+                   ))}
+                   {currentPartners.length > 3 && (
+                     <div className="w-20 h-20 rounded-full border-8 border-gray-50 bg-sm-blue flex items-center justify-center text-white text-xs font-black shadow-xl hover:-rotate-6 transition-all cursor-pointer">
+                        +{currentPartners.length - 3}
+                     </div>
+                   )}
+                </div>
             </div>
 
          </div>
