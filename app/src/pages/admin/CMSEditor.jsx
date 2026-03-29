@@ -128,11 +128,16 @@ const BlockForms = {
   ),
 
   page_hero: ({ data, set }) => (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <Field label="Page Title"><TextInput value={data.title} onChange={v => set('title', v)} placeholder="Page Title" /></Field>
       <Field label="Sub-title"><TextInput value={data.subtitle} onChange={v => set('subtitle', v)} placeholder="Page subtitle..." /></Field>
       <Field label="Background Gradient" hint="Tailwind from-to classes"><TextInput value={data.bgGradient} onChange={v => set('bgGradient', v)} placeholder="from-blue-900 to-blue-700" /></Field>
-      <ImageUpload label="Hero Image" value={data.img} onChange={v => set('img', v)} />
+      <div className="flex gap-2 mb-2">
+        {['image', 'video'].map(mode => (
+          <button key={mode} onClick={() => set('mediaType', mode)} className={`flex-1 py-1.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-all ${data.mediaType === mode || (!data.mediaType && mode === 'image') ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-400 border-gray-200'}`}>{mode}</button>
+        ))}
+      </div>
+      <MediaUpload label="Hero Media" value={data.mediaUrl || data.img} onChange={v => set('mediaUrl', v)} />
     </div>
   ),
 
@@ -299,11 +304,16 @@ const BlockForms = {
   ),
 
   about_hero: ({ data, set }) => (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <Field label="Title"><TextInput value={data.title} onChange={v => set('title', v)} /></Field>
       <Field label="Subtitle"><TextInput value={data.subtitle} onChange={v => set('subtitle', v)} /></Field>
       <Field label="Description"><TextArea value={data.description} onChange={v => set('description', v)} rows={4} /></Field>
-      <ImageUpload label="Hero Image" value={data.img} onChange={v => set('img', v)} />
+      <div className="flex gap-2 mb-2">
+        {['image', 'video'].map(mode => (
+          <button key={mode} onClick={() => set('mediaType', mode)} className={`flex-1 py-1.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-all ${data.mediaType === mode || (!data.mediaType && mode === 'image') ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-400 border-gray-200'}`}>{mode}</button>
+        ))}
+      </div>
+      <MediaUpload label="Hero Media" value={data.mediaUrl || data.img} onChange={v => set('mediaUrl', v)} />
     </div>
   ),
 
@@ -406,11 +416,17 @@ const BlockForms = {
 
   catalogues_page_content: ({ data, set }) => (
     <div className="space-y-6">
-      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-4">
         <h4 className="font-bold text-gray-800 text-sm">Top Library Hero</h4>
         <Field label="Badge"><TextInput value={data.libraryHero?.badge} onChange={v => set('libraryHero', { ...data.libraryHero, badge: v })} /></Field>
         <Field label="Title HTML (supports <br/> and span)"><TextArea value={data.libraryHero?.titleHtml} onChange={v => set('libraryHero', { ...data.libraryHero, titleHtml: v })} rows={2} /></Field>
         <Field label="Subtitle"><TextArea value={data.libraryHero?.subtitle} onChange={v => set('libraryHero', { ...data.libraryHero, subtitle: v })} rows={2} /></Field>
+        <div className="flex gap-2">
+          {['image', 'video'].map(mode => (
+            <button key={mode} onClick={() => set('libraryHero', { ...data.libraryHero, mediaType: mode })} className={`flex-1 py-1.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-all ${data.libraryHero?.mediaType === mode || (!data.libraryHero?.mediaType && mode === 'image') ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-400 border-gray-200'}`}>{mode}</button>
+          ))}
+        </div>
+        <MediaUpload label="Hero Media" value={data.libraryHero?.mediaUrl || data.libraryHero?.img} onChange={v => set('libraryHero', { ...data.libraryHero, mediaUrl: v })} />
       </div>
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
         <h4 className="font-bold text-gray-800 text-sm">Dark Action Strip</h4>
@@ -446,12 +462,17 @@ const BlockForms = {
 
   environments_page_content: ({ data, set }) => (
     <div className="space-y-6">
-      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-4">
         <h4 className="font-bold text-gray-800 text-sm">Hero Section</h4>
         <Field label="Badge"><TextInput value={data.hero?.badge} onChange={v => set('hero', { ...data.hero, badge: v })} /></Field>
         <Field label="Title HTML"><TextArea value={data.hero?.titleHtml} onChange={v => set('hero', { ...data.hero, titleHtml: v })} rows={2} /></Field>
         <Field label="Subtitle"><TextArea value={data.hero?.subtitle} onChange={v => set('hero', { ...data.hero, subtitle: v })} rows={2} /></Field>
-        <ImageUpload label="Hero Image" value={data.heroImage} onChange={v => set('heroImage', v)} />
+        <div className="flex gap-2">
+          {['image', 'video'].map(mode => (
+            <button key={mode} onClick={() => set('hero', { ...data.hero, mediaType: mode })} className={`flex-1 py-1.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-all ${data.hero?.mediaType === mode || (!data.hero?.mediaType && mode === 'image') ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-400 border-gray-200'}`}>{mode}</button>
+          ))}
+        </div>
+        <MediaUpload label="Hero Media" value={data.hero?.mediaUrl || data.heroImage} onChange={v => set('hero', { ...data.hero, mediaUrl: v })} />
       </div>
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
         <h4 className="font-bold text-gray-800 text-sm">Dark Action Card</h4>
@@ -498,11 +519,17 @@ const BlockForms = {
 
   guides_page_content: ({ data, set }) => (
     <div className="space-y-6">
-      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-4">
         <h4 className="font-bold text-gray-800 text-sm">Top Hero</h4>
         <Field label="Badge"><TextInput value={data.hero?.badge} onChange={v => set('hero', { ...data.hero, badge: v })} /></Field>
         <Field label="Title HTML"><TextArea value={data.hero?.titleHtml} onChange={v => set('hero', { ...data.hero, titleHtml: v })} rows={2} /></Field>
         <Field label="Subtitle"><TextArea value={data.hero?.subtitle} onChange={v => set('hero', { ...data.hero, subtitle: v })} rows={2} /></Field>
+        <div className="flex gap-2">
+          {['image', 'video'].map(mode => (
+            <button key={mode} onClick={() => set('hero', { ...data.hero, mediaType: mode })} className={`flex-1 py-1.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-all ${data.hero?.mediaType === mode || (!data.hero?.mediaType && mode === 'image') ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-400 border-gray-200'}`}>{mode}</button>
+          ))}
+        </div>
+        <MediaUpload label="Hero Media" value={data.hero?.mediaUrl} onChange={v => set('hero', { ...data.hero, mediaUrl: v })} />
       </div>
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
         <h4 className="font-bold text-gray-800 text-sm">Action Cards (3 Max)</h4>
@@ -550,13 +577,18 @@ const BlockForms = {
 
   inner_page_hero: ({ data, set }) => (
     <div className="space-y-6">
-      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-4">
         <Field label="Theme Identifier (e.g. Furniture, Sports)"><TextInput value={data.theme} onChange={v => set('theme', v)} placeholder="Furniture" /></Field>
         <Field label="Badge"><TextInput value={data.badge} onChange={v => set('badge', v)} placeholder="2025 Collection" /></Field>
         <Field label="Icon Logo Name (e.g. Sofa, Shield)"><TextInput value={data.badgeIcon} onChange={v => set('badgeIcon', v)} placeholder="Sofa" /></Field>
         <Field label="Title HTML"><TextArea value={data.titleHtml} onChange={v => set('titleHtml', v)} rows={3} /></Field>
         <Field label="Subtitle"><TextArea value={data.subtitle} onChange={v => set('subtitle', v)} rows={2} /></Field>
-        <ImageUpload label="Hero Image" value={data.img} onChange={v => set('img', v)} />
+        <div className="flex gap-2">
+          {['image', 'video'].map(mode => (
+            <button key={mode} onClick={() => set('mediaType', mode)} className={`flex-1 py-1.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-all ${data.mediaType === mode || (!data.mediaType && mode === 'image') ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-400 border-gray-200'}`}>{mode}</button>
+          ))}
+        </div>
+        <MediaUpload label="Hero Media" value={data.mediaUrl || data.img} onChange={v => set('mediaUrl', v)} />
       </div>
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
          <h4 className="font-bold text-gray-800 text-sm">Dark Block</h4>
