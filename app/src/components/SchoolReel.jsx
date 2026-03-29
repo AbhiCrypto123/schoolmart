@@ -24,7 +24,8 @@ const slides = [
 
 const INTERVAL_MS = 2000; // ~30 seconds total for 15 slides
 
-const SchoolReel = () => {
+const SchoolReel = ({ slides: customSlides }) => {
+    const activeSlides = (customSlides && customSlides.length > 0) ? customSlides : slides;
     const [current, setCurrent] = useState(0);
     const [prev, setPrev] = useState(null);
     const [transitioning, setTransitioning] = useState(false);
@@ -33,7 +34,7 @@ const SchoolReel = () => {
     const goNext = (idx) => {
         setPrev(idx);
         setTransitioning(true);
-        const next = (idx + 1) % slides.length;
+        const next = (idx + 1) % activeSlides.length;
         setCurrent(next);
         setTimeout(() => {
             setPrev(null);
@@ -55,7 +56,7 @@ const SchoolReel = () => {
     useEffect(() => {
         clearInterval(timerRef.current);
         timerRef.current = setInterval(() => {
-            setCurrent((c) => (c + 1) % slides.length);
+            setCurrent((c) => (c + 1) % activeSlides.length);
         }, INTERVAL_MS);
         return () => clearInterval(timerRef.current);
     }, []);
@@ -63,7 +64,7 @@ const SchoolReel = () => {
     return (
         <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-900 shadow-2xl">
             {/* Slides */}
-            {slides.map((slide, i) => (
+            {activeSlides.map((slide, i) => (
                 <div
                     key={i}
                     className="absolute inset-0 transition-opacity duration-1000"
@@ -89,11 +90,11 @@ const SchoolReel = () => {
                     {/* Animated REC dot */}
                     <span className="flex-shrink-0 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                     <span className="text-white/90 text-xs font-semibold tracking-wide drop-shadow">
-                        {slides[current].caption}
+                        {activeSlides[current].caption}
                     </span>
                 </div>
                 <span className="text-white/50 text-[10px] font-mono">
-                    {String(current + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
+                    {String(current + 1).padStart(2, '0')} / {String(activeSlides.length).padStart(2, '0')}
                 </span>
             </div>
 
@@ -102,15 +103,14 @@ const SchoolReel = () => {
                 <div
                     className="h-full bg-sm-orange"
                     style={{
-                        width: `${((current + 1) / slides.length) * 100}%`,
+                        width: `${((current + 1) / activeSlides.length) * 100}%`,
                         transition: 'width 0.5s ease',
                     }}
                 />
             </div>
 
-            {/* Slide dots */}
             <div className="absolute top-3 right-3 z-10 flex gap-1">
-                {slides.map((_, i) => (
+                {activeSlides.map((_, i) => (
                     <button
                         key={i}
                         onClick={() => setCurrent(i)}

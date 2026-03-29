@@ -23,7 +23,7 @@ const QuickView = ({ isOpen, onClose, data }) => {
             </div>
             <div>
               <h2 className="text-xl font-black text-gray-900 uppercase tracking-tighter leading-none">{data.title || data.t || data.name}</h2>
-              <p className="text-[10px] font-bold text-sm-blue uppercase tracking-[0.2em] mt-1.5">{data.cat || data.c || 'Resource Overview'}</p>
+              <p className="text-[10px] font-bold text-sm-blue uppercase tracking-[0.2em] mt-1.5">{data.cat || data.c || data.subcategory || data.category || 'Resource Overview'}</p>
             </div>
           </div>
           <button 
@@ -41,9 +41,9 @@ const QuickView = ({ isOpen, onClose, data }) => {
             <div className="lg:w-2/5 p-6 lg:p-8 bg-gray-50 border-r border-gray-100 space-y-6">
               <div className="aspect-[4/5] rounded-[25px] overflow-hidden shadow-2xl border-4 border-white">
                 <img 
-                  src={data.img} 
-                  alt={data.title} 
-                  className="w-full h-full object-cover grayscale-0"
+                  src={data.img || data.image || data.images?.[0]} 
+                  alt={data.title || data.name} 
+                  className="w-full h-full object-cover"
                 />
               </div>
               

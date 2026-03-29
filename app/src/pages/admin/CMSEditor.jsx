@@ -5,6 +5,7 @@ import { getAllPages, getPage, updateBlock, addBlock, deleteBlock } from '../../
 import { ChevronDown, ChevronRight, Trash2, Plus, Eye, EyeOff, Save, GripVertical, Image as ImageIcon, Link2, Type, List, ToggleLeft, Upload, Layers } from 'lucide-react';
 import ProductManager from './ProductManager';
 import ImageUpload from '../../components/admin/ImageUpload';
+import MediaUpload from '../../components/admin/MediaUpload';
 
 // ── Reusable form field helpers ───────────────────────────────────────────────
 const Field = ({ label, children, hint }) => (
@@ -72,12 +73,51 @@ const BlockForms = {
   ),
 
   hero: ({ data, set }) => (
-    <div className="space-y-3">
+    <div className="space-y-4">
+      <SectionTitle>Text Content</SectionTitle>
       <Field label="Badge Text"><TextInput value={data.badge} onChange={v => set('badge', v)} placeholder="Price · Quality · Range Promise" /></Field>
       <Field label="Headline 1"><TextInput value={data.headline1} onChange={v => set('headline1', v)} placeholder="FURNITURE" /></Field>
       <Field label="Headline 2"><TextInput value={data.headline2} onChange={v => set('headline2', v)} placeholder="QUICK DELIVERY" /></Field>
       <Field label="Sub-line 1"><TextInput value={data.subline1} onChange={v => set('subline1', v)} placeholder="Order Now" /></Field>
       <Field label="Sub-line 2"><TextInput value={data.subline2} onChange={v => set('subline2', v)} placeholder="Kindergarten · Highschools · Labs · Libraries" /></Field>
+      
+      <SectionTitle>Visual Banner Mode</SectionTitle>
+      <div className="flex gap-2 mb-4">
+        {['slideshow', 'image', 'video'].map(mode => (
+          <button
+            key={mode}
+            onClick={() => set('mediaType', mode)}
+            className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold uppercase tracking-wider border transition-all ${data.mediaType === mode || (!data.mediaType && mode === 'slideshow') ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-gray-400 border-gray-200 hover:border-blue-200'}`}
+          >
+            {mode}
+          </button>
+        ))}
+      </div>
+
+      {(data.mediaType === 'image' || data.mediaType === 'video') ? (
+        <MediaUpload 
+          label={data.mediaType === 'video' ? "Hero Video" : "Hero Image"} 
+          value={data.mediaUrl} 
+          onChange={v => set('mediaUrl', v)} 
+        />
+      ) : (
+        <div className="space-y-3">
+          <SectionTitle>Slideshow Slides (School Reel)</SectionTitle>
+          {(data.slides || []).map((slide, i) => (
+            <div key={i} className="border border-gray-200 rounded-xl p-3 space-y-2 bg-gray-50/50">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-gray-500">Slide {i + 1}</span>
+                <button onClick={() => set('slides', data.slides.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={13}/></button>
+              </div>
+              <TextInput value={slide.caption} onChange={v => { const s = [...data.slides]; s[i] = { ...s[i], caption: v }; set('slides', s); }} placeholder="Slide Caption" />
+              <ImageUpload label="Slide Image" value={slide.src} onChange={v => { const s = [...data.slides]; s[i] = { ...s[i], src: v }; set('slides', s); }} />
+            </div>
+          ))}
+          <button onClick={() => set('slides', [...(data.slides || []), { src: '', caption: '' }])}
+            className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline mt-1"><Plus size={13} /> Add Slide</button>
+        </div>
+      )}
+
       <SectionTitle>Button 1</SectionTitle>
       <Field label="Label"><TextInput value={data.cta1?.label} onChange={v => set('cta1', { ...data.cta1, label: v })} placeholder="Shop Furniture →" /></Field>
       <Field label="Link (path)"><TextInput value={data.cta1?.path} onChange={v => set('cta1', { ...data.cta1, path: v })} placeholder="/furniture" /></Field>

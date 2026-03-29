@@ -59,10 +59,27 @@ const BannerSection = () => {
               </div>
             </div>
 
-            {/* Right — School Reel */}
+            {/* Right — School Reel / Image / Video */}
             <div className="flex-1 p-4 lg:p-5 flex items-center">
-              <div className="w-full" style={{ height: '260px' }}>
-                <SchoolReel />
+              <div className="w-full relative h-[260px] rounded-2xl overflow-hidden shadow-2xl bg-gray-900/40">
+                {d.mediaType === 'video' ? (
+                  <video 
+                    src={d.mediaUrl} 
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline 
+                    className="w-full h-full object-cover" 
+                  />
+                ) : d.mediaType === 'image' ? (
+                  <img 
+                    src={d.mediaUrl} 
+                    className="w-full h-full object-cover" 
+                    alt="Hero Banner" 
+                  />
+                ) : (
+                  <SchoolReel slides={d.slides} />
+                )}
               </div>
             </div>
           </div>
