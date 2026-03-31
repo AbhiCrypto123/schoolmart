@@ -47,6 +47,7 @@ export const updatePage = (slug, data) => request('PUT', `/cms/${slug}`, data);
 export const updateBlock = (slug, blockId, data) => request('PATCH', `/cms/${slug}/block/${blockId}`, data);
 export const addBlock = (slug, data) => request('POST', `/cms/${slug}/block`, data);
 export const deleteBlock = (slug, blockId) => request('DELETE', `/cms/${slug}/block/${blockId}`);
+export const standardizeAllBlocks = () => request('POST', '/cms/standardize');
 
 // ─── Products ────────────────────────────────
 export const getProducts = (params = {}) => {

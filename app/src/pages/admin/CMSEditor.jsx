@@ -1,7 +1,7 @@
 // src/pages/admin/CMSEditor.jsx
 // Form-field based CMS editor — proper inputs for every block type
 import { useEffect, useState } from 'react';
-import { getAllPages, getPage, updateBlock, addBlock, deleteBlock } from '../../services/api';
+import { getAllPages, getPage, updateBlock, addBlock, deleteBlock, standardizeAllBlocks } from '../../services/api';
 import { clearCMSCache } from '../../hooks/useCMSBlock';
 import { ChevronDown, ChevronRight, Trash2, Plus, Eye, EyeOff, Save, GripVertical, Image as ImageIcon, Link2, Type, List, ToggleLeft, Upload, Layers } from 'lucide-react';
 import ProductManager from './ProductManager';
@@ -1140,8 +1140,24 @@ export default function CMSEditor() {
       {/* Page Selector Grid */}
       {!selected && (
         <div>
-          <h2 className="text-lg font-black text-gray-800 mb-1">Choose a page to edit</h2>
-          <p className="text-sm text-gray-400 mb-6">Select any page below to edit its content blocks with form fields</p>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-lg font-black text-gray-800 mb-1">Choose a page to edit</h2>
+              <p className="text-sm text-gray-400">Select any page below to edit its content blocks with form fields</p>
+            </div>
+            <button 
+              onClick={() => {
+                if(!confirm('This will automatically add missing sections to all 17 pages. Continue?')) return;
+                setLoading(true);
+                standardizeAllBlocks()
+                  .then(() => { alert('Standardization complete! All pages are now ready.'); window.location.reload(); })
+                  .catch(err => { alert(err.message); setLoading(false); });
+              }}
+              className="px-4 py-2 bg-blue-600 text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/20"
+            >
+              🔄 Fix All Page Sections
+            </button>
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {pages.map(p => (
               <button key={p.pageSlug} onClick={() => setSelected(p.pageSlug)}
