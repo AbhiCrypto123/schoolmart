@@ -289,18 +289,19 @@ const BlockForms = {
             </div>
             <div className="grid grid-cols-2 gap-2">
               <TextInput value={item.title} onChange={v => { const s = [...(data.items || [])]; s[i] = { ...s[i], title: v }; set('items', s); }} placeholder="Card Title" />
-              <TextInput value={item.subtitle} onChange={v => { const s = [...(data.items || [])]; s[i] = { ...s[i], subtitle: v }; set('items', s); }} placeholder="Subtitle / Short Description" />
+              <TextInput value={item.price} onChange={v => { const s = [...(data.items || [])]; s[i] = { ...s[i], price: v }; set('items', s); }} placeholder="Price (e.g. 3,500.00)" />
             </div>
-            <Field label="Link Path">
-                <TextInput value={item.path} onChange={v => { const s = [...(data.items || [])]; s[i] = { ...s[i], path: v }; set('items', s); }} placeholder="/page-link" />
-            </Field>
-            <ImageUpload label="Background Image" value={item.img} onChange={v => { const s = [...(data.items || [])]; s[i] = { ...s[i], img: v }; set('items', s); }} />
+            <div className="grid grid-cols-2 gap-2">
+              <TextInput value={item.path} onChange={v => { const s = [...(data.items || [])]; s[i] = { ...s[i], path: v }; set('items', s); }} placeholder="Product Details Path (/page-link)" />
+              <TextInput value={item.cartLink} onChange={v => { const s = [...(data.items || [])]; s[i] = { ...s[i], cartLink: v }; set('items', s); }} placeholder="Add to Cart Link (URL)" />
+            </div>
+            <ImageUpload label="Product Image" value={item.img} onChange={v => { const s = [...(data.items || [])]; s[i] = { ...s[i], img: v }; set('items', s); }} />
           </div>
         ))}
       </div>
-      <button onClick={() => set('items', [...(data.items || []), { title: '', subtitle: '', img: '', path: '#' }])}
+      <button onClick={() => set('items', [...(data.items || []), { title: '', price: '', img: '', path: '#', cartLink: '#' }])}
         className="flex items-center gap-1 text-blue-600 text-[10px] font-black uppercase tracking-widest hover:underline mt-1 bg-blue-50 px-3 py-2 rounded-lg w-full justify-center border border-dashed border-blue-200">
-        <Plus size={13} /> Add Slide Card
+        <Plus size={13} /> Add Product Card
       </button>
     </div>
   ),

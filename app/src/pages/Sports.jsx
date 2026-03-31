@@ -37,6 +37,12 @@ const Sports = () => {
   const cats = sidebarCategories.categories || [];
   const filteredItems = items.filter(p => !selectedCat || (p.subcategory || '').toUpperCase() === selectedCat.toUpperCase());
 
+  useEffect(() => {
+    if (!loading && cats.length > 0 && !selectedCat) {
+      setSelectedCat(cats[0]);
+    }
+  }, [loading, cats, selectedCat]);
+
   if (loading) return <div className="min-h-screen flex items-center justify-center text-sm-blue font-bold tracking-widest uppercase">Loading Sports Infrastructure...</div>;
 
 
