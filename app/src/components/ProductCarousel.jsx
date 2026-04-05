@@ -100,7 +100,7 @@ const ProductCarousel = () => {
                                     <img 
                                         src={formatImgUrl(item.img)} 
                                         alt={item.title} 
-                                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+                                        className="w-full h-full object-contain p-4 transition-transform duration-1000 group-hover:scale-105" 
                                     />
                                 </Link>
                                 

@@ -39,25 +39,25 @@ const QuickView = ({ isOpen, onClose, data }) => {
           <div className="flex flex-col lg:flex-row min-h-full">
             {/* Left — Visual Showcase (40%) */}
             <div className="lg:w-2/5 p-6 lg:p-8 bg-gray-50 border-r border-gray-100 space-y-6">
-              <div className="aspect-[4/5] rounded-[25px] overflow-hidden shadow-2xl border-4 border-white">
+              <div className="aspect-[4/5] rounded-[25px] overflow-hidden shadow-2xl border-4 border-white bg-white flex items-center justify-center p-8">
                 <img 
                   src={data.img || data.image || data.images?.[0]} 
                   alt={data.title || data.name} 
-                  className="w-full h-full object-cover"
+                  className="max-w-full max-h-full object-contain transition-transform duration-700 hover:scale-110"
                 />
               </div>
               
               <div className="grid grid-cols-3 gap-3">
                  {data.images?.length > 1 ? (
                    data.images.slice(1, 4).map((imgUrl, i) => (
-                      <div key={i} className="aspect-square rounded-xl bg-white border border-gray-200 overflow-hidden shadow-sm group cursor-pointer">
-                         <img src={imgUrl} className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity" />
+                      <div key={i} className="aspect-square rounded-xl bg-white border border-gray-200 overflow-hidden shadow-sm group cursor-pointer p-2 flex items-center justify-center">
+                         <img src={imgUrl} className="max-w-full max-h-full object-contain opacity-50 group-hover:opacity-100 transition-opacity" />
                       </div>
                    ))
                  ) : (
                    [1,2,3].map(i => (
-                      <div key={i} className="aspect-square rounded-xl bg-white border border-gray-200 overflow-hidden shadow-sm group cursor-pointer">
-                         <img src={data.img || data.images?.[0]} className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity" />
+                      <div key={i} className="aspect-square rounded-xl bg-white border border-gray-200 overflow-hidden shadow-sm group cursor-pointer p-2 flex items-center justify-center">
+                         <img src={data.img || data.images?.[0]} className="max-w-full max-h-full object-contain opacity-50 group-hover:opacity-100 transition-opacity" />
                       </div>
                    ))
                  )}

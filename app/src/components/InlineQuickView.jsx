@@ -31,11 +31,11 @@ const InlineQuickView = ({ isOpen, onClose, data }) => {
         <div className="flex flex-col lg:flex-row">
           {/* Left — Visual Showcase (40%) */}
           <div className="lg:w-2/5 p-8 bg-gray-50 border-r border-gray-100 space-y-6">
-            <div className="aspect-video lg:aspect-[4/5] rounded-[25px] overflow-hidden shadow-2xl border-4 border-white">
+            <div className="aspect-video lg:aspect-[4/5] rounded-[25px] overflow-hidden shadow-2xl border-4 border-white bg-white flex items-center justify-center p-8">
               <img 
                 src={data.img || data.image || data.images?.[0]} 
                 alt={data.title || data.name} 
-                className="w-full h-full object-cover"
+                className="max-w-full max-h-full object-contain"
               />
             </div>
             
