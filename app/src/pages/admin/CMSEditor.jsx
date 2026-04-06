@@ -1113,6 +1113,20 @@ const BlockForms = {
     </div>
   ),
 
+  text_content: ({ data, set }) => (
+    <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-4">
+      <h4 className="font-bold text-gray-800 text-sm">Rich Text Content</h4>
+      <Field label="Heading Content"><TextInput value={data.title} onChange={v => set('title', v)} /></Field>
+      <div className="space-y-1">
+         <label className="text-[10px] font-black uppercase text-gray-400">Body (HTML Allowed)</label>
+         <TextArea value={data.body} onChange={v => set('body', v)} rows={15} className="font-mono text-[12px]" />
+      </div>
+      <div className="p-3 bg-blue-50 rounded-lg">
+         <p className="text-[9px] text-blue-600 font-bold uppercase tracking-widest">Tip: You can use &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, and &lt;li&gt; tags to structure your content properly.</p>
+      </div>
+    </div>
+  ),
+
   sidebar_categories: ({ data, set }) => (
     <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
       <h4 className="font-bold text-gray-800 text-sm">Category Sidebar Tabs</h4>

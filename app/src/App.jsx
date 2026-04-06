@@ -29,6 +29,7 @@ import SchoolSale from './pages/SchoolSale';
 import Partnerships from './pages/Partnerships';
 import SetupGuide from './pages/SetupGuide';
 import Workshops from './pages/Workshops';
+import GenericInnerPage from './pages/GenericInnerPage';
 
 // Admin Pages
 import AdminLogin from './pages/admin/AdminLogin';
@@ -81,6 +82,7 @@ function App() {
             <Route path="/setup-guide" element={<SetupGuide />} />
             <Route path="/workshops" element={<Workshops />} />
             <Route path="/fundraising" element={<Partnerships />} />
+            <Route path="/p/:slug" element={<GenericInnerPage />} />
           </Route>
 
           {/* Admin Routes */}

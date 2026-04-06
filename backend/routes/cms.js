@@ -4,11 +4,28 @@ const Page = require('../models/Page');
 const auth = require('../middleware/auth');
 const { adminOnly } = require('../middleware/auth');
 
-// GET /api/cms/:slug  — public endpoint
+// GET /api/cms/:slug  — public endpoint (auto-create if missing)
 router.get('/:slug', async (req, res) => {
   try {
-    const page = await Page.findOne({ pageSlug: req.params.slug, isPublished: true });
-    if (!page) return res.status(404).json({ message: 'Page not found' });
+    let page = await Page.findOne({ pageSlug: req.params.slug });
+    
+    // If page doesn't exist, create a draft version with standard template blocks
+    if (!page) {
+      page = new Page({
+        pageSlug: req.params.slug,
+        pageTitle: req.params.slug.replace(/-/g, ' ').toUpperCase(),
+        isPublished: true,
+        blocks: [
+          { blockType: 'inner_page_hero', data: { title: req.params.slug.replace(/-/g, ' ').toUpperCase() }, order: 0 },
+          { blockType: 'sidebar_resources', data: { items: [] }, order: 1 },
+          { blockType: 'sidebar_trending', data: { items: [] }, order: 2 },
+          { blockType: 'text_content', data: { title: '', body: '' }, order: 3 },
+          { blockType: 'cta_whatsapp', data: {}, order: 4 }
+        ]
+      });
+      await page.save();
+    }
+    
     res.json(page);
   } catch (err) {
     res.status(500).json({ message: err.message });

@@ -42,14 +42,13 @@ const ICONS = { Leaf, Wind, Sun, Layers };
 
 const Environments = () => {
   const [selectedItem, setSelectedItem] = useState(null);
-    const { blocks, loading } = useCMSPage('environments');
+  const { blocks, loading } = useCMSPage('environments');
   const sidebarResources = blocks?.sidebar_resources || {};
   const sidebarTrending = blocks?.sidebar_trending || {};
+  
   const d = blocks?.environments_page_content || DEFAULT_CONTENT;
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sm-blue"></div></div>;
-
-    if (loading) return <div className="min-h-screen flex items-center justify-center text-sm-blue font-bold tracking-widest uppercase">Loading Environments...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-sm-blue font-bold tracking-widest uppercase">Loading Environments...</div>;
 
   return (
     <main className="min-h-screen bg-gray-50 pt-8 pb-4">
@@ -200,92 +199,6 @@ const Environments = () => {
              </section>
            </div>
         </div>
-      </div>
-    </main>
-  );
-           })}
-
-           {/* FLOW BLOCK */}
-           <div className="hidden lg:flex lg:col-span-1 bg-blue-50/30 rounded-[20px] p-6 border border-blue-100 shadow-sm items-center justify-between group hover:bg-sm-blue hover:text-white transition-all">
-              <span className="text-[8px] font-black uppercase tracking-[0.2em]">Spatial Research Indices</span>
-              <Layers className="text-sm-blue group-hover:text-white transition-colors" size={20} />
-           </div>
-        </section>
-
-        {/* MASONRY DISPLAY */}
-        <section className="py-6 border-t border-gray-100">
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
-              {(d.masonryItems || []).map((work, i) => (
-                 <React.Fragment key={i}>
-                    <CatalogueCard 
-                      work={{ name: work.t, subcategory: work.c, image: work.img }} 
-                      isSelected={selectedItem?.t === work.t} 
-                      onClick={() => setSelectedItem(selectedItem?.t === work.t ? null : work)} 
-                      themeColor="bg-sm-blue"
-                      ringColor="ring-blue-500"
-                      textColor="text-blue-400"
-                    />
-
-                    {/* INLINE EXPANSION LOGIC */}
-                    {/* Mobile */}
-                    <div className="md:hidden col-span-full">
-                       {selectedItem?.t === work.t && (
-                          <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={{ ...selectedItem, name: selectedItem.t, subcategory: selectedItem.c, image: selectedItem.img }} />
-                       )}
-                    </div>
-                    {/* Tablet (2 cols) */}
-                    {i % 2 === 1 && (
-                       <div className="hidden md:block lg:hidden col-span-full">
-                          {(d.masonryItems || []).slice(i-1, i+1).some(dw => dw.t === selectedItem?.t) && (
-                             <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={{ ...selectedItem, name: selectedItem.t, subcategory: selectedItem.c, image: selectedItem.img }} />
-                          )}
-                       </div>
-                    )}
-                    {/* Desktop (3 cols) */}
-                    {i % 3 === 2 && (
-                       <div className="hidden lg:block col-span-full">
-                          {(d.masonryItems || []).slice(i-2, i+1).some(dw => dw.t === selectedItem?.t) && (
-                             <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={{ ...selectedItem, name: selectedItem.t, subcategory: selectedItem.c, image: selectedItem.img }} />
-                          )}
-                       </div>
-                    )}
-                    {/* Handle End of List */}
-                    {i === (d.masonryItems || []).length - 1 && (
-                       <>
-                          <div className="hidden md:block lg:hidden col-span-full">
-                             {(d.masonryItems || []).slice(Math.floor(i/2)*2).some(dw => dw.t === selectedItem?.t) && i % 2 !== 1 && (
-                                <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={{ ...selectedItem, name: selectedItem.t, subcategory: selectedItem.c, image: selectedItem.img }} />
-                             )}
-                          </div>
-                          <div className="hidden lg:block col-span-full">
-                             {(d.masonryItems || []).slice(Math.floor(i/3)*3).some(dw => dw.t === selectedItem?.t) && i % 3 !== 2 && (
-                                <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={{ ...selectedItem, name: selectedItem.t, subcategory: selectedItem.c, image: selectedItem.img }} />
-                             )}
-                          </div>
-                       </>
-                    )}
-                 </React.Fragment>
-              ))}
-           </div>
-        </section>
-
-        {/* INFO SPLIT GRID */}
-        <section className="py-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center border-t border-gray-100 mt-6">
-           <div className="bg-white p-12 rounded-[30px] border border-gray-300 shadow-sm">
-              <h2 className="text-4xl font-black text-gray-900 font-heading mb-8 leading-none uppercase tracking-tighter" dangerouslySetInnerHTML={{ __html: d.infoGrid?.titleHtml }} />
-              <div className="grid grid-cols-2 gap-3">
-                 {(d.infoGrid?.points || []).map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 text-[10px] font-black text-gray-900 uppercase tracking-widest bg-gray-50 p-4 rounded-xl group hover:bg-sm-blue hover:text-white transition-all border border-gray-100">
-                       <CheckCircle2 size={14} className="text-sm-blue group-hover:text-white" />
-                       {item}
-                    </div>
-                 ))}
-              </div>
-           </div>
-           <div className="rounded-[30px] overflow-hidden shadow-xl h-[300px]">
-              <img src={d.infoGrid?.img} alt="Consultation" className="w-full h-full object-cover shadow-2xl" />
-           </div>
-        </section>
       </div>
     </main>
   );

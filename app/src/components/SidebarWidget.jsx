@@ -44,6 +44,12 @@ const SidebarWidget = ({ title, items = [], type = 'resources' }) => {
              Object.keys(PATH_MAP).forEach(k => {
                 if (key.includes(k)) path = PATH_MAP[k];
              });
+             
+             // Dynamic Fallback: if STILL #, create a slug from label
+             if (path === '#') {
+                const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+                path = `/p/${slug}`;
+             }
           }
 
           return (

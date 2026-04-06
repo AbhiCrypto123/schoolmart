@@ -40,16 +40,6 @@ const Navbar = () => {
     { name: 'Environments', path: '/environments' },
     { name: 'SHOP', path: 'http://www.schoolmart.store', external: true },
     { name: 'GUIDES', path: '/guides' },
-    { 
-      name: 'Opportunities', 
-      path: '#',
-      dropdown: [
-        { name: 'Schools for Sale/Lease', path: '/school-sale' },
-        { name: 'Partnerships & Models', path: '/partnerships' },
-        { name: 'Workshops & Summit', path: '/workshops' },
-        { name: 'Setting Up A School', path: '/setup-guide' },
-      ]
-    },
     { name: 'Contact Us', path: '/contact-us' },
   ];
 
