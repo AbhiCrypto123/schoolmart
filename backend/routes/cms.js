@@ -19,7 +19,10 @@ router.get('/:slug', async (req, res) => {
           { blockType: 'inner_page_hero', data: { title: req.params.slug.replace(/-/g, ' ').toUpperCase() }, order: 0 },
           { blockType: 'sidebar_resources', data: { items: [] }, order: 1 },
           { blockType: 'sidebar_trending', data: { items: [] }, order: 2 },
-          { blockType: 'text_content', data: { title: '', body: '' }, order: 3 },
+          { blockType: 'text_content', data: { 
+            title: `Strategic Framework for ${req.params.slug.replace(/-/g, ' ').toUpperCase()}`, 
+            body: '<p>Standardizing institutional growth through dedicated frameworks and tactical resource allocation.</p><h2>Objective</h2><p>To establish a robust ecosystem for academic excellence.</p>' 
+          }, order: 3 },
           { blockType: 'cta_whatsapp', data: {}, order: 4 }
         ]
       });
