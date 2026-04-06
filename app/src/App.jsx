@@ -25,6 +25,10 @@ import Science from './pages/Science';
 import LabsLibraries from './pages/LabsLibraries';
 import Registration from './pages/Registration';
 import Login from './pages/Login';
+import SchoolSale from './pages/SchoolSale';
+import Partnerships from './pages/Partnerships';
+import SetupGuide from './pages/SetupGuide';
+import Workshops from './pages/Workshops';
 
 // Admin Pages
 import AdminLogin from './pages/admin/AdminLogin';
@@ -72,6 +76,11 @@ function App() {
             <Route path="/labs" element={<LabsLibraries />} />
             <Route path="/registration-new-form" element={<Registration />} />
             <Route path="/my-account" element={<Login />} />
+            <Route path="/school-sale" element={<SchoolSale />} />
+            <Route path="/partnerships" element={<Partnerships />} />
+            <Route path="/setup-guide" element={<SetupGuide />} />
+            <Route path="/workshops" element={<Workshops />} />
+            <Route path="/fundraising" element={<Partnerships />} />
           </Route>
 
           {/* Admin Routes */}

@@ -1033,6 +1033,86 @@ const BlockForms = {
     </div>
   ),
 
+  listings: ({ data, set }) => (
+    <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+      <h4 className="font-bold text-gray-800 text-sm">Opportunities List</h4>
+      {(data.items || []).map((item, i) => (
+        <div key={i} className="flex flex-col gap-2 p-3 bg-white border border-gray-100 rounded-lg relative">
+          <button onClick={() => set('items', data.items.filter((_,j) => j !== i))} className="absolute top-2 right-2 text-red-400"><Trash2 size={13}/></button>
+          <TextInput value={item.title} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], title: v }; set('items', ts); }} placeholder="Title" />
+          <div className="grid grid-cols-2 gap-2">
+            <TextInput value={item.location} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], location: v }; set('items', ts); }} placeholder="Location" />
+            <select value={item.type} onChange={e => { const ts = [...data.items]; ts[i] = { ...ts[i], type: e.target.value }; set('items', ts); }} className="border rounded text-xs px-2">
+              <option value="Lease">Lease</option>
+              <option value="Sale">Sale</option>
+              <option value="Franchise">Franchise</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <TextInput value={item.size} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], size: v }; set('items', ts); }} placeholder="Size" />
+            <TextInput value={item.price} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], price: v }; set('items', ts); }} placeholder="Price/Contact" />
+          </div>
+        </div>
+      ))}
+      <button onClick={() => set('items', [...(data.items||[]), { title: '', location: '', type: 'Lease', size: '', price: '' }])} className="text-blue-500 font-bold text-xs">+ Add Listing</button>
+    </div>
+  ),
+
+  categories: ({ data, set }) => (
+    <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+      <h4 className="font-bold text-gray-800 text-sm">Categories / Models List</h4>
+      {(data.items || []).map((cat, i) => (
+        <div key={i} className="flex flex-col gap-2 p-3 bg-white border border-gray-100 rounded-lg relative">
+          <button onClick={() => set('items', data.items.filter((_,j) => j !== i))} className="absolute top-2 right-2 text-red-400"><Trash2 size={13}/></button>
+          <TextInput value={cat.title} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], title: v }; set('items', ts); }} placeholder="Category Title" />
+          <div className="grid grid-cols-2 gap-2">
+             <TextInput value={cat.icon} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], icon: v }; set('items', ts); }} placeholder="Icon (Award/Zap/Globe)" />
+             <TextInput value={cat.color} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], color: v }; set('items', ts); }} placeholder="Tailwind Colors" />
+          </div>
+          <TextArea value={(cat.items || []).join(', ')} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], items: v.split(',').map(s=>s.trim()) }; set('items', ts); }} placeholder="Points (comma separated)" rows={2} />
+        </div>
+      ))}
+      <button onClick={() => set('items', [...(data.items||[]), { title: '', icon: 'Award', color: 'bg-blue-50 text-blue-600', items: [] }])} className="text-blue-500 font-bold text-xs">+ Add Category</button>
+    </div>
+  ),
+
+  benefits: ({ data, set }) => (
+    <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+      <h4 className="font-bold text-gray-800 text-sm">Benefits Grid</h4>
+      {(data.items || []).map((b, i) => (
+        <div key={i} className="flex flex-col gap-2 p-3 bg-white border border-gray-100 rounded-lg relative">
+          <button onClick={() => set('items', data.items.filter((_,j) => j !== i))} className="absolute top-2 right-2 text-red-400"><Trash2 size={13}/></button>
+          <TextInput value={b.title} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], title: v }; set('items', ts); }} placeholder="Benefit Title" />
+          <TextInput value={b.icon} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], icon: v }; set('items', ts); }} placeholder="Icon (CheckCircle2)" />
+          <TextArea value={b.description} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], description: v }; set('items', ts); }} placeholder="Description" rows={2} />
+        </div>
+      ))}
+      <button onClick={() => set('items', [...(data.items||[]), { title: '', icon: 'CheckCircle2', description: '' }])} className="text-blue-500 font-bold text-xs">+ Add Benefit</button>
+    </div>
+  ),
+
+  upcoming_events: ({ data, set }) => (
+    <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+      <h4 className="font-bold text-gray-800 text-sm">Workshop Events</h4>
+      {(data.items || []).map((e, i) => (
+        <div key={i} className="flex flex-col gap-2 p-3 bg-white border border-gray-100 rounded-lg relative">
+          <button onClick={() => set('items', data.items.filter((_,j) => j !== i))} className="absolute top-2 right-2 text-red-400"><Trash2 size={13}/></button>
+          <TextInput value={e.title} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], title: v }; set('items', ts); }} placeholder="Event Title" />
+          <div className="grid grid-cols-2 gap-2">
+            <TextInput value={e.date} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], date: v }; set('items', ts); }} placeholder="Date (e.g. 15 May 2025)" />
+            <TextInput value={e.location} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], location: v }; set('items', ts); }} placeholder="Location" />
+          </div>
+          <TextInput value={(e.speakers || []).join(', ')} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], speakers: v.split(',').map(s=>s.trim()) }; set('items', ts); }} placeholder="Speakers (comma separated)" />
+          <div className="grid grid-cols-2 gap-2">
+            <TextInput value={e.type} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], type: v }; set('items', ts); }} placeholder="Type (Webinar/Workshop)" />
+            <TextInput value={e.status} onChange={v => { const ts = [...data.items]; ts[i] = { ...ts[i], status: v }; set('items', ts); }} placeholder="Status (Book Now)" />
+          </div>
+        </div>
+      ))}
+      <button onClick={() => set('items', [...(data.items||[]), { title: '', date: '', location: '', speakers: [], type: 'Workshop', status: 'Upcoming' }])} className="text-blue-500 font-bold text-xs">+ Add Event</button>
+    </div>
+  ),
+
   sidebar_categories: ({ data, set }) => (
     <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
       <h4 className="font-bold text-gray-800 text-sm">Category Sidebar Tabs</h4>

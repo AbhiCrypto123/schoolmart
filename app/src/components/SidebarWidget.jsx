@@ -2,6 +2,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, TrendingUp, ChevronRight } from 'lucide-react';
 
+const PATH_MAP = {
+  'SCHOOLS FOR SALE / LEASE': '/school-sale',
+  'SCHOOLS FOR SALE/LEASE': '/school-sale',
+  'FUNDRAISING': '/partnerships',
+  'FUND RAISING': '/partnerships',
+  'PARTNERSHIPS': '/partnerships',
+  'WORKSHOPS': '/workshops',
+  'SETTING UP A SCHOOL IN INDIA': '/setup-guide',
+  'DIGITIZATION': '/digital',
+  'PRODUCT CATALOG 2025': '/catalogues',
+  'LOOKBOOK': '/catalogues',
+  'LIBRARY TRENDS': '/libraries',
+  'JOB OPENINGS': '/contact-us',
+  'JOIN AS INFLUENCERS': '/contact-us',
+};
+
 const SidebarWidget = ({ title, items = [], type = 'resources' }) => {
   if (!items || items.length === 0) return null;
   
@@ -20,7 +36,16 @@ const SidebarWidget = ({ title, items = [], type = 'resources' }) => {
       <div className="divide-y divide-gray-50">
         {items.map((item, i) => {
           const label = typeof item === 'string' ? item : item.label;
-          const path = typeof item === 'string' || !item.path ? '#' : item.path;
+          let path = typeof item === 'string' || !item.path ? '#' : item.path;
+          
+          if (path === '#') {
+             const key = label.toUpperCase();
+             // Find matching key in PATH_MAP
+             Object.keys(PATH_MAP).forEach(k => {
+                if (key.includes(k)) path = PATH_MAP[k];
+             });
+          }
+
           return (
             <Link 
               key={i} 

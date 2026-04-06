@@ -110,14 +110,27 @@ router.post('/standardize', auth, adminOnly, async (req, res) => {
       guides:      ['guides_page_content', 'guides_list', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp'],
       aboutus:     ['about_hero', 'stats', 'mission_vision', 'about_philosophy', 'journey', 'sidebar_resources', 'sidebar_trending'],
       'contact-us':['contact_page_content', 'contact_info', 'sidebar_resources', 'sidebar_trending'],
+      'school-sale': ['inner_page_hero', 'sidebar_resources', 'sidebar_trending', 'listings', 'cta_whatsapp'],
+      partnerships:['inner_page_hero', 'sidebar_resources', 'sidebar_trending', 'categories', 'cta_whatsapp'],
+      'setup-guide': ['inner_page_hero', 'sidebar_resources', 'sidebar_trending', 'benefits', 'cta_whatsapp'],
+      workshops:   ['inner_page_hero', 'sidebar_resources', 'sidebar_trending', 'upcoming_events', 'cta_whatsapp'],
     };
 
     const allSlugs = Object.keys(PAGE_ALLOWED_BLOCKS);
     let results = { updated: 0, skipped: 0 };
 
     for (const slug of allSlugs) {
-      const page = await Page.findOne({ pageSlug: slug });
-      if (!page) { results.skipped++; continue; }
+      let page = await Page.findOne({ pageSlug: slug });
+      let isNew = false;
+      if (!page) {
+        page = new Page({ 
+          pageSlug: slug, 
+          pageTitle: slug.replace(/-/g, ' ').toUpperCase(), 
+          isPublished: true, 
+          blocks: [] 
+        });
+        isNew = true;
+      }
 
       let changed = false;
       const currentTypes = page.blocks.map(b => b.blockType);
@@ -144,11 +157,13 @@ router.post('/standardize', auth, adminOnly, async (req, res) => {
         }
       }
 
-      if (changed) {
+      if (changed || isNew) {
         page.blocks.sort((a, b) => allowed.indexOf(a.blockType) - allowed.indexOf(b.blockType));
         page.blocks.forEach((b, i) => b.order = i);
         await page.save();
         results.updated++;
+      } else {
+        results.skipped++;
       }
     }
     res.json({ message: 'Standardization complete', ...results });
