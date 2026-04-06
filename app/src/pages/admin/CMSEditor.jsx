@@ -1293,8 +1293,8 @@ function PageEditor({ slug }) {
         </div>
       </div>
 
-      {/* Dynamic Inner Page Cards Manager (always show to allow site-wide product editing) */}
-      {true && (
+      {/* Dynamic Inner Page Cards Manager - Only show on pages that actually use the global product list */}
+      {(['home', 'furniture', 'architecture', 'digital', 'sports', 'libraries', 'labs', 'mathematics', 'science', 'design'].includes(slug)) && (
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden mt-8">
           <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
             <div>
@@ -1305,7 +1305,9 @@ function PageEditor({ slug }) {
                 Manage Catalog Products ({page?.pageTitle || slug})
               </h3>
               <p className="text-[11px] text-gray-400 font-medium mt-1 uppercase tracking-wider">
-                These are the dynamic products that appear under the sidebar tabs at the bottom of the page.
+                {slug === 'home' 
+                  ? "Manage the dynamic products appearing in the homepage carousel." 
+                  : "Manage the dynamic products that appear under the sidebar tabs on this page."}
               </p>
             </div>
           </div>
