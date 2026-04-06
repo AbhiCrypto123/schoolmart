@@ -6,6 +6,7 @@ import ImageOverlayCard from './ImageOverlayCard';
 import { submitQuote } from '../services/api';
 import { useCMSPage } from '../hooks/useCMSBlock';
 import ProductCarousel from './ProductCarousel';
+import SidebarWidget from './SidebarWidget';
 
 const tiles = [
   {
@@ -293,59 +294,19 @@ const ResourceTiles = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
-              <div className="bg-cyan-500 px-3 py-1.5">
-                <h3 className="text-white font-bold text-center uppercase tracking-wide text-xs">TRENDING</h3>
-              </div>
-              <div className="px-3 py-1">
-                {(sidebarTrending.items?.length ? sidebarTrending.items : ['Schools for Sale / Lease', 'Fundraising', 'Partnerships', 'Workshops']).map((item, i) => {
-                  const label = typeof item === 'string' ? item : item.label;
-                  const path = typeof item === 'string' || !item.path ? '#' : item.path;
-                  return (
-                    <Link key={i} to={path} className="block text-[10px] font-bold text-gray-700 hover:text-sm-blue py-3 border-b border-gray-200 last:border-0 uppercase tracking-wider">
-                      {label}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
+            <div className="space-y-6">
+               <SidebarWidget title="TRENDING" items={sidebarTrending.items} type="trending" />
+               
+               <div className="relative rounded-2xl overflow-hidden shadow-sm h-40">
+                  <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&q=80" alt="Consultation" className="absolute inset-0 w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-teal-700/80 p-5 flex flex-col items-center justify-center text-white text-center">
+                     <h2 className="text-2xl font-black mb-0 uppercase tracking-tighter">FREE</h2>
+                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4">CONSULTATION</h3>
+                     <Link to="/contact-us" className="px-6 py-2.5 bg-white text-teal-700 font-bold rounded-xl text-[9px] uppercase tracking-widest hover:bg-gray-100 transition-colors">Book Now</Link>
+                  </div>
+               </div>
 
-            <div className="relative rounded-2xl overflow-hidden shadow-sm h-40">
-              <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&q=80" alt="Consultation" className="absolute inset-0 w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-teal-700/80 p-5 flex flex-col items-center justify-center text-white text-center">
-                <h2 className="text-2xl font-black mb-0">FREE</h2>
-                <h3 className="text-sm font-bold uppercase tracking-widest mb-3">CONSULTATION</h3>
-                <Link to="#" className="px-5 py-2 bg-white text-teal-700 font-bold rounded-lg text-xs uppercase hover:bg-gray-100 transition-colors">Book Now</Link>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-              <div className="bg-cyan-500 px-4 py-2">
-                <h3 className="text-white font-bold text-center uppercase tracking-wide text-xs">Resources</h3>
-              </div>
-              <div className="px-4 py-1">
-                {(sidebarResources.items?.length ? sidebarResources.items : [
-                  'Complete guide to digitization',
-                  'Setting Up A School In India',
-                  'Product catalog 2025',
-                  'How to setup composite skill lab?',
-                  'Lookbook – Play Furniture',
-                  'Gamified math resources',
-                  'Completed projects',
-                  '20 stunning school design ideas',
-                  'Library trends',
-                  'JOB OPENINGS',
-                  'Join as Influencers',
-                ]).map((item, i) => {
-                  const label = typeof item === 'string' ? item : item.label;
-                  const path = typeof item === 'string' || !item.path ? '#' : item.path;
-                  return (
-                    <Link key={i} to={path} className="block text-[10px] font-bold text-gray-700 hover:text-sm-blue py-2.5 border-b border-gray-200 last:border-0 uppercase tracking-widest">
-                      {label}
-                    </Link>
-                  );
-                })}
-              </div>
+               <SidebarWidget title="RESOURCES" items={sidebarResources.items} type="resources" />
             </div>
 
             <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">

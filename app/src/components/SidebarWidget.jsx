@@ -23,12 +23,12 @@ const SidebarWidget = ({ title, items: itemsProp = [], type = 'resources' }) => 
   const isTrending = type === 'trending';
   const blockSlug = isTrending ? 'sidebar_trending' : 'sidebar_resources';
   const { data: globalData } = useCMSBlock('home', blockSlug);
-  
+
   // Use passed items if not empty, else use home blocks
   const items = (itemsProp && itemsProp.length > 0) ? itemsProp : (globalData?.items || []);
 
   if (!items || items.length === 0) return null;
-  
+
   const Icon = isTrending ? TrendingUp : FileText;
   const headerBg = 'bg-sm-blue'; // Consistent with SchoolMart turquoise
 
@@ -44,25 +44,25 @@ const SidebarWidget = ({ title, items: itemsProp = [], type = 'resources' }) => 
         {items.map((item, i) => {
           const label = typeof item === 'string' ? item : item.label;
           let path = typeof item === 'string' || !item.path ? '#' : item.path;
-          
+
           if (path === '#') {
-             const key = label.toUpperCase();
-             // Find matching key in PATH_MAP
-             Object.keys(PATH_MAP).forEach(k => {
-                if (key.includes(k)) path = PATH_MAP[k];
-             });
-             
-             // Dynamic Fallback: if STILL #, create a slug from label
-             if (path === '#') {
-                const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-                path = `/p/${slug}`;
-             }
+            const key = label.toUpperCase();
+            // Find matching key in PATH_MAP
+            Object.keys(PATH_MAP).forEach(k => {
+              if (key.includes(k)) path = PATH_MAP[k];
+            });
+
+            // Dynamic Fallback: if STILL #, create a slug from label
+            if (path === '#') {
+              const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+              path = `/p/${slug}`;
+            }
           }
 
           return (
-            <Link 
-              key={i} 
-              to={path} 
+            <Link
+              key={i}
+              to={path}
               className="flex items-center justify-between px-6 py-4 group hover:bg-gray-50 transition-all active:bg-gray-100"
             >
               <span className="text-[10px] font-black uppercase text-gray-900 group-hover:text-sm-blue transition-colors leading-tight">

@@ -14,17 +14,8 @@ const AboutUs = () => {
     return (
     <main className="min-h-screen bg-white pt-8 pb-10">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col lg:flex-row gap-8">
-           {/* Sidebar Widget Sync */}
-           <aside className="lg:w-[240px] flex-shrink-0">
-              <div className="sticky top-24 space-y-6">
-                 <SidebarWidget title="TRENDING" items={sidebarTrending?.items} type="trending" />
-                 <SidebarWidget title="RESOURCES" items={sidebarResources?.items} type="resources" />
-              </div>
-           </aside>
-
-           {/* Main Content Area */}
-           <div className="flex-grow min-w-0">
+         {/* Main Content Area */}
+         <div className="min-w-0">
              <section className="pt-2 pb-6 grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch min-h-[450px]">
                 <div className="lg:col-span-8 bg-gray-50 rounded-[25px] p-10 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group">
                    <CMSMedia 
@@ -103,8 +94,7 @@ const AboutUs = () => {
                    ))}
                 </div>
              </div>
-           </div>
-        </div>
+         </div>
       </div>
     </main>
   );
