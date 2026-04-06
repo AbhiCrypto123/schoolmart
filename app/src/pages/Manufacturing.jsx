@@ -14,13 +14,13 @@ const stats = [
 const Manufacturing = () => {
   const { blocks, loading } = useCMSPage('manufacturing');
   const [selectedItem, setSelectedItem] = useState(null);
-  const heroBlock = blocks?.inner_page_hero || {};
+  const d = blocks?.manufacturing_page_content || {};
   const statsBlock = blocks?.stats || {};
   const currentStats = statsBlock.stats || stats;
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-sm-blue font-bold tracking-widest uppercase">Loading Manufacturing...</div>;
 
-  const manufacturingCards = [
+  const manufacturingCards = d.cards?.length ? d.cards : [
     { name: 'ROBOTIC ASSEMBLY', subcategory: 'Precision 4.0', image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80' },
     { name: 'CNC MACHINING', subcategory: '0.01mm Grade', image: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?w=800&q=80' },
     { name: 'QUALITY CONTROL', subcategory: 'ISO Certified', image: 'https://plus.unsplash.com/premium_photo-1661877737564-3dfd7282efcb?w=800&q=80' },
@@ -37,18 +37,18 @@ const Manufacturing = () => {
            <div className="flex flex-col lg:flex-row gap-8 items-stretch mb-8">
             <div className="flex-1 bg-[#1A1A1A] rounded-[30px] p-12 text-white relative overflow-hidden group border border-gray-800 shadow-2xl min-h-[400px] flex flex-col justify-center">
                <CMSMedia 
-                 mediaType={heroBlock.mediaType} 
-                 mediaUrl={heroBlock.mediaUrl} 
-                 fallbackImg={heroBlock.img || "https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?w=1200&q=80"}
+                 mediaType={d.hero?.mediaType} 
+                 mediaUrl={d.hero?.mediaUrl} 
+                 fallbackImg={d.hero?.img || "https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?w=1200&q=80"}
                  className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-110 transition-transform duration-[3000ms] z-0"
                />
                <div className="relative z-10">
                  <div className="px-4 py-1.5 bg-emerald-500 text-white font-black rounded-full text-[10px] uppercase tracking-[0.2em] mb-6 w-fit shadow-xl shadow-emerald-500/20">
-                    <Factory size={14} className="inline mr-2" /> {heroBlock.badge || "Precision 4.0"}
+                    <Factory size={14} className="inline mr-2" /> {d.hero?.badge || "Precision 4.0"}
                  </div>
-                 <h1 className="text-5xl lg:text-7xl font-black font-heading leading-none mb-6 tracking-tighter uppercase" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || 'Precision <br/> <span className="text-emerald-500 italic font-serif lowercase tracking-normal">and</span> <br/> Scale.' }} />
+                 <h1 className="text-5xl lg:text-7xl font-black font-heading leading-none mb-6 tracking-tighter uppercase" dangerouslySetInnerHTML={{ __html: d.hero?.titleHtml || 'Precision <br/> <span className="text-emerald-500 italic font-serif lowercase tracking-normal">and</span> <br/> Scale.' }} />
                  <p className="text-white/40 text-[11px] font-bold uppercase tracking-widest max-w-sm leading-loose">
-                    {heroBlock.subtitle || "Combining robotic precision with artisan craftsmanship for institutional excellence."}
+                    {d.hero?.subtitle || "Combining robotic precision with artisan craftsmanship for institutional excellence."}
                  </p>
                </div>
                <div className="absolute top-12 right-12 flex flex-col gap-4 z-20">
@@ -110,9 +110,9 @@ const Manufacturing = () => {
         <section className="py-12 border-t border-gray-100 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-6">
            <div className="bg-white p-12 rounded-[40px] border border-gray-100 shadow-sm relative overflow-hidden group">
               <div className="absolute -top-10 -right-10 w-24 h-24 bg-emerald-500/5 blur-2xl rounded-full" />
-              <h2 className="text-4xl font-black text-gray-900 font-heading mb-8 leading-none uppercase tracking-tighter">Direct Source <br/> <span className="text-emerald-600">Control.</span></h2>
+              <h2 className="text-4xl font-black text-gray-900 font-heading mb-8 leading-none uppercase tracking-tighter" dangerouslySetInnerHTML={{ __html: d.infoGrid?.titleHtml || 'Direct Source <br/> <span className="text-emerald-600">Control.</span>' }} />
               <div className="flex flex-col gap-4">
-                 {['NEP Compliant Materials', 'BIFMA Level 3 Quality', 'Zero VOC Finishing', 'Eco-Circular Supply'].map((item, i) => (
+                 {(d.infoGrid?.points?.length ? d.infoGrid.points : ['NEP Compliant Materials', 'BIFMA Level 3 Quality', 'Zero VOC Finishing', 'Eco-Circular Supply']).map((item, i) => (
                     <div key={i} className="flex items-center gap-4 text-[10px] font-black tracking-widest uppercase bg-gray-50 p-5 rounded-2xl border border-gray-50 hover:bg-emerald-50 transition-colors">
                        <CheckCircle2 size={16} className="text-emerald-500" />
                        {item}
@@ -122,7 +122,7 @@ const Manufacturing = () => {
            </div>
            
            <div className="rounded-[40px] overflow-hidden shadow-2xl h-[450px]">
-              <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1000&q=80" alt="Tech" className="w-full h-full object-cover" />
+              <img src={d.infoGrid?.img || "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1000&q=80"} alt="Tech" className="w-full h-full object-cover" />
            </div>
         </section>
       </div>

@@ -10,7 +10,7 @@ const partners = [
 
 const Corporate = () => {
   const { blocks, loading } = useCMSPage('corporate');
-  const heroBlock = blocks?.inner_page_hero || {};
+  const d = blocks?.corporate_page_content || {};
   const partnerBlock = blocks?.partners || {};
   const currentPartners = partnerBlock.items || partners;
 
@@ -25,17 +25,17 @@ const Corporate = () => {
             {/* Main Statement Bento (Screenshot 2 Inspired) */}
             <div className="lg:col-span-8 lg:row-span-4 bg-gray-900 rounded-[60px] p-12 lg:p-20 text-white relative overflow-hidden group shadow-3xl">
                <CMSMedia 
-                 mediaType={heroBlock.mediaType} 
-                 mediaUrl={heroBlock.mediaUrl} 
-                 fallbackImg={heroBlock.img} 
+                 mediaType={d.hero?.mediaType} 
+                 mediaUrl={d.hero?.mediaUrl} 
+                 fallbackImg={d.hero?.img} 
                  className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-40 transition-all duration-1000"
                />
                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sm-blue opacity-10 rounded-full blur-[100px] group-hover:scale-110 transition-transform" />
-               <div className="relative z-10 flex flex-col h-full h-full">
-                  <span className="inline-block px-5 py-2 bg-sm-blue text-white font-black rounded-full mb-10 text-[10px] uppercase tracking-widest shadow-lg">{heroBlock.badge || "Enterprise Solutions"}</span>
-                  <h1 className="text-5xl md:text-8xl font-black font-heading leading-[0.85] tracking-tighter uppercase mb-12" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Strategic <br/> Infrastructure <br/> <span className=\"text-sm-blue italic font-serif\">Partnership.</span>" }} />
+               <div className="relative z-10 flex flex-col h-full">
+                  <span className="inline-block px-5 py-2 bg-sm-blue text-white font-black rounded-full mb-10 text-[10px] uppercase tracking-widest shadow-lg">{d.hero?.badge || "Enterprise Solutions"}</span>
+                  <h1 className="text-5xl md:text-8xl font-black font-heading leading-[0.85] tracking-tighter uppercase mb-12" dangerouslySetInnerHTML={{ __html: d.hero?.titleHtml || "Strategic <br/> Infrastructure <br/> <span className=\"text-sm-blue italic font-serif\">Partnership.</span>" }} />
                   <p className="text-white/40 text-lg md:text-xl max-w-xl leading-relaxed mb-auto font-medium uppercase tracking-widest">
-                     {heroBlock.subtitle || "We don't just supply; we strategize. Our corporate division handles institutional procurement for high-net school networks across 22 states."}
+                     {d.hero?.subtitle || "We don't just supply; we strategize. Our corporate division handles institutional procurement for high-net school networks across 22 states."}
                   </p>
                   <div className="mt-12">
                      <button className="px-10 py-5 bg-white text-gray-900 font-black rounded-3xl hover:bg-sm-blue hover:text-white transition-all shadow-xl uppercase tracking-widest text-[11px] active:scale-95 flex items-center gap-3">
@@ -89,11 +89,11 @@ const Corporate = () => {
             <div className="flex-1 text-center lg:text-left order-2 lg:order-1">
                <h2 className="text-5xl md:text-8xl font-black text-gray-900 font-heading leading-tight mb-8 tracking-tighter uppercase">Boardroom <br/> <span className="text-sm-blue">Consultancy.</span></h2>
                <div className="space-y-6">
-                  {[
+                  {(d.capabilities?.length ? d.capabilities : [
                     { t: 'Multi-Phase Procurement', d: 'Structured budgets across fiscal years.' },
                     { t: 'Turnkey Campus Ready', d: 'Design-Build-Supply-Maintain workflow.' },
                     { t: 'Bulk Logistics Hub', d: 'Priority delivery for school networks.' },
-                  ].map((item, i) => (
+                  ]).map((item, i) => (
                     <div key={i} className="flex items-center gap-6 p-8 rounded-[40px] bg-gray-50 border border-transparent group hover:bg-white hover:border-sm-blue hover:shadow-3xl transition-all cursor-pointer">
                        <div className="w-14 h-14 bg-blue-50 text-sm-blue group-hover:bg-sm-blue group-hover:text-white rounded-2xl flex items-center justify-center transition-all">
                           <Target size={24} />
@@ -125,9 +125,9 @@ const Corporate = () => {
             <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 bg-sm-blue rounded-[50px] flex items-center justify-center text-white shadow-2xl group-hover:rotate-12 transition-all">
                <Rocket size={48} />
             </div>
-            <h5 className="text-gray-900 text-3xl md:text-5xl font-black font-heading leading-tight mb-10 tracking-tighter uppercase mt-10">Scale Your Institutional <br/> <span className="text-sm-blue decoration-yellow-400 decoration-4 underline underline-offset-[16px]">Impact.</span></h5>
+            <h5 className="text-gray-900 text-3xl md:text-5xl font-black font-heading leading-tight mb-10 tracking-tighter uppercase mt-10" dangerouslySetInnerHTML={{ __html: d.cta?.titleHtml || "Scale Your Institutional <br/> <span className=\"text-sm-blue decoration-yellow-400 decoration-4 underline underline-offset-[16px]\">Impact.</span>" }} />
             <button className="px-12 py-5 bg-gray-900 text-white font-black rounded-3xl hover:bg-sm-blue transition-all shadow-xl uppercase tracking-widest text-[11px] active:scale-95 flex items-center justify-center gap-3 mx-auto">
-               Request Management Consultation <ArrowUpRight size={20} />
+               {d.cta?.btnText || 'Request Management Consultation'} <ArrowUpRight size={20} />
             </button>
          </div>
       </section>

@@ -911,6 +911,74 @@ const BlockForms = {
     </div>
   ),
 
+  corporate_page_content: ({ data, set }) => (
+    <div className="space-y-6">
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-4">
+        <h4 className="font-bold text-gray-800 text-sm">Hero Branding</h4>
+        <Field label="Badge"><TextInput value={data.hero?.badge} onChange={v => set('hero', { ...data.hero, badge: v })} /></Field>
+        <Field label="Title HTML"><TextArea value={data.hero?.titleHtml} onChange={v => set('hero', { ...data.hero, titleHtml: v })} rows={2} /></Field>
+        <Field label="Subtitle"><TextArea value={data.hero?.subtitle} onChange={v => set('hero', { ...data.hero, subtitle: v })} rows={2} /></Field>
+        <div className="flex gap-2">
+          {['image', 'video'].map(mode => (
+            <button key={mode} onClick={() => set('hero', { ...data.hero, mediaType: mode })} className={`flex-1 py-1.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-all ${data.hero?.mediaType === mode || (!data.hero?.mediaType && mode === 'image') ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-400 border-gray-200'}`}>{mode}</button>
+          ))}
+        </div>
+        <MediaUpload label="Hero Media" value={data.hero?.mediaUrl} onChange={v => set('hero', { ...data.hero, mediaUrl: v })} />
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Strategic Capabilities</h4>
+        {(data.capabilities || []).map((item, i) => (
+          <div key={i} className="flex flex-col gap-2 p-3 bg-white border border-gray-100 rounded-lg relative">
+             <button onClick={() => set('capabilities', data.capabilities.filter((_,j) => j !== i))} className="absolute top-2 right-2 text-red-400 hover:text-red-600"><Trash2 size={13}/></button>
+             <TextInput value={item.t} onChange={v => { const ts = [...data.capabilities]; ts[i] = { ...ts[i], t: v }; set('capabilities', ts); }} placeholder="Capability Title" />
+             <TextInput value={item.d} onChange={v => { const ts = [...data.capabilities]; ts[i] = { ...ts[i], d: v }; set('capabilities', ts); }} placeholder="Description" />
+          </div>
+        ))}
+        <button onClick={() => set('capabilities', [...(data.capabilities||[]), { t: '', d: '' }])} className="text-blue-500 text-xs font-bold">+ Add Capability</button>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Final CTA</h4>
+        <Field label="Large Heading"><TextArea value={data.cta?.titleHtml} onChange={v => set('cta', { ...data.cta, titleHtml: v })} rows={2} /></Field>
+        <Field label="Button Text"><TextInput value={data.cta?.btnText} onChange={v => set('cta', { ...data.cta, btnText: v })} /></Field>
+      </div>
+    </div>
+  ),
+
+  manufacturing_page_content: ({ data, set }) => (
+    <div className="space-y-6">
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-4">
+        <h4 className="font-bold text-gray-800 text-sm">Main Hero</h4>
+        <Field label="Badge"><TextInput value={data.hero?.badge} onChange={v => set('hero', { ...data.hero, badge: v })} /></Field>
+        <Field label="Title HTML"><TextArea value={data.hero?.titleHtml} onChange={v => set('hero', { ...data.hero, titleHtml: v })} rows={2} /></Field>
+        <Field label="Subtitle"><TextArea value={data.hero?.subtitle} onChange={v => set('hero', { ...data.hero, subtitle: v })} rows={2} /></Field>
+        <div className="flex gap-2">
+          {['image', 'video'].map(mode => (
+            <button key={mode} onClick={() => set('hero', { ...data.hero, mediaType: mode })} className={`flex-1 py-1.5 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-all ${data.hero?.mediaType === mode || (!data.hero?.mediaType && mode === 'image') ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-400 border-gray-200'}`}>{mode}</button>
+          ))}
+        </div>
+        <MediaUpload label="Hero Media" value={data.hero?.mediaUrl} onChange={v => set('hero', { ...data.hero, mediaUrl: v })} />
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Grid Cards (Robotic, CNC, etc.)</h4>
+        {(data.cards || []).map((card, i) => (
+          <div key={i} className="flex flex-col gap-2 p-3 bg-white border border-gray-100 rounded-lg relative">
+             <button onClick={() => set('cards', data.cards.filter((_,j) => j !== i))} className="absolute top-2 right-2 text-red-400 hover:text-red-600"><Trash2 size={13}/></button>
+             <TextInput value={card.name} onChange={v => { const ts = [...data.cards]; ts[i] = { ...ts[i], name: v }; set('cards', ts); }} placeholder="Card Title" />
+             <TextInput value={card.subcategory} onChange={v => { const ts = [...data.cards]; ts[i] = { ...ts[i], subcategory: v }; set('cards', ts); }} placeholder="Subtitle/Tag" />
+             <ImageUpload label="Image" value={card.image} onChange={v => { const ts = [...data.cards]; ts[i] = { ...ts[i], image: v }; set('cards', ts); }} />
+          </div>
+        ))}
+        <button onClick={() => set('cards', [...(data.cards||[]), { name: '', subcategory: '', image: '' }])} className="text-blue-500 text-xs font-bold">+ Add Card</button>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Industrial Bottom Grid</h4>
+        <Field label="Heading HTML"><TextInput value={data.infoGrid?.titleHtml} onChange={v => set('infoGrid', { ...data.infoGrid, titleHtml: v })} /></Field>
+        <ImageUpload label="Grid Image" value={data.infoGrid?.img} onChange={v => set('infoGrid', { ...data.infoGrid, img: v })} />
+        <Field label="4 Specs (comma separated)"><TextArea value={(data.infoGrid?.points || []).join(', ')} onChange={v => set('infoGrid', { ...data.infoGrid, points: v.split(',')})} rows={2} /></Field>
+      </div>
+    </div>
+  ),
+
   contact_page_content: ({ data, set }) => (
     <div className="space-y-6">
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
