@@ -123,29 +123,29 @@ const Furniture = () => {
 
                        {/* INLINE EXPANSION LOGIC */}
                        {/* Mobile */}
-                       <div className="md:hidden col-span-full">
-                          {selectedItem?.name === work.name && (
+                       {selectedItem?.name === work.name && (
+                          <div className="md:hidden col-span-full">
                              <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
-                          )}
-                       </div>
+                          </div>
+                       )}
                        
                        {/* Tablet (2 cols) */}
-                       <div className="hidden md:block lg:hidden col-span-full">
-                          {(i % 2 === 1 || i === filteredItems.length - 1) && 
-                           filteredItems.slice(Math.floor(i/2)*2, i+1).some(dw => dw.name === selectedItem?.name) && (
+                       {(i % 2 === 1 || i === filteredItems.length - 1) && 
+                         filteredItems.slice(Math.floor(i/2)*2, i+1).some(dw => dw.name === selectedItem?.name) && (
+                          <div className="hidden md:block lg:hidden col-span-full">
                              <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
-                          )}
-                       </div>
+                          </div>
+                       )}
 
                        {/* Desktop (3 cols) */}
-                       <div className="hidden lg:block col-span-full">
-                          {(i % 3 === 2 || i === filteredItems.length - 1) && 
-                           filteredItems.slice(Math.floor(i/3)*3, i+1).some(dw => dw.name === selectedItem?.name) && (
+                       {(i % 3 === 2 || i === filteredItems.length - 1) && 
+                         filteredItems.slice(Math.floor(i/3)*3, i+1).some(dw => dw.name === selectedItem?.name) && (
+                          <div className="hidden lg:block col-span-full">
                              <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
-                          )}
-                       </div>
+                          </div>
+                       )}
                     </React.Fragment>
-                  ))}
+                 ))}
                  
                  <div 
                    style={{ backgroundColor: (blocks?.feature_card?.bgColor || '#111827') }}
