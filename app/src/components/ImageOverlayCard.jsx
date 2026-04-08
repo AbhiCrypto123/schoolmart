@@ -17,11 +17,11 @@ const ImageOverlayCard = ({
             onClick={onClick}
         >
             {/* Image section with light background */}
-            <div className="w-full h-3/5 p-6 flex items-center justify-center bg-[#F9F9F9] relative overflow-hidden">
+            <div className="w-full h-3/5 relative overflow-hidden">
                 <img
                     src={img}
                     alt={title}
-                    className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     onError={(e) => {
                         if (fallback) e.target.src = fallback;
                     }}

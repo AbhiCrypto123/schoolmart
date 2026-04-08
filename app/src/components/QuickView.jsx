@@ -39,11 +39,11 @@ const QuickView = ({ isOpen, onClose, data }) => {
           <div className="flex flex-col lg:flex-row min-h-full">
             {/* Left — Visual Showcase (40%) */}
             <div className="lg:w-2/5 p-6 lg:p-8 bg-gray-50 border-r border-gray-100 space-y-6">
-              <div className="aspect-[4/5] rounded-[25px] overflow-hidden shadow-2xl border-4 border-white bg-white flex items-center justify-center p-8">
+              <div className="aspect-[4/5] rounded-[25px] overflow-hidden shadow-2xl border-4 border-white bg-white flex items-center justify-center p-2">
                 <img 
                   src={data.img || data.image || data.images?.[0]} 
                   alt={data.title || data.name} 
-                  className="max-w-full max-h-full object-contain transition-transform duration-700 hover:scale-110"
+                  className="w-full h-full object-contain transition-transform duration-700 hover:scale-110"
                 />
               </div>
               

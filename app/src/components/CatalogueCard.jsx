@@ -10,12 +10,12 @@ const CatalogueCard = ({ work, isSelected, onClick, themeColor = 'bg-emerald-600
         onClick={onClick}
       >
         <div className="flex flex-col h-full">
-          {/* Image Container - White Background for object-contain */}
-          <div className="flex-[3] w-full bg-white relative overflow-hidden p-8 flex items-center justify-center">
+          {/* Image Container - Full Coverage */}
+          <div className="flex-[3] w-full bg-white relative overflow-hidden flex items-center justify-center">
             <img 
               src={formatImgUrl(work.image || work.images?.[0] || work.img || "")} 
               alt={work.name || work.title} 
-              className="max-h-full max-w-full object-contain transition-all duration-700 group-hover:scale-110" 
+              className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" 
             />
           </div>
           
