@@ -104,7 +104,7 @@ const DigitalInfra = () => {
                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Enterprise Class: 300+ Deployments</span>
               </div>
               
-              <div id="product-grid" className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+              <div id="product-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
                  {filteredItems.map((work, i) => (
                     <React.Fragment key={i}>
                        <CatalogueCard 
@@ -123,24 +123,22 @@ const DigitalInfra = () => {
                              <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
                           )}
                        </div>
-                       {/* PC (2 cols) */}
-                       {i % 2 === 1 && (
-                          <div className="hidden md:block col-span-full">
-                             {filteredItems.slice(i-1, i+1).some(dw => dw.name === selectedItem?.name) && (
-                                <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
-                             )}
-                          </div>
-                       )}
-                       {/* Handle End of List */}
-                       {i === filteredItems.length - 1 && (
-                          <>
-                             <div className="hidden md:block col-span-full">
-                                {filteredItems.slice(Math.floor(i/2)*2).some(dw => dw.name === selectedItem?.name) && i % 2 !== 1 && (
-                                   <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
-                                )}
-                             </div>
-                          </>
-                       )}
+                       
+                       {/* Tablet (2 cols) */}
+                       <div className="hidden md:block lg:hidden col-span-full">
+                          {(i % 2 === 1 || i === filteredItems.length - 1) && 
+                           filteredItems.slice(Math.floor(i/2)*2, i+1).some(dw => dw.name === selectedItem?.name) && (
+                             <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
+                          )}
+                       </div>
+
+                       {/* Desktop (3 cols) */}
+                       <div className="hidden lg:block col-span-full">
+                          {(i % 3 === 2 || i === filteredItems.length - 1) && 
+                           filteredItems.slice(Math.floor(i/3)*3, i+1).some(dw => dw.name === selectedItem?.name) && (
+                             <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
+                          )}
+                       </div>
                     </React.Fragment>
                  ))}
                  

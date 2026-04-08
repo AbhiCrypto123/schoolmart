@@ -128,9 +128,7 @@ const mapCSVToBlockData = (blockType, rows) => {
         return { title: rows[0].title, subtitle: rows[0].subtitle, img: rows[0].img };
     case 'sidebar_categories':
         return { categories: rows.map(r => ({ name: r.name, icon: r.icon })) };
-    case 'sidebar_trending':
-    case 'sidebar_resources':
-        return { items: rows.map(r => ({ label: r.label, path: r.path })) };
+
     case 'feature_card': 
         return { title: rows[0].title, btnLabel: rows[0].btnLabel, bgColor: rows[0].bgColor, btnColor: rows[0].btnColor, btnPath: rows[0].btnPath };
     default:
@@ -689,12 +687,7 @@ const BlockForms = {
     </div>
   ),
 
-  text_content: ({ data, set }) => (
-    <div className="space-y-3">
-      <Field label="Heading"><TextInput value={data.heading} onChange={v => set('heading', v)} /></Field>
-      <Field label="Body Text"><TextArea value={data.body} onChange={v => set('body', v)} rows={6} /></Field>
-    </div>
-  ),
+
 
   catalogues_list: ({ data, set }) => (
     <div className="space-y-3">
