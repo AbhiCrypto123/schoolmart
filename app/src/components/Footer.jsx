@@ -4,31 +4,31 @@ import { Facebook, Twitter, Youtube } from 'lucide-react';
 
 const Footer = () => {
   const brandHelp = [
-    { name: 'How it works', path: '#' },
-    { name: 'Sell on schoolmart', path: '#' },
-    { name: 'Pricing', path: '#' },
-    { name: 'Seller Help', path: '#' },
-    { name: 'Shipping Policy', path: '#' },
-    { name: 'Cancellation Policy', path: '#' },
-    { name: 'Replacement & Return', path: '#' },
-    { name: 'Order Rejection Policy', path: '#' },
-    { name: 'Payments', path: '#' },
+    { name: 'How it works', path: '/p/how-it-works' },
+    { name: 'Sell on schoolmart', path: '/p/sell-on-schoolmart' },
+    { name: 'Pricing', path: '/p/pricing' },
+    { name: 'Seller Help', path: '/p/seller-help' },
+    { name: 'Shipping Policy', path: '/p/shipping-policy' },
+    { name: 'Cancellation Policy', path: '/p/cancellation-policy' },
+    { name: 'Replacement & Return', path: '/p/replacement-return' },
+    { name: 'Order Rejection Policy', path: '/p/order-rejection-policy' },
+    { name: 'Payments', path: '/p/payments' },
   ];
 
   const schoolHelp = [
-    { name: 'Shipping Policy', path: '#' },
-    { name: 'Cancellation Policy', path: '#' },
-    { name: 'Replacement & Return', path: '#' },
-    { name: 'Payment Policy', path: '#' },
-    { name: 'Order Rejection Policy', path: '#' },
+    { name: 'Shipping Policy', path: '/p/shipping-policy' },
+    { name: 'Cancellation Policy', path: '/p/cancellation-policy' },
+    { name: 'Replacement & Return', path: '/p/replacement-return' },
+    { name: 'Payment Policy', path: '/p/payments' },
+    { name: 'Order Rejection Policy', path: '/p/order-rejection-policy' },
   ];
 
   const businessLinks = [
     { name: 'About Us', path: '/aboutus' },
     { name: 'Contact Us', path: '/contact-us' },
-    { name: 'Report Issue', path: '#' },
-    { name: 'Blog', path: '#' },
-    { name: 'Delivery Locations', path: '#' },
+    { name: 'Report Issue', path: '/p/report-issue' },
+    { name: 'Blog', path: '/p/blog' },
+    { name: 'Delivery Locations', path: '/p/delivery-locations' },
   ];
 
   const trendingLinks = [
