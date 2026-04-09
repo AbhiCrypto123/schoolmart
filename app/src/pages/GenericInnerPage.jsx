@@ -348,21 +348,20 @@ const GenericInnerPage = ({ explicitSlug }) => {
       {innerPageCta && (
         <section 
           className={`py-16 px-6 rounded-[50px] mx-6 mt-20 mb-12 flex flex-col items-center justify-center text-center group transition-all duration-700
-            ${innerPageCta.theme === 'Black' ? 'bg-gray-950 text-white' : 
-              innerPageCta.theme === 'Blue' ? 'bg-sm-blue text-white' : 
-              innerPageCta.theme === 'Rose' ? 'bg-rose-50 text-gray-900 border border-rose-100' :
-              innerPageCta.theme === 'Emerald' ? 'bg-emerald-600 text-white' : 'bg-gray-50 text-gray-900 border border-gray-100'}
+            ${innerPageCta.theme === 'Black' || innerPageCta.theme === 'Blue' || innerPageCta.theme === 'Emerald' ? 
+              'bg-gray-50 border border-gray-100 text-gray-900 shadow-sm hover:bg-white hover:shadow-xl' : 
+              'bg-white border border-gray-100 text-gray-900 shadow-sm hover:shadow-md'}
           `}
         >
-          <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-4 max-w-2xl px-4">{innerPageCta.title}</h3>
-          {innerPageCta.subtitle && <p className="text-[11px] font-black uppercase tracking-widest opacity-60 mb-10">{innerPageCta.subtitle}</p>}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-sm-blue/5 rounded-full blur-[100px] pointer-events-none" />
+          <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-4 max-w-2xl px-4 relative z-10">{innerPageCta.title}</h3>
+          {innerPageCta.subtitle && <p className="text-[11px] font-black uppercase tracking-widest text-gray-400 mb-10 relative z-10">{innerPageCta.subtitle}</p>}
           <button 
-            className={`px-12 py-5 font-black rounded-xl text-[10px] uppercase tracking-widest transition-all shadow-2xl active:scale-95 duration-500 flex items-center gap-4
-              ${innerPageCta.theme === 'Black' || innerPageCta.theme === 'Blue' || innerPageCta.theme === 'Emerald' ? 'bg-white text-gray-900 hover:bg-gray-100' : 'bg-gray-900 text-white hover:bg-sm-blue'}
-            `}
+            className="px-12 py-5 bg-sm-blue text-white font-black rounded-xl text-[10px] uppercase tracking-widest transition-all shadow-xl shadow-blue-500/20 active:scale-95 duration-500 flex items-center gap-4 relative z-10 hover:bg-gray-900"
             onClick={() => window.location.href = innerPageCta.actionLink || '/contact-us'}
           >
             {innerPageCta.actionText || 'Schedule Consultation'}
+            <ArrowRight size={16} />
           </button>
         </section>
       )}

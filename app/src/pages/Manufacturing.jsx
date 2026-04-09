@@ -157,21 +157,23 @@ const Manufacturing = () => {
         </div>
 
         {/* SECTION 4: INSTITUTIONAL FOOTER */}
-        <div className="bg-[#004a8e] rounded-[40px] p-10 lg:p-16 flex flex-col items-center text-center text-white border border-[#004a8e]">
-           <h3 className="text-3xl lg:text-5xl font-black uppercase tracking-tighter mb-4 leading-none">
+        <div className="bg-white rounded-[40px] p-10 lg:p-16 flex flex-col items-center text-center text-gray-900 border border-gray-100 shadow-sm relative overflow-hidden group">
+           <div className="absolute top-0 right-0 w-96 h-96 bg-sm-blue/5 rounded-full blur-[100px] -mr-48 -mt-48 group-hover:bg-sm-blue/10 transition-all duration-1000" />
+           
+           <h3 className="text-3xl lg:text-5xl font-black uppercase tracking-tighter mb-4 leading-none relative z-10">
               {cta.headline}
            </h3>
-           <p className="text-[10px] lg:text-[12px] font-black uppercase tracking-[0.2em] max-w-2xl mb-12 leading-relaxed opacity-70">
-              {cta.description}
+           <p className="text-[10px] lg:text-[12px] font-black uppercase tracking-[0.2em] max-w-2xl mb-12 leading-relaxed text-gray-400 relative z-10">
+              {hero.description}
            </p>
-           <div className="flex flex-wrap justify-center gap-10 lg:gap-20">
+           <div className="flex flex-wrap justify-center gap-10 lg:gap-20 relative z-10">
               {cta.stats?.map((stat, i) => (
                 <div key={i} className="flex items-center gap-10 lg:gap-20">
                   <div className="text-center">
-                    <span className="text-4xl lg:text-6xl font-black block mb-1 tracking-tighter">{stat.value}</span>
-                    <span className="text-[9px] font-black uppercase tracking-widest opacity-60">{stat.label}</span>
+                    <span className="text-4xl lg:text-6xl font-black text-gray-900 block mb-1 tracking-tighter">{stat.value}</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-gray-400">{stat.label}</span>
                   </div>
-                  {i < cta.stats.length - 1 && <div className="w-px bg-white/10 hidden sm:block h-12" />}
+                  {i < cta.stats.length - 1 && <div className="w-px bg-gray-100 hidden sm:block h-12" />}
                 </div>
               ))}
            </div>

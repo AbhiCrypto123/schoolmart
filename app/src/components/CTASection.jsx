@@ -15,44 +15,46 @@ const CTASection = () => {
   const d = { ...DEFAULTS, ...data };
 
   return (
-    <section className="py-6 px-4 relative overflow-hidden bg-sm-gray">
+    <section className="py-12 px-4 relative overflow-hidden bg-white">
       <div className="max-w-7xl mx-auto">
-        <div className="relative bg-white rounded-[40px] p-8 md:p-16 border border-gray-200 shadow-sm overflow-hidden group">
-          {/* Background Accent */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-sm-blue/5 rounded-full blur-[120px] -mr-48 -mt-48 group-hover:bg-sm-blue/10 transition-all duration-1000" />
+        <div className="relative bg-gray-50/50 rounded-[50px] p-8 md:p-20 border border-gray-100 shadow-sm overflow-hidden group transition-all duration-700 hover:shadow-2xl hover:bg-white">
+          {/* Premium Background Accents */}
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sm-blue/5 rounded-full blur-[120px] -mr-64 -mt-64 group-hover:bg-sm-blue/10 transition-all duration-1000" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-500/5 rounded-full blur-[100px] -ml-48 -mb-48 opacity-40" />
           
-          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
+          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-16">
             {/* Left Content */}
             <div className="flex-1 text-center lg:text-left">
-              <div className="inline-block px-4 py-1 bg-sm-blue text-white rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-lg shadow-blue-500/20">
+              <div className="inline-flex items-center gap-2 px-5 py-2 bg-white text-sm-blue rounded-full text-[10px] font-black uppercase tracking-[0.3em] mb-8 shadow-sm border border-blue-50/50">
+                <div className="w-2 h-2 rounded-full bg-sm-blue animate-pulse" />
                 {d.badge}
               </div>
-              <h2 className="text-4xl md:text-5xl font-black text-gray-900 font-heading mb-6 tracking-tighter uppercase leading-[1.1]">
+              <h2 className="text-4xl md:text-6xl font-black text-gray-900 font-heading mb-8 tracking-tighter uppercase leading-[0.95]">
                 {d.headline}
               </h2>
-              <p className="text-gray-500 text-sm font-medium leading-relaxed max-w-xl">
+              <p className="text-gray-400 text-xs md:text-sm font-bold uppercase tracking-widest leading-loose max-w-xl">
                 {d.description}
               </p>
             </div>
  
             {/* Right Content - Buttons */}
-            <div className="flex flex-col sm:flex-row gap-5">
+            <div className="flex flex-col sm:flex-row gap-5 shrink-0">
               <a
                 href={`https://wa.me/${d.whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex items-center justify-center gap-3 px-8 py-4 bg-[#25D366] text-white font-black rounded-full hover:bg-[#128C7E] transition-all active:scale-95 shadow-[0_0_20px_rgba(37,211,102,0.4)]"
+                className="group relative flex items-center justify-center gap-4 px-10 py-5 bg-[#25D366] text-white font-black rounded-2xl hover:scale-105 transition-all active:scale-95 shadow-[0_0_30px_rgba(37,211,102,0.25)]"
               >
-                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 rounded-full transition-opacity" />
-                <MessageCircle size={22} className="group-hover:rotate-12 transition-transform" />
-                <span className="text-[10px] uppercase tracking-widest text-white">Connect on WhatsApp</span>
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity" />
+                <MessageCircle size={24} className="group-hover:rotate-12 transition-transform" />
+                <span className="text-[11px] uppercase tracking-[0.2em] text-white font-black">Connect on WhatsApp</span>
               </a>
               <a
                 href={`tel:${d.phone}`}
-                className="flex items-center justify-center gap-3 px-8 py-4 bg-transparent border border-gray-200 text-gray-900 font-black rounded-full hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all active:scale-95"
+                className="flex items-center justify-center gap-4 px-10 py-5 bg-white border border-gray-200 text-gray-900 font-black rounded-2xl hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all active:scale-95 shadow-sm"
               >
-                <Phone size={20} />
-                <span className="text-[10px] uppercase tracking-widest">Call {d.phone}</span>
+                <Phone size={22} />
+                <span className="text-[11px] uppercase tracking-[0.2em] font-black">Call Support</span>
               </a>
             </div>
           </div>

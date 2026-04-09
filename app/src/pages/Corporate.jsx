@@ -159,7 +159,8 @@ const Corporate = () => {
         </div>
 
         {/* 04. INSTITUTIONAL CTA */}
-        <div className="bg-[#004a8e] rounded-[30px] lg:rounded-[50px] p-10 lg:p-16 text-center text-white relative overflow-hidden flex flex-col items-center">
+        <div className="bg-white rounded-[30px] lg:rounded-[50px] p-10 lg:p-16 text-center text-gray-900 relative overflow-hidden flex flex-col items-center border border-gray-100 shadow-sm group">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-sm-blue/5 rounded-full blur-[100px] -mr-48 -mt-48 group-hover:bg-sm-blue/10 transition-all duration-1000" />
           <h2 className="text-4xl lg:text-7xl font-black font-heading leading-[0.9] tracking-tighter mb-8 uppercase">
             {cta.headline}
           </h2>
@@ -167,11 +168,11 @@ const Corporate = () => {
             {cta.description}
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center px-4">
-            <a href={`https://wa.me/${cta.whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="px-10 py-5 bg-[#25D366] text-white font-black rounded-full hover:scale-105 transition-all uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-3 shadow-xl">
+          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center px-4 relative z-10">
+            <a href={`https://wa.me/${cta.whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="px-10 py-5 bg-[#25D366] text-white font-black rounded-full hover:scale-105 transition-all uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(37,211,102,0.3)]">
                Connect On WhatsApp <MessageCircle size={20} />
             </a>
-            <a href={`tel:${cta.phone || cta.whatsappNumber}`} className="px-10 py-5 bg-white text-[#004a8e] font-black rounded-full hover:bg-gray-100 transition-all uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-3 shadow-xl">
+            <a href={`tel:${cta.phone || cta.whatsappNumber}`} className="px-10 py-5 bg-white border border-gray-200 text-[#004a8e] font-black rounded-full hover:bg-gray-50 transition-all uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-3 shadow-sm">
                Call {cta.phone || cta.whatsappNumber} <Phone size={20} />
             </a>
           </div>
