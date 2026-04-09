@@ -1,12 +1,13 @@
 // src/pages/admin/CMSEditor.jsx
 // Form-field based CMS editor — proper inputs for every block type
 import { useEffect, useState } from 'react';
-import { getAllPages, getPage, updateBlock, addBlock, deleteBlock, standardizeAllBlocks } from '../../services/api';
+import { getAllPages, getPage, updateBlock, addBlock, deleteBlock, standardizeAllBlocks, uploadFile } from '../../services/api';
 import { clearCMSCache } from '../../hooks/useCMSBlock';
 import { ChevronDown, ChevronRight, Trash2, Plus, Eye, EyeOff, Save, GripVertical, Image as ImageIcon, Link2, Type, List, ToggleLeft, Upload, Layers } from 'lucide-react';
 import ProductManager from './ProductManager';
 import ImageUpload from '../../components/admin/ImageUpload';
 import MediaUpload from '../../components/admin/MediaUpload';
+import FileUpload from '../../components/admin/FileUpload';
 
 // ── Reusable form field helpers ───────────────────────────────────────────────
 const Field = ({ label, children, hint }) => (
@@ -130,7 +131,17 @@ const mapCSVToBlockData = (blockType, rows) => {
         return { categories: rows.map(r => ({ name: r.name, icon: r.icon })) };
 
     case 'feature_card': 
-        return { title: rows[0].title, btnLabel: rows[0].btnLabel, bgColor: rows[0].bgColor, btnColor: rows[0].btnColor, btnPath: rows[0].btnPath };
+        return { title: rows[0].title, subtitle: rows[0].subtitle, btnLabel: rows[0].btnLabel, bgColor: rows[0].bgColor, btnColor: rows[0].btnColor, btnPath: rows[0].btnPath, icon: rows[0].icon };
+    case 'action_strip':
+        return { title: rows[0].title, subtitle: rows[0].subtitle, downloadPath: rows[0].downloadPath, bgColor: rows[0].bgColor };
+    case 'grid_heading':
+        return { leftHeading: rows[0].leftHeading, rightStat: rows[0].rightStat };
+    case 'info_split_grid':
+        return { titleHtml: rows[0].titleHtml, description: rows[0].description, points: rows.map(r => r.point).filter(Boolean), btnLabel: rows[0].btnLabel, btnPath: rows[0].btnPath, img: rows[0].img };
+    case 'action_stack':
+        return { cards: rows.map(r => ({ title: r.title, subtitle: r.subtitle, icon: r.icon, link: r.link, bgColor: r.bgColor })) };
+    case 'feature_blocks':
+        return { blocks: rows.map(r => ({ title: r.title, subtitle: r.subtitle, icon: r.icon, bgColor: r.bgColor, textColor: r.textColor })) };
     default:
       return rows[0]; // Simple flat mapping
   }
@@ -152,7 +163,12 @@ const downloadCSVTemplate = (blockType) => {
     case 'partners': headers = ['heading', 'subheading', 'name', 'icon', 'color']; break;
     case 'inner_page_hero': headers = ['badge', 'badgeIcon', 'titleHtml', 'subtitle', 'mediaType', 'mediaUrl']; break;
     case 'sidebar_categories': headers = ['name', 'icon']; break;
-    case 'feature_card': headers = ['title', 'btnLabel', 'bgColor', 'btnColor', 'btnPath']; break;
+    case 'feature_card': headers = ['title', 'subtitle', 'btnLabel', 'bgColor', 'btnColor', 'btnPath', 'icon']; break;
+    case 'action_strip': headers = ['title', 'subtitle', 'downloadPath', 'bgColor']; break;
+    case 'grid_heading': headers = ['leftHeading', 'rightStat']; break;
+    case 'info_split_grid': headers = ['titleHtml', 'description', 'point', 'btnLabel', 'btnPath', 'img']; break;
+    case 'action_stack': headers = ['title', 'subtitle', 'icon', 'link', 'bgColor']; break;
+    case 'feature_blocks': headers = ['title', 'subtitle', 'icon', 'bgColor', 'textColor']; break;
     default: headers = ['data'];
   }
   const blob = new Blob([headers.join(',')], { type: 'text/csv' });
@@ -698,30 +714,12 @@ const BlockForms = {
             <button onClick={() => set('catalogues', data.catalogues.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={13} /></button>
           </div>
           <TextInput value={c.title} onChange={v => { const t = [...data.catalogues]; t[i] = { ...t[i], title: v }; set('catalogues', t); }} placeholder="Catalogue Title" />
-          <TextArea rows={2} value={c.description} onChange={v => { const t = [...data.catalogues]; t[i] = { ...t[i], description: v }; set('catalogues', t); }} placeholder="Description..." />
-          <div className="flex gap-2 items-center">
-            <TextInput value={c.fileUrl} onChange={v => { const t = [...data.catalogues]; t[i] = { ...t[i], fileUrl: v }; set('catalogues', t); }} placeholder="Download URL or #" />
-            <label className="cursor-pointer bg-gray-100 p-2 rounded-lg border border-gray-200 hover:bg-sm-blue hover:text-white transition-colors shrink-0">
-               <Upload size={14} />
-               <input type="file" className="hidden" accept=".pdf,.doc,.docx" onChange={async (e) => {
-                 if(e.target.files?.[0]) {
-                   try {
-                     const res = await uploadFile(e.target.files[0]);
-                     const t = [...data.catalogues];
-                     t[i] = { ...t[i], fileUrl: res.url };
-                     set('catalogues', t);
-                     alert('Upload successful!');
-                   } catch(err) {
-                     alert(err.message);
-                   }
-                 }
-               }}/>
-            </label>
-          </div>
+          <TextArea rows={2} value={c.category || c.description} onChange={v => { const t = [...data.catalogues]; t[i] = { ...t[i], category: v, description: v }; set('catalogues', t); }} placeholder="Category / Description..." />
+          <FileUpload label={`PDF / Document (Catalogue ${i + 1})`} value={c.fileUrl} onChange={v => { const t = [...data.catalogues]; t[i] = { ...t[i], fileUrl: v }; set('catalogues', t); }} />
           <ImageUpload label="Thumbnail" value={c.img} onChange={v => { const t = [...data.catalogues]; t[i] = { ...t[i], img: v }; set('catalogues', t); }} />
         </div>
       ))}
-      <button onClick={() => set('catalogues', [...(data.catalogues || []), { title: '', description: '', fileUrl: '#', img: '' }])}
+      <button onClick={() => set('catalogues', [...(data.catalogues || []), { title: '', category: '', description: '', fileUrl: '#', img: '' }])}
         className="flex items-center gap-1 text-blue-600 text-xs font-bold hover:underline"><Plus size={13} /> Add Catalogue</button>
     </div>
   ),
@@ -785,7 +783,7 @@ const BlockForms = {
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
         <h4 className="font-bold text-gray-800 text-sm">Bottom Grid Section</h4>
         <Field label="Title HTML"><TextInput value={data.infoGrid?.titleHtml} onChange={v => set('infoGrid', { ...data.infoGrid, titleHtml: v })} /></Field>
-        <Field label="Image URL"><TextInput value={data.infoGrid?.img} onChange={v => set('infoGrid', { ...data.infoGrid, img: v })} /></Field>
+        <ImageUpload label="Grid Image" value={data.infoGrid?.img} onChange={v => set('infoGrid', { ...data.infoGrid, img: v })} />
         <Field label="4 Info Points (comma separated)"><TextArea value={(data.infoGrid?.points || []).join(', ')} onChange={v => set('infoGrid', { ...data.infoGrid, points: v.split(',')})} rows={2} /></Field>
       </div>
     </div>
@@ -823,21 +821,44 @@ const BlockForms = {
         <button onClick={() => set('subBlocks', [...(data.subBlocks||[]), { title: '', subtitle: '', icon: 'Sparkles' }])} className="text-blue-500 text-xs font-bold">+ Add Sub Block</button>
       </div>
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
-        <h4 className="font-bold text-gray-800 text-sm">Masonry Images Grid</h4>
+        <h4 className="font-bold text-gray-800 text-sm">Environment Case Studies ({(data.masonryItems || []).length})</h4>
         {(data.masonryItems || []).map((m, i) => (
-          <div key={i} className="flex flex-col gap-2 p-3 border border-gray-100 rounded-lg bg-white relative">
-            <button onClick={() => set('masonryItems', data.masonryItems.filter((_,j) => j !== i))} className="absolute top-2 right-2 text-red-400 hover:text-red-600"><Trash2 size={13}/></button>
-            <div className="grid grid-cols-2 gap-2">
-              <TextInput value={m.t} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], t: v }; set('masonryItems', ts); }} placeholder="Title (e.g. Natural Light)" />
-              <TextInput value={m.c} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], c: v }; set('masonryItems', ts); }} placeholder="Category (e.g. Optics)" />
+          <details key={i} className="border border-gray-200 rounded-xl bg-white relative group">
+            <summary className="p-3 cursor-pointer flex items-center justify-between hover:bg-gray-50 rounded-xl">
+              <span className="text-xs font-bold text-gray-700">{m.t || `Item ${i + 1}`} <span className="text-gray-400 font-medium">— {m.c || 'No category'}</span></span>
+              <button onClick={(e) => { e.preventDefault(); set('masonryItems', data.masonryItems.filter((_,j) => j !== i)); }} className="text-red-400 hover:text-red-600 shrink-0"><Trash2 size={13}/></button>
+            </summary>
+            <div className="p-4 pt-2 space-y-3 border-t border-gray-100">
+              <div className="grid grid-cols-2 gap-2">
+                <TextInput value={m.t} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], t: v }; set('masonryItems', ts); }} placeholder="Title (e.g. Natural Light)" />
+                <TextInput value={m.c} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], c: v }; set('masonryItems', ts); }} placeholder="Category (e.g. Optics)" />
+              </div>
+              <ImageUpload label="Card / Hero Image" value={m.img} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], img: v }; set('masonryItems', ts); }} />
+              <div className="pt-3 border-t border-dashed border-gray-100">
+                <p className="text-[9px] font-black text-blue-500 uppercase tracking-widest mb-2">Inner Page Fields</p>
+                <Field label="Badge"><TextInput value={m.badge} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], badge: v }; set('masonryItems', ts); }} placeholder="Case Study 2025" /></Field>
+                <Field label="Description"><TextArea rows={3} value={m.description} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], description: v }; set('masonryItems', ts); }} placeholder="Designing a high-performance educational dining environment..." /></Field>
+                <div className="mt-2 space-y-2">
+                  <p className="text-[10px] font-bold text-gray-500">Spec Cards ({(m.specs || []).length})</p>
+                  {(m.specs || []).map((spec, si) => (
+                    <div key={si} className="flex gap-2 items-start bg-gray-50 p-2 rounded-lg">
+                      <div className="flex-1 space-y-1">
+                        <TextInput value={spec.t} onChange={v => { const ts = [...data.masonryItems]; const sp = [...(ts[i].specs||[])]; sp[si] = { ...sp[si], t: v }; ts[i] = { ...ts[i], specs: sp }; set('masonryItems', ts); }} placeholder="Spec title" />
+                        <TextInput value={spec.d} onChange={v => { const ts = [...data.masonryItems]; const sp = [...(ts[i].specs||[])]; sp[si] = { ...sp[si], d: v }; ts[i] = { ...ts[i], specs: sp }; set('masonryItems', ts); }} placeholder="Spec description" />
+                      </div>
+                      <button onClick={() => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], specs: (ts[i].specs||[]).filter((_,k)=>k!==si) }; set('masonryItems', ts); }} className="text-red-400 shrink-0 mt-1"><Trash2 size={12}/></button>
+                    </div>
+                  ))}
+                  <button onClick={() => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], specs: [...(ts[i].specs||[]), { t: '', d: '' }] }; set('masonryItems', ts); }} className="text-blue-500 text-[10px] font-bold">+ Add Spec</button>
+                </div>
+                <Field label="Technical Details (one per line)">
+                  <TextArea rows={4} value={(m.technicalDetails || []).join('\n')} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], technicalDetails: v.split('\n').filter(Boolean) }; set('masonryItems', ts); }} placeholder={"Stainless Steel 304 Grade\nComposite ceiling panels"} />
+                </Field>
+              </div>
             </div>
-            <ImageUpload label="Grid Image" value={m.img} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], img: v }; set('masonryItems', ts); }} />
-            <div className="grid grid-cols-3 gap-2">
-              <TextInput value={m.h} onChange={v => { const ts = [...data.masonryItems]; ts[i] = { ...ts[i], h: v }; set('masonryItems', ts); }} placeholder="Height (e.g. h-[220px])" className="col-span-3" />
-            </div>
-          </div>
+          </details>
         ))}
-        <button onClick={() => set('masonryItems', [...(data.masonryItems||[]), { t: '', c: '', img: '', h: 'h-[250px]' }])} className="text-blue-500 text-xs font-bold">+ Add Image block</button>
+        <button onClick={() => set('masonryItems', [...(data.masonryItems||[]), { t: '', c: '', img: '', h: 'h-[250px]', badge: '', description: '', specs: [], technicalDetails: [] }])} className="text-blue-500 text-xs font-bold">+ Add Case Study</button>
       </div>
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
         <h4 className="font-bold text-gray-800 text-sm">Bottom Info Grid</h4>
@@ -885,18 +906,65 @@ const BlockForms = {
         <TextArea value={(data.menuStrip || []).join(', ')} onChange={v => set('menuStrip', v.split(','))} rows={2} />
       </div>
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
-        <h4 className="font-bold text-gray-800 text-sm">Resource Image Grid</h4>
-        {(data.resourceList || []).map((r, i) => (
-          <div key={i} className="flex flex-col gap-2 p-3 bg-white border border-gray-100 rounded-lg relative">
-            <button onClick={() => set('resourceList', data.resourceList.filter((_,j) => j !== i))} className="absolute top-2 right-2 text-red-400 hover:text-red-600"><Trash2 size={13}/></button>
-            <div className="flex gap-2">
-              <TextInput value={r.t} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], t: v }; set('resourceList', ts); }} placeholder="Title" />
-              <TextInput value={r.c} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], c: v }; set('resourceList', ts); }} placeholder="Category" />
+        <h4 className="font-bold text-gray-800 text-sm">Strategy Guide Cards ({(data.caseStudies || []).length})</h4>
+        {(data.caseStudies || []).map((r, i) => (
+          <details key={i} className="border border-gray-200 rounded-xl bg-white relative group">
+            <summary className="p-3 cursor-pointer flex items-center justify-between hover:bg-gray-50 rounded-xl">
+              <span className="text-xs font-bold text-gray-700">{r.t || `Guide ${i + 1}`} <span className="text-gray-400 font-medium">— {r.c || 'No category'}</span></span>
+              <button onClick={(e) => { e.preventDefault(); set('caseStudies', data.caseStudies.filter((_,j) => j !== i)); }} className="text-red-400 hover:text-red-600 shrink-0"><Trash2 size={13}/></button>
+            </summary>
+            <div className="p-4 pt-2 space-y-3 border-t border-gray-100">
+              <div className="flex gap-2">
+                <TextInput value={r.t} onChange={v => { const ts = [...data.caseStudies]; ts[i] = { ...ts[i], t: v }; set('caseStudies', ts); }} placeholder="Guide Title" />
+                <TextInput value={r.c} onChange={v => { const ts = [...data.caseStudies]; ts[i] = { ...ts[i], c: v }; set('caseStudies', ts); }} placeholder="Category" />
+              </div>
+              <ImageUpload label="Card / Hero Image" value={r.img} onChange={v => { const ts = [...data.caseStudies]; ts[i] = { ...ts[i], img: v }; set('caseStudies', ts); }} />
+              <div className="pt-3 border-t border-dashed border-gray-100">
+                <p className="text-[9px] font-black text-blue-500 uppercase tracking-widest mb-2">Inner Page Fields</p>
+                <Field label="Badge"><TextInput value={r.badge} onChange={v => { const ts = [...data.caseStudies]; ts[i] = { ...ts[i], badge: v }; set('caseStudies', ts); }} placeholder="Strategic Guide 2025" /></Field>
+                <Field label="Introduction"><TextArea rows={3} value={r.intro} onChange={v => { const ts = [...data.caseStudies]; ts[i] = { ...ts[i], intro: v }; set('caseStudies', ts); }} placeholder="The decision to enroll a child..." /></Field>
+                <div className="mt-2 space-y-2">
+                  <p className="text-[10px] font-bold text-gray-500">Steps ({(r.steps || []).length})</p>
+                  {(r.steps || []).map((step, si) => (
+                    <div key={si} className="bg-gray-50 p-3 rounded-lg space-y-1 relative">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Step {si + 1}</span>
+                        <button onClick={() => { const ts = [...data.caseStudies]; ts[i] = { ...ts[i], steps: (ts[i].steps||[]).filter((_,k)=>k!==si) }; set('caseStudies', ts); }} className="text-red-400"><Trash2 size={11}/></button>
+                      </div>
+                      <TextInput value={step.title} onChange={v => { const ts = [...data.caseStudies]; const st = [...(ts[i].steps||[])]; st[si] = { ...st[si], title: v }; ts[i] = { ...ts[i], steps: st }; set('caseStudies', ts); }} placeholder="Step title" />
+                      <TextArea rows={2} value={step.content} onChange={v => { const ts = [...data.caseStudies]; const st = [...(ts[i].steps||[])]; st[si] = { ...st[si], content: v }; ts[i] = { ...ts[i], steps: st }; set('caseStudies', ts); }} placeholder="Content..." />
+                      <TextInput value={step.insight} onChange={v => { const ts = [...data.caseStudies]; const st = [...(ts[i].steps||[])]; st[si] = { ...st[si], insight: v }; ts[i] = { ...ts[i], steps: st }; set('caseStudies', ts); }} placeholder="Insight quote" />
+                      <TextInput value={step.action} onChange={v => { const ts = [...data.caseStudies]; const st = [...(ts[i].steps||[])]; st[si] = { ...st[si], action: v }; ts[i] = { ...ts[i], steps: st }; set('caseStudies', ts); }} placeholder="Action point" />
+                    </div>
+                  ))}
+                  <button onClick={() => { const ts = [...data.caseStudies]; ts[i] = { ...ts[i], steps: [...(ts[i].steps||[]), { title: '', content: '', insight: '', action: '' }] }; set('caseStudies', ts); }} className="text-blue-500 text-[10px] font-bold">+ Add Step</button>
+                </div>
+                <div className="mt-2 space-y-2">
+                  <p className="text-[10px] font-bold text-gray-500">Summary Points ({(r.summaryPoints || []).length})</p>
+                  {(r.summaryPoints || []).map((pt, pi) => (
+                    <div key={pi} className="flex gap-2 items-center bg-gray-50 p-2 rounded-lg">
+                      <TextInput value={pt.t} onChange={v => { const ts = [...data.caseStudies]; const sp = [...(ts[i].summaryPoints||[])]; sp[pi] = { ...sp[pi], t: v }; ts[i] = { ...ts[i], summaryPoints: sp }; set('caseStudies', ts); }} placeholder="Label" />
+                      <TextInput value={pt.icon} onChange={v => { const ts = [...data.caseStudies]; const sp = [...(ts[i].summaryPoints||[])]; sp[pi] = { ...sp[pi], icon: v }; ts[i] = { ...ts[i], summaryPoints: sp }; set('caseStudies', ts); }} placeholder="Icon" />
+                      <button onClick={() => { const ts = [...data.caseStudies]; ts[i] = { ...ts[i], summaryPoints: (ts[i].summaryPoints||[]).filter((_,k)=>k!==pi) }; set('caseStudies', ts); }} className="text-red-400 shrink-0"><Trash2 size={11}/></button>
+                    </div>
+                  ))}
+                  <button onClick={() => { const ts = [...data.caseStudies]; ts[i] = { ...ts[i], summaryPoints: [...(ts[i].summaryPoints||[]), { t: '', icon: 'Star' }] }; set('caseStudies', ts); }} className="text-blue-500 text-[10px] font-bold">+ Add Point</button>
+                </div>
+              </div>
             </div>
-            <ImageUpload label="Resource Image" value={r.img} onChange={v => { const ts = [...data.resourceList]; ts[i] = { ...ts[i], img: v }; set('resourceList', ts); }} />
-          </div>
+          </details>
         ))}
-        <button onClick={() => set('resourceList', [...(data.resourceList||[]), { t: '', c: '', img: '', h: 'h-[300px]' }])} className="text-blue-500 text-xs font-bold">+ Add Resource</button>
+        <button onClick={() => set('caseStudies', [...(data.caseStudies||[]), { t: '', c: '', img: '', badge: '', intro: '', steps: [], summaryPoints: [] }])} className="text-blue-500 text-xs font-bold">+ Add Guide Card</button>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-4">
+        <h4 className="font-bold text-gray-800 text-sm">Featured Article (Editorial Breakout)</h4>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Title"><TextInput value={data.featured?.t} onChange={v => set('featured', { ...data.featured, t: v })} placeholder="The Parent's Magnet" /></Field>
+          <Field label="Category"><TextInput value={data.featured?.c} onChange={v => set('featured', { ...data.featured, c: v })} placeholder="Enrollment Strategy" /></Field>
+        </div>
+        <Field label="Description"><TextArea value={data.featured?.d} onChange={v => set('featured', { ...data.featured, d: v })} rows={3} placeholder="How to redesign your school identity..." /></Field>
+        <Field label="Tags (comma separated)"><TextInput value={(data.featured?.tags || []).join(', ')} onChange={v => set('featured', { ...data.featured, tags: v.split(',').map(s => s.trim()) })} placeholder="Branding, Admissions, Psychology" /></Field>
+        <ImageUpload label="Featured Image" value={data.featured?.img} onChange={v => set('featured', { ...data.featured, img: v })} />
       </div>
       <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
         <h4 className="font-bold text-gray-800 text-sm">Bottom Grid Section</h4>
@@ -1051,6 +1119,79 @@ const BlockForms = {
     </div>
   ),
 
+  environment_post_content: ({ data, set }) => (
+    <div className="space-y-6">
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-4">
+        <h4 className="font-bold text-gray-800 text-sm">Post Hero</h4>
+        <Field label="Title"><TextInput value={data.title} onChange={v => set('title', v)} placeholder="Dining Hall Architecture & Execution" /></Field>
+        <Field label="Badge"><TextInput value={data.badge} onChange={v => set('badge', v)} placeholder="Case Study 2025" /></Field>
+        <Field label="Description"><TextArea value={data.description} onChange={v => set('description', v)} rows={4} placeholder="Designing a high-performance educational dining environment..." /></Field>
+        <ImageUpload label="Main Image" value={data.mainImg} onChange={v => set('mainImg', v)} />
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Specification Cards ({(data.specs || []).length})</h4>
+        {(data.specs || []).map((spec, i) => (
+          <div key={i} className="flex flex-col gap-2 p-3 bg-white border border-gray-100 rounded-lg relative">
+            <button onClick={() => set('specs', data.specs.filter((_,j) => j !== i))} className="absolute top-2 right-2 text-red-400 hover:text-red-600"><Trash2 size={13}/></button>
+            <TextInput value={spec.t} onChange={v => { const ts = [...data.specs]; ts[i] = { ...ts[i], t: v }; set('specs', ts); }} placeholder="Spec Title (e.g. Ergonomic Seating)" />
+            <TextArea rows={2} value={spec.d} onChange={v => { const ts = [...data.specs]; ts[i] = { ...ts[i], d: v }; set('specs', ts); }} placeholder="Description..." />
+          </div>
+        ))}
+        <button onClick={() => set('specs', [...(data.specs||[]), { t: '', d: '' }])} className="text-blue-500 text-xs font-bold">+ Add Spec Card</button>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Technical Details (Bullet Points)</h4>
+        <Field label="One bullet per line" hint="These appear in the blue technical spec box">
+          <TextArea
+            value={(data.technicalDetails || []).join('\n')}
+            onChange={v => set('technicalDetails', v.split('\n').filter(Boolean))}
+            rows={6}
+            placeholder={"Stainless Steel 304 Grade\nComposite ceiling panels\nGranite work surfaces"}
+          />
+        </Field>
+      </div>
+    </div>
+  ),
+
+  guide_post_content: ({ data, set }) => (
+    <div className="space-y-6">
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-4">
+        <h4 className="font-bold text-gray-800 text-sm">Guide Hero</h4>
+        <Field label="Title"><TextInput value={data.title} onChange={v => set('title', v)} placeholder="The Parent's Magnet: Creating a School..." /></Field>
+        <Field label="Badge"><TextInput value={data.badge} onChange={v => set('badge', v)} placeholder="Strategic Guide 2025" /></Field>
+        <Field label="Introduction"><TextArea value={data.intro} onChange={v => set('intro', v)} rows={4} placeholder="The decision to enroll a child is the most significant..." /></Field>
+        <ImageUpload label="Main Image" value={data.mainImg} onChange={v => set('mainImg', v)} />
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Guide Steps ({(data.steps || []).length})</h4>
+        {(data.steps || []).map((step, i) => (
+          <div key={i} className="border border-gray-200 rounded-xl p-4 space-y-2 bg-white">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-black text-gray-500 uppercase tracking-widest">Step {i + 1}</span>
+              <button onClick={() => set('steps', data.steps.filter((_,j) => j !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={13}/></button>
+            </div>
+            <Field label="Step Title"><TextInput value={step.title} onChange={v => { const ts = [...data.steps]; ts[i] = { ...ts[i], title: v }; set('steps', ts); }} placeholder="Step 1: Audit Parent Priorities" /></Field>
+            <Field label="Content"><TextArea rows={3} value={step.content} onChange={v => { const ts = [...data.steps]; ts[i] = { ...ts[i], content: v }; set('steps', ts); }} placeholder="Modern parents prioritize safety..." /></Field>
+            <Field label="Insight Quote"><TextArea rows={2} value={step.insight} onChange={v => { const ts = [...data.steps]; ts[i] = { ...ts[i], insight: v }; set('steps', ts); }} placeholder="Direct research often reveals..." /></Field>
+            <Field label="Action Point"><TextInput value={step.action} onChange={v => { const ts = [...data.steps]; ts[i] = { ...ts[i], action: v }; set('steps', ts); }} placeholder="Conduct a 5-question digital audit..." /></Field>
+          </div>
+        ))}
+        <button onClick={() => set('steps', [...(data.steps||[]), { title: '', content: '', insight: '', action: '' }])} className="text-blue-500 text-xs font-bold">+ Add Step</button>
+      </div>
+      <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
+        <h4 className="font-bold text-gray-800 text-sm">Summary Points ({(data.summaryPoints || []).length})</h4>
+        {(data.summaryPoints || []).map((pt, i) => (
+          <div key={i} className="flex gap-2 items-center bg-white p-2 rounded-lg border border-gray-100">
+            <TextInput value={pt.t} onChange={v => { const ts = [...data.summaryPoints]; ts[i] = { ...ts[i], t: v }; set('summaryPoints', ts); }} placeholder="Point label (e.g. Parental Psychology)" />
+            <TextInput value={pt.icon} onChange={v => { const ts = [...data.summaryPoints]; ts[i] = { ...ts[i], icon: v }; set('summaryPoints', ts); }} placeholder="Icon (ShieldCheck/Target/Zap)" />
+            <button onClick={() => set('summaryPoints', data.summaryPoints.filter((_,j) => j !== i))} className="text-red-400 shrink-0"><Trash2 size={14}/></button>
+          </div>
+        ))}
+        <button onClick={() => set('summaryPoints', [...(data.summaryPoints||[]), { t: '', icon: 'Star' }])} className="text-blue-500 text-xs font-bold">+ Add Point</button>
+      </div>
+    </div>
+  ),
+
   categories: ({ data, set }) => (
     <div className="p-4 border border-gray-200 rounded-xl bg-gray-50/50 space-y-3">
       <h4 className="font-bold text-gray-800 text-sm">Categories / Models List</h4>
@@ -1146,6 +1287,204 @@ const BlockForms = {
       </button>
     </div>
   ),
+  // ── New block forms for per-page unique elements ─────────────────────────
+
+  action_strip: ({ data, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Dark Action Strip (below hero)</SectionTitle>
+      <Field label="Title">
+        <TextInput value={data.title} onChange={v => set('title', v)} placeholder="The 2025 Lookbook" />
+      </Field>
+      <Field label="Subtitle">
+        <TextInput value={data.subtitle} onChange={v => set('subtitle', v)} placeholder="MASTER CATALOGUE" />
+      </Field>
+      <Field label="Download / Link Path">
+        <TextInput value={data.downloadPath} onChange={v => set('downloadPath', v)} placeholder="/catalogues" />
+      </Field>
+      <div className="space-y-1">
+        <label className="text-[10px] font-bold text-gray-500 uppercase">Background Color</label>
+        <div className="flex gap-2">
+          <input type="color" value={data.bgColor || '#1A1A1A'} onChange={e => set('bgColor', e.target.value)} className="h-10 w-16 p-1 border rounded-lg cursor-pointer" />
+          <input type="text" value={data.bgColor || '#1A1A1A'} onChange={e => set('bgColor', e.target.value)} className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-xs font-mono uppercase" />
+        </div>
+      </div>
+    </div>
+  ),
+
+  grid_heading: ({ data, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Grid Heading Bar (above product cards)</SectionTitle>
+      <Field label="Left Heading HTML" hint='Use *word* for italic, e.g. CLASSROOM *Collection*'>
+        <TextInput value={data.leftHeading} onChange={v => set('leftHeading', v)} placeholder="CLASSROOM *Collection*" />
+      </Field>
+      <Field label="Right Stat Text">
+        <TextInput value={data.rightStat} onChange={v => set('rightStat', v)} placeholder="Showing 12 Products" />
+      </Field>
+    </div>
+  ),
+
+  info_split_grid: ({ data, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Info Split Grid (Bottom Section)</SectionTitle>
+      <Field label="Heading HTML" hint='Supports <br/> and <span> tags'>
+        <TextArea value={data.titleHtml} onChange={v => set('titleHtml', v)} rows={2} placeholder="Bespoke *Planning Hub*" />
+      </Field>
+      <Field label="Description">
+        <TextArea value={data.description} onChange={v => set('description', v)} rows={3} />
+      </Field>
+      <SectionTitle>Info Points</SectionTitle>
+      {(data.points || []).map((point, i) => (
+        <div key={i} className="flex gap-2 items-center">
+          <TextInput value={point} onChange={v => { const p = [...(data.points || [])]; p[i] = v; set('points', p); }} placeholder={`Point ${i + 1}`} />
+          <button onClick={() => set('points', (data.points || []).filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={13} /></button>
+        </div>
+      ))}
+      <button onClick={() => set('points', [...(data.points || []), ''])} className="text-blue-600 text-xs font-bold"><Plus size={13} /> Add Point</button>
+      <SectionTitle>CTA Button</SectionTitle>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="Button Label"><TextInput value={data.btnLabel} onChange={v => set('btnLabel', v)} placeholder="Schedule Site Visit" /></Field>
+        <Field label="Button Link"><TextInput value={data.btnPath} onChange={v => set('btnPath', v)} placeholder="/contact-us" /></Field>
+      </div>
+      <SectionTitle>Image</SectionTitle>
+      <ImageUpload label="Section Image" value={data.img} onChange={v => set('img', v)} />
+    </div>
+  ),
+
+  action_stack: ({ data, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Action Stack Cards (Sports page – right side mini cards)</SectionTitle>
+      {(data.cards || []).map((card, i) => (
+        <div key={i} className="border border-gray-200 rounded-xl p-3 space-y-2 bg-gray-50/50">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-500">Card {i + 1}</span>
+            <button onClick={() => set('cards', (data.cards || []).filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={13} /></button>
+          </div>
+          <TextInput value={card.title} onChange={v => { const c = [...(data.cards || [])]; c[i] = { ...c[i], title: v }; set('cards', c); }} placeholder="Schedule Site Survey" />
+          <TextInput value={card.subtitle} onChange={v => { const c = [...(data.cards || [])]; c[i] = { ...c[i], subtitle: v }; set('cards', c); }} placeholder="Subtitle text" />
+          <div className="grid grid-cols-2 gap-2">
+            <TextInput value={card.icon} onChange={v => { const c = [...(data.cards || [])]; c[i] = { ...c[i], icon: v }; set('cards', c); }} placeholder="Icon (Lucide name)" />
+            <TextInput value={card.link} onChange={v => { const c = [...(data.cards || [])]; c[i] = { ...c[i], link: v }; set('cards', c); }} placeholder="/path" />
+          </div>
+          <div className="flex gap-2 items-center">
+            <label className="text-[10px] font-bold text-gray-500 uppercase">BG Color</label>
+            <input type="color" value={card.bgColor || '#1A1A1A'} onChange={e => { const c = [...(data.cards || [])]; c[i] = { ...c[i], bgColor: e.target.value }; set('cards', c); }} className="h-8 w-12 p-0.5 border rounded cursor-pointer" />
+            <input type="text" value={card.bgColor || '#1A1A1A'} onChange={e => { const c = [...(data.cards || [])]; c[i] = { ...c[i], bgColor: e.target.value }; set('cards', c); }} className="flex-1 px-2 py-1 border border-gray-200 rounded text-xs font-mono" />
+          </div>
+        </div>
+      ))}
+      <button onClick={() => set('cards', [...(data.cards || []), { title: '', subtitle: '', icon: 'Zap', link: '#', bgColor: '#1A1A1A' }])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold"><Plus size={13} /> Add Card</button>
+    </div>
+  ),
+
+  feature_blocks: ({ data, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Colored Feature Blocks (Design page – right-side colored cards)</SectionTitle>
+      {(data.blocks || []).map((block, i) => (
+        <div key={i} className="border border-gray-200 rounded-xl p-3 space-y-2 bg-gray-50/50">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-500">Block {i + 1}</span>
+            <button onClick={() => set('blocks', (data.blocks || []).filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={13} /></button>
+          </div>
+          <TextInput value={block.title} onChange={v => { const b = [...(data.blocks || [])]; b[i] = { ...b[i], title: v }; set('blocks', b); }} placeholder="Block Title" />
+          <TextInput value={block.subtitle} onChange={v => { const b = [...(data.blocks || [])]; b[i] = { ...b[i], subtitle: v }; set('blocks', b); }} placeholder="Subtitle / Year" />
+          <TextInput value={block.icon} onChange={v => { const b = [...(data.blocks || [])]; b[i] = { ...b[i], icon: v }; set('blocks', b); }} placeholder="Icon (Lucide)" />
+          <div className="grid grid-cols-2 gap-2">
+            <div className="flex gap-2 items-center">
+              <label className="text-[10px] font-bold text-gray-400">BG</label>
+              <input type="color" value={block.bgColor || '#0057A8'} onChange={e => { const b = [...(data.blocks || [])]; b[i] = { ...b[i], bgColor: e.target.value }; set('blocks', b); }} className="h-8 w-12 p-0.5 border rounded cursor-pointer" />
+              <input type="text" value={block.bgColor || '#0057A8'} onChange={e => { const b = [...(data.blocks || [])]; b[i] = { ...b[i], bgColor: e.target.value }; set('blocks', b); }} className="flex-1 px-2 py-1 border border-gray-200 rounded text-xs font-mono" />
+            </div>
+            <div className="flex gap-2 items-center">
+              <label className="text-[10px] font-bold text-gray-400">Text</label>
+              <input type="color" value={block.textColor || '#FFFFFF'} onChange={e => { const b = [...(data.blocks || [])]; b[i] = { ...b[i], textColor: e.target.value }; set('blocks', b); }} className="h-8 w-12 p-0.5 border rounded cursor-pointer" />
+              <input type="text" value={block.textColor || '#FFFFFF'} onChange={e => { const b = [...(data.blocks || [])]; b[i] = { ...b[i], textColor: e.target.value }; set('blocks', b); }} className="flex-1 px-2 py-1 border border-gray-200 rounded text-xs font-mono" />
+            </div>
+          </div>
+        </div>
+      ))}
+      <button onClick={() => set('blocks', [...(data.blocks || []), { title: '', subtitle: '', icon: 'Palette', bgColor: '#0057A8', textColor: '#FFFFFF' }])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold"><Plus size={13} /> Add Block</button>
+    </div>
+  ),
+
+  registration_hero: ({ data, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Registration Page — Hero Sidebar</SectionTitle>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="Badge Icon (Lucide)"><TextInput value={data.badgeIcon} onChange={v => set('badgeIcon', v)} placeholder="Users" /></Field>
+        <Field label="Badge Text"><TextInput value={data.badge} onChange={v => set('badge', v)} placeholder="Partner Network" /></Field>
+      </div>
+      <Field label="Main Heading HTML" hint='e.g. Join The <span>Circle.</span>'>
+        <TextArea value={data.titleHtml} onChange={v => set('titleHtml', v)} rows={2} />
+      </Field>
+      <Field label="Sub-paragraph">
+        <TextArea value={data.subtitle} onChange={v => set('subtitle', v)} rows={3} />
+      </Field>
+      <SectionTitle>Feature Bullets</SectionTitle>
+      {(data.features || []).map((f, i) => (
+        <div key={i} className="flex gap-2 items-start bg-gray-50 rounded-lg p-2">
+          <div className="flex-1 space-y-1">
+            <TextInput value={f.title} onChange={v => { const fs = [...(data.features || [])]; fs[i] = { ...fs[i], title: v }; set('features', fs); }} placeholder="Feature title" />
+            <TextInput value={f.subtitle} onChange={v => { const fs = [...(data.features || [])]; fs[i] = { ...fs[i], subtitle: v }; set('features', fs); }} placeholder="Feature description" />
+          </div>
+          <button onClick={() => set('features', (data.features || []).filter((_, j) => j !== i))} className="text-red-400 mt-2"><Trash2 size={13} /></button>
+        </div>
+      ))}
+      <button onClick={() => set('features', [...(data.features || []), { title: '', subtitle: '' }])} className="text-blue-600 text-xs font-bold"><Plus size={13} /> Add Feature</button>
+    </div>
+  ),
+
+  registration_features: ({ data, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Registration Page — Bottom Feature Cards</SectionTitle>
+      {(data.cards || []).map((card, i) => (
+        <div key={i} className="border border-gray-200 rounded-xl p-3 space-y-2 bg-gray-50/50">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-500">Card {i + 1}</span>
+            <button onClick={() => set('cards', (data.cards || []).filter((_, j) => j !== i))} className="text-red-400"><Trash2 size={13} /></button>
+          </div>
+          <TextInput value={card.icon} onChange={v => { const c = [...(data.cards || [])]; c[i] = { ...c[i], icon: v }; set('cards', c); }} placeholder="Icon (Lucide)" />
+          <TextInput value={card.title} onChange={v => { const c = [...(data.cards || [])]; c[i] = { ...c[i], title: v }; set('cards', c); }} placeholder="Title" />
+          <TextInput value={card.description} onChange={v => { const c = [...(data.cards || [])]; c[i] = { ...c[i], description: v }; set('cards', c); }} placeholder="Description" />
+          <div className="flex gap-2 items-center">
+            <label className="text-[10px] font-bold text-gray-400">Color</label>
+            <input type="color" value={card.color || '#0057A8'} onChange={e => { const c = [...(data.cards || [])]; c[i] = { ...c[i], color: e.target.value }; set('cards', c); }} className="h-8 w-12 p-0.5 border rounded cursor-pointer" />
+          </div>
+        </div>
+      ))}
+      <button onClick={() => set('cards', [...(data.cards || []), { icon: 'Shield', title: '', description: '', color: '#0057A8' }])}
+        className="flex items-center gap-1 text-blue-600 text-xs font-bold"><Plus size={13} /> Add Card</button>
+    </div>
+  ),
+
+  login_hero: ({ data, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Login Page — Hero Sidebar</SectionTitle>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="Badge Icon (Lucide)"><TextInput value={data.badgeIcon} onChange={v => set('badgeIcon', v)} placeholder="Shield" /></Field>
+        <Field label="Badge Text"><TextInput value={data.badge} onChange={v => set('badge', v)} placeholder="Secure Institutional Portal" /></Field>
+      </div>
+      <Field label="Main Heading HTML">
+        <TextArea value={data.titleHtml} onChange={v => set('titleHtml', v)} rows={2} placeholder="Welcome Back." />
+      </Field>
+      <Field label="Sub-paragraph">
+        <TextArea value={data.subtitle} onChange={v => set('subtitle', v)} rows={3} />
+      </Field>
+      <SectionTitle>Member Circle Section</SectionTitle>
+      <Field label="Circle Heading">
+        <TextInput value={data.circleHeading} onChange={v => set('circleHeading', v)} placeholder="Join 4000+ Institutional Partners" />
+      </Field>
+      <Field label="Circle Sub-text">
+        <TextInput value={data.circleSubtext} onChange={v => set('circleSubtext', v)} placeholder="Access exclusive resources" />
+      </Field>
+      <SectionTitle>Bottom CTA</SectionTitle>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label='"New Institution?" Text'><TextInput value={data.newUserText} onChange={v => set('newUserText', v)} placeholder="New Institution?" /></Field>
+        <Field label="Register Link Label"><TextInput value={data.registerLabel} onChange={v => set('registerLabel', v)} placeholder="Register Now" /></Field>
+      </div>
+    </div>
+  ),
 };
 
 // Fallback: generic key-value editor for unknown block types
@@ -1223,7 +1562,21 @@ function BlockEditor({ slug, block, onSaved }) {
     mission_vision: '🎯 Mission & Vision (OLD)', about_philosophy: '🧠 Philosophy & Team Photo', journey: '⏳ Journey Timeline',
     contact_info: '📞 Contact Info', text_content: '📝 Text Content',
     catalogues_list: '📁 Catalogues List', guides_list: '📖 Guides List',
-    feature_card: '🎴 Dynamic Feature Card (Color/Text)',
+    feature_card: '🎴 Feature Card (Color/CTA)',
+    action_strip: '🏷️ Dark Action Strip',
+    grid_heading: '📊 Grid Heading Bar',
+    info_split_grid: 'ℹ️ Info Split Grid',
+    action_stack: '📚 Action Stack Cards',
+    feature_blocks: '🎨 Colored Feature Blocks',
+    registration_hero: '📝 Registration Hero',
+    registration_features: '✨ Registration Features',
+    login_hero: '🔐 Login Hero',
+    corporate_page_content: '🏢 Corporate Page Content',
+    manufacturing_page_content: '🏭 Manufacturing Page Content',
+    environments_page_content: '🌿 Environments Page Content',
+    catalogues_page_content: '📄 Catalogues Page Content',
+    guides_page_content: '📖 Guides Page Content',
+    contact_page_content: '✉️ Contact Page Content',
   };
 
   return (
@@ -1270,28 +1623,30 @@ function BlockEditor({ slug, block, onSaved }) {
 
 // What block types each page slug is allowed to use (matches what the frontend actually reads)
 const PAGE_ALLOWED_BLOCKS = {
-  home:        ['hero', 'product_carousel', 'tiles', 'solutions', 'sidebar_trending', 'sidebar_resources', 'sidebar_banners', 'cta_whatsapp', 'partners', 'topbar', 'navbar', 'ticker'],
-  furniture:   ['inner_page_hero', 'feature_card', 'sidebar_categories', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp'],
-  architecture:['inner_page_hero', 'feature_card', 'sidebar_categories', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp'],
-  digital:     ['inner_page_hero', 'feature_card', 'sidebar_categories', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp'],
-  sports:      ['inner_page_hero', 'feature_card', 'sidebar_categories', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp'],
-  libraries:   ['inner_page_hero', 'feature_card', 'sidebar_categories', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp'],
-  labs:        ['inner_page_hero', 'feature_card', 'sidebar_categories', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp'],
-  mathematics: ['inner_page_hero', 'feature_card', 'sidebar_categories', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp'],
-  science:     ['inner_page_hero', 'feature_card', 'sidebar_categories', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp'],
-  design:      ['inner_page_hero', 'feature_card', 'sidebar_categories', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp'],
-  manufacturing:['inner_page_hero', 'feature_card', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp', 'text_content'],
-  corporate:   ['inner_page_hero', 'feature_card', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp', 'text_content'],
-  environments:['environments_page_content', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp'],
-  catalogues:  ['catalogues_page_content', 'catalogues_list', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp'],
-  guides:      ['guides_page_content', 'guides_list', 'sidebar_resources', 'sidebar_trending', 'cta_whatsapp'],
-  aboutus:     ['about_hero', 'stats', 'about_philosophy', 'journey', 'sidebar_resources', 'sidebar_trending'],
-  'contact-us':['contact_page_content', 'contact_info', 'sidebar_resources', 'sidebar_trending'],
-  'school-sale': ['inner_page_hero', 'sidebar_resources', 'sidebar_trending', 'listings', 'cta_whatsapp'],
-  partnerships:['inner_page_hero', 'sidebar_resources', 'sidebar_trending', 'categories', 'cta_whatsapp'],
-  'setup-guide': ['inner_page_hero', 'sidebar_resources', 'sidebar_trending', 'benefits', 'cta_whatsapp'],
-  workshops:   ['inner_page_hero', 'sidebar_resources', 'sidebar_trending', 'upcoming_events', 'cta_whatsapp'],
-  fundraising: ['inner_page_hero', 'sidebar_resources', 'sidebar_trending', 'categories', 'cta_whatsapp'],
+  home:        ['topbar', 'navbar', 'ticker', 'hero', 'product_carousel', 'tiles', 'solutions', 'sidebar_trending', 'sidebar_resources', 'sidebar_banners', 'cta_whatsapp', 'partners'],
+  furniture:   ['inner_page_hero', 'action_strip', 'sidebar_categories', 'grid_heading', 'feature_card', 'cta_whatsapp'],
+  architecture:['inner_page_hero', 'sidebar_categories', 'grid_heading', 'feature_card', 'cta_whatsapp'],
+  digital:     ['inner_page_hero', 'sidebar_categories', 'grid_heading', 'feature_card', 'cta_whatsapp'],
+  sports:      ['inner_page_hero', 'action_stack', 'sidebar_categories', 'grid_heading', 'feature_card', 'info_split_grid', 'cta_whatsapp'],
+  libraries:   ['inner_page_hero', 'feature_card', 'sidebar_categories', 'grid_heading', 'info_split_grid', 'cta_whatsapp'],
+  labs:        ['inner_page_hero', 'sidebar_categories', 'grid_heading', 'info_split_grid', 'cta_whatsapp'],
+  mathematics: ['inner_page_hero', 'sidebar_categories', 'grid_heading', 'info_split_grid', 'cta_whatsapp'],
+  science:     ['inner_page_hero', 'feature_card', 'sidebar_categories', 'grid_heading', 'info_split_grid', 'cta_whatsapp'],
+  design:      ['inner_page_hero', 'feature_blocks', 'sidebar_categories', 'grid_heading', 'feature_card', 'info_split_grid', 'cta_whatsapp'],
+  manufacturing:['manufacturing_page_content', 'cta_whatsapp'],
+  corporate:   ['corporate_page_content', 'cta_whatsapp'],
+  environments:['environments_page_content', 'cta_whatsapp'],
+  catalogues:  ['catalogues_page_content', 'catalogues_list', 'cta_whatsapp'],
+  guides:      ['guides_page_content', 'guides_list', 'cta_whatsapp'],
+  aboutus:     ['about_hero', 'stats', 'about_philosophy', 'journey'],
+  'contact-us':['contact_page_content', 'contact_info'],
+  'school-sale': ['inner_page_hero', 'sidebar_categories', 'listings', 'cta_whatsapp'],
+  partnerships:['inner_page_hero', 'sidebar_categories', 'categories', 'cta_whatsapp'],
+  'setup-guide': ['inner_page_hero', 'sidebar_categories', 'benefits', 'cta_whatsapp'],
+  workshops:   ['inner_page_hero', 'sidebar_categories', 'upcoming_events', 'cta_whatsapp'],
+  fundraising: ['inner_page_hero', 'sidebar_categories', 'categories', 'cta_whatsapp'],
+  registration:['registration_hero', 'registration_features'],
+  login:       ['login_hero'],
   'digitization-guide': ['inner_page_hero', 'text_content', 'sidebar_categories', 'cta_whatsapp'],
   'catalogue-2025': ['inner_page_hero', 'text_content', 'sidebar_categories', 'cta_whatsapp'],
   'skill-lab-guide': ['inner_page_hero', 'text_content', 'sidebar_categories', 'cta_whatsapp'],
@@ -1302,6 +1657,7 @@ const PAGE_ALLOWED_BLOCKS = {
   'library-trends': ['inner_page_hero', 'text_content', 'sidebar_categories', 'cta_whatsapp'],
   'job-openings': ['inner_page_hero', 'text_content', 'sidebar_categories', 'cta_whatsapp'],
   'influencer-program': ['inner_page_hero', 'text_content', 'sidebar_categories', 'cta_whatsapp'],
+  'setup-school-india': ['inner_page_hero', 'text_content', 'sidebar_categories', 'cta_whatsapp'],
 };
 
 const DEFAULT_ALLOWED_BLOCKS = ['inner_page_hero', 'text_content', 'sidebar_categories', 'cta_whatsapp'];
@@ -1371,7 +1727,17 @@ function PageEditor({ slug }) {
     guides_page_content: '📖 Guides Page Content',
     guides_list: '📋 Guides List',
     contact_page_content: '✉️ Contact Page Content',
-    feature_card: '🎴 Dynamic Feature Card (Color/Text)',
+    feature_card: '🎴 Feature Card (Color/CTA)',
+    action_strip: '🏷️ Dark Action Strip',
+    grid_heading: '📊 Grid Heading Bar',
+    info_split_grid: 'ℹ️ Info Split Grid',
+    action_stack: '📚 Action Stack Cards',
+    feature_blocks: '🎨 Colored Feature Blocks',
+    registration_hero: '📝 Registration Hero Sidebar',
+    registration_features: '✨ Registration Bottom Cards',
+    login_hero: '🔐 Login Hero Sidebar',
+    corporate_page_content: '🏢 Corporate Page Content',
+    manufacturing_page_content: '🏭 Manufacturing Page Content',
   };
 
   if (loading) return <div className="flex justify-center py-16"><div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full" /></div>;
@@ -1509,6 +1875,9 @@ const PAGE_ICONS = {
   'play-furniture-lookbook': '🪑', 'math-resources': '🧮', 'completed-projects': '🏗️',
   'design-ideas': '💡', 'library-trends': '🏛️', 'job-openings': '💼',
   'influencer-program': '📣',
+  registration: '📝',
+  login: '🔐',
+  'setup-school-india': '🏫',
 };
 
 export default function CMSEditor() {

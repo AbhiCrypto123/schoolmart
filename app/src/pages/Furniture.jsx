@@ -40,7 +40,7 @@ const Furniture = () => {
       <div className="max-w-7xl mx-auto px-4">
         
         <section className="pt-4 pb-6 grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
-           <div className="lg:col-span-7 rounded-[25px] overflow-hidden relative shadow-lg group border border-gray-100 min-h-[400px]">
+           <div className="lg:col-span-7 rounded-[40px] overflow-hidden relative shadow-lg group border border-gray-100 min-h-[400px]">
               <CMSMedia 
                 mediaType={heroBlock.mediaType} 
                 mediaUrl={heroBlock.mediaUrl} 
@@ -48,7 +48,7 @@ const Furniture = () => {
                 className="w-full h-full object-cover brightness-90 transition-all duration-1000"
               />
               <div className="absolute inset-0 bg-sm-blue/10 mix-blend-multiply opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end backdrop-blur-md bg-white/10 p-6 rounded-[20px] border border-white/20">
+              <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end backdrop-blur-md bg-white/10 p-6 rounded-[30px] border border-white/20">
                  <div>
                     <span className="text-[8px] font-black text-white/60 uppercase tracking-widest block mb-2">{heroBlock.badge || "Featured Series"}</span>
                     <h2 className="text-2xl font-black text-white uppercase leading-none font-heading" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Modular <br/> Classroom Pro." }} />
@@ -58,7 +58,7 @@ const Furniture = () => {
            </div>
 
            <div className="lg:col-span-5 flex flex-col gap-3">
-              <div className="flex-grow bg-gray-50 rounded-[25px] p-8 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group">
+              <div className="flex-grow bg-gray-50 rounded-[40px] p-8 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group">
                  <div className="px-3 py-1 bg-sm-blue text-white font-black rounded-full text-[8px] uppercase tracking-[0.2em] mb-4 w-fit scale-90">
                     <Sofa size={12} className="inline mr-2" /> {heroBlock.badge || "2025 Collection"}
                  </div>
@@ -68,15 +68,17 @@ const Furniture = () => {
                  </p>
               </div>
 
-              <div className="bg-gray-900 rounded-[25px] p-8 text-white flex items-center justify-between group overflow-hidden relative border border-gray-800 shadow-2xl transition-transform hover:scale-[1.02]">
+               <Link to={blocks?.action_strip?.downloadPath || '/catalogues'}
+                 style={{ backgroundColor: blocks?.action_strip?.bgColor || '#111827' }}
+                 className="rounded-[40px] p-8 text-white flex items-center justify-between group overflow-hidden relative border border-gray-800 shadow-2xl transition-transform hover:scale-[1.02]">
                  <div className="flex flex-col gap-2">
-                    <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-sm-blue">The 2025 Lookbook.</h3>
-                    <span className="text-[7px] font-black text-white/40 uppercase tracking-widest font-heading">MASTER CATALOGUE</span>
+                    <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-sm-blue">{blocks?.action_strip?.title || 'The 2025 Lookbook.'}</h3>
+                    <span className="text-[7px] font-black text-white/40 uppercase tracking-widest font-heading">{blocks?.action_strip?.subtitle || 'MASTER CATALOGUE'}</span>
                  </div>
-                 <button className="p-4 bg-sm-blue text-white rounded-full shadow-lg relative z-10 transition-all hover:bg-white hover:text-sm-blue">
+                 <span className="p-4 bg-sm-blue text-white rounded-full shadow-lg relative z-10 transition-all group-hover:bg-white group-hover:text-sm-blue">
                     <Download size={20} />
-                 </button>
-              </div>
+                 </span>
+               </Link>
            </div>
         </section>
 
@@ -146,25 +148,39 @@ const Furniture = () => {
                        )}
                     </React.Fragment>
                  ))}
-                 
+              </div>
+
+              {/* FULL WIDTH SPACE PLANNING HUB */}
+              <div className="mt-16 pt-16 border-t border-gray-100">
                  <div 
-                   style={{ backgroundColor: (blocks?.feature_card?.bgColor || '#111827') }}
-                   className="rounded-[30px] p-8 text-white flex flex-col justify-center min-h-[350px] relative overflow-hidden group shadow-lg border border-white/5"
+                   style={{ backgroundColor: (blocks?.feature_card?.bgColor || '#0A0E14') }}
+                   className="rounded-[40px] p-8 lg:p-16 text-white flex flex-col md:flex-row items-center justify-between relative overflow-hidden group shadow-2xl border border-white/5 min-h-[300px]"
                  >
-                    <Building2 size={32} style={{ color: blocks?.feature_card?.btnColor || '#3B82F6' }} className="mb-4" />
-                    <h4 className="text-xl font-black font-heading tracking-tighter uppercase leading-none mb-4">
-                       {blocks?.feature_card?.title || "Space Planning Hub."}
-                    </h4>
-                    <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-6 leading-relaxed">
-                       {blocks?.feature_card?.subtitle || "Free Layout Design & Mockup Services."}
-                    </p>
-                    <Link 
-                      to={blocks?.feature_card?.btnPath || '#'}
-                      style={{ backgroundColor: blocks?.feature_card?.btnColor || '#3B82F6' }}
-                      className="px-5 py-2.5 text-white font-black rounded-full hover:bg-white hover:text-gray-900 transition-all text-[8px] tracking-widest w-fit z-10"
-                    >
-                      {blocks?.feature_card?.btnLabel || "Request Pitch"}
-                    </Link>
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sm-blue/10 rounded-full blur-[120px] -mr-64 -mt-64" />
+                    
+                    <div className="relative z-10 max-w-2xl text-center md:text-left">
+                       <div className="flex items-center gap-3 mb-6 justify-center md:justify-start">
+                          <Building2 size={32} style={{ color: blocks?.feature_card?.btnColor || '#3B82F6' }} />
+                          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Infrastructure Support</span>
+                       </div>
+                       <h4 className="text-4xl lg:text-5xl font-black font-heading tracking-tighter uppercase leading-[0.9] mb-6">
+                          {blocks?.feature_card?.title || "Space Planning Hub."}
+                       </h4>
+                       <p className="text-white/40 text-xs lg:text-sm font-bold uppercase tracking-widest leading-loose max-w-lg">
+                          {blocks?.feature_card?.subtitle || "Free Layout Design & Mockup Services. Get professional campus architecture audits and master planning."}
+                       </p>
+                    </div>
+
+                    <div className="mt-10 md:mt-0 relative z-10">
+                       <Link 
+                         to={blocks?.feature_card?.btnPath || '/registration'}
+                         style={{ backgroundColor: blocks?.feature_card?.btnColor || '#3B82F6' }}
+                         className="px-10 py-5 text-white font-black rounded-full hover:bg-white hover:text-gray-900 transition-all text-[11px] uppercase tracking-widest shadow-2xl flex items-center gap-3 group"
+                       >
+                         {blocks?.feature_card?.btnLabel || "Request Pitch"}
+                         <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                       </Link>
+                    </div>
                  </div>
               </div>
            </div>

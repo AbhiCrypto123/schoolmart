@@ -21,19 +21,29 @@ const storage = multer.diskStorage({
   }
 });
 
-// File filter (images and videos)
+// File filter (images, videos, and documents)
+const ALLOWED_MIMES = [
+  'image/', 'video/',
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+];
+
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
+  const allowed = ALLOWED_MIMES.some(mime =>
+    mime.endsWith('/') ? file.mimetype.startsWith(mime) : file.mimetype === mime
+  );
+  if (allowed) {
     cb(null, true);
   } else {
-    cb(new Error('Only image and video files are allowed!'), false);
+    cb(new Error('Only image, video, PDF and DOC files are allowed!'), false);
   }
 };
 
 const upload = multer({ 
   storage, 
   fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+  limits: { fileSize: 25 * 1024 * 1024 } // 25MB limit
 });
 
 // POST /api/upload

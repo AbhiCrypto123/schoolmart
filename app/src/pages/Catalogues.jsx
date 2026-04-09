@@ -1,138 +1,191 @@
 // src/pages/Catalogues.jsx
 import React, { useState } from 'react';
-import { BookOpen, Download, ArrowUpRight, Layers } from 'lucide-react';
+import { BookOpen, Download, ArrowUpRight, Layers, FileText, Share2, ShieldCheck, Zap, CheckCircle2, X } from 'lucide-react';
 import { useCMSPage } from '../hooks/useCMSBlock';
+import { useNavigate } from 'react-router-dom';
 import CMSMedia from '../components/ui/CMSMedia';
 import CatalogueCard from '../components/CatalogueCard';
 
 const DEFAULT_CONTENT = {
   libraryHero: {
     badge: 'Digital Library 2025',
-    titleHtml: 'Digital <br/> <span class="text-sm-blue italic font-serif lowercase tracking-normal">Infrastructure.</span>',
+    titleHtml: 'Digital <br/> <span class="text-[#004a8e] italic font-serif lowercase tracking-normal">Infrastructure.</span>',
     subtitle: 'Deep-dive into our comprehensive institutional catalogues and design handbooks.',
   },
   actionStrip: {
     title: '2025 Master Catalogue.',
     subtitle: 'Complete range of ergonomic campus solutions for modern schools.',
     btn1Text: 'Instant PDF',
-    btn2Text: 'Share Hub',
+    btn2Text: 'Request Hub',
   },
   resourceTiles: ['Technical Specs', 'Compliance Guide', 'Design Portfolio'],
-  menuStrip: ['MASTER 2025', 'FURNITURE', 'INFRASTRUCTURE', 'RESOURCES', 'AUDIT INDICES'],
   infoGrid: {
-    titleHtml: 'Knowledge <span class="text-sm-blue">Infrastructure.</span>',
+    titleHtml: 'Knowledge <span class="text-[#004a8e]">Infrastructure.</span>',
     points: ['Verified Specs', 'Compliance Audit', 'Future Ready', 'BIFMA Level-3'],
     img: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1000&q=80',
   }
 };
 
 const DEFAULT_CATALOGUES = [
-  { title: 'School Furniture 2025', category: 'Furniture', img: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80' },
-  { title: 'Tech Infrastructure', category: 'Digital', img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80' },
-  { title: 'Sports Surfaces', category: 'Sports', img: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80' },
-  { title: 'Lab Equipment', category: 'Science', img: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80' },
+  { title: 'School Furniture 2025', category: 'Modular furniture for classrooms and labs.', img: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80', fileUrl: '#' },
+  { title: 'Digital Infrastructure', category: 'Smart boards and digital edtech solutions.', img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80', fileUrl: '#' },
+  { title: 'Sports & Play', category: 'Professional equipment for sports and outdoor play.', img: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80', fileUrl: '#' },
+  { title: 'Lab & Science', category: 'Comprehensive kits for STEM and lab environments.', img: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80', fileUrl: '#' },
+  { title: 'Library Solutions', category: 'Modern shelving and reading space architecture.', img: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1000&q=80', fileUrl: '#' },
+  { title: 'Skill Lab Guide', category: 'Vocational training and specialized skill labs.', img: 'https://images.unsplash.com/photo-1581092580497-e0d23cb61402?w=800&q=80', fileUrl: '#' },
+  { title: 'Audit Indices 2025', category: 'Documentation for institutional quality audits.', img: 'https://images.unsplash.com/photo-1454165833267-028cc21e7867?w=800&q=80', fileUrl: '#' },
+  { title: 'Setup Guide India', category: 'Legal and logistical framework for school setup.', img: 'https://images.unsplash.com/photo-1522071823907-b712ec46597a?w=800&q=80', fileUrl: '#' },
 ];
 
 const Catalogues = () => {
-    const { blocks, loading } = useCMSPage('catalogues');
+  const navigate = useNavigate();
+  const { blocks, loading } = useCMSPage('catalogues');
   const [selectedItem, setSelectedItem] = useState(null);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [showCaution, setShowCaution] = useState(false);
+  
   const d = blocks?.catalogues_page_content || DEFAULT_CONTENT;
-  const catalogues = blocks?.catalogues_list?.catalogues || DEFAULT_CATALOGUES;
+  const cmsCatalogues = (blocks?.catalogues_list?.catalogues || []).map(c => ({
+    ...c,
+    category: c.category || c.description || '',
+  }));
+  // Force exactly 8 items for the institutional grid density
+  const catalogues = [...cmsCatalogues, ...DEFAULT_CATALOGUES].slice(0, 8);
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center text-sm-blue font-bold tracking-widest uppercase">Loading Catalogues...</div>;
+  const handleDownload = (e, item) => {
+    e.stopPropagation();
+    if (!isRegistered) {
+       setShowCaution(true);
+       return;
+    }
+    window.open(item.fileUrl || '#', '_blank');
+  };
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-[#004a8e] font-black tracking-widest uppercase py-20">Loading Catalogues...</div>;
 
   return (
-    <main className="min-h-screen bg-white pt-10 pb-10">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col gap-8">
-           {/* Main Content Area */}
-           <div className="flex-grow min-w-0">
-             <section className="pt-2 pb-12 grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
-                <div className="md:col-span-4 bg-gray-50 rounded-[30px] p-12 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group min-h-[400px]">
-                   <CMSMedia 
-                     mediaType={d.libraryHero?.mediaType} 
-                     mediaUrl={d.libraryHero?.mediaUrl} 
-                     fallbackImg={d.libraryHero?.img} 
-                     className="absolute inset-0 w-full h-full object-cover opacity-10 group-hover:opacity-20 transition-all duration-1000"
-                   />
-                   <div className="px-4 py-1.5 bg-sm-blue text-white font-black rounded-full text-[10px] uppercase tracking-[0.2em] mb-6 w-fit shadow-xl shadow-blue-500/20 relative z-10">
-                      <BookOpen size={14} className="inline mr-2" /> {d.libraryHero?.badge || 'Catalogue'}
-                   </div>
-                   <h1 className="text-4xl lg:text-5xl font-black font-heading leading-tight mb-8 tracking-tighter text-gray-900 uppercase" dangerouslySetInnerHTML={{ __html: d.libraryHero?.titleHtml }} />
-                   <p className="text-gray-400 text-[11px] font-bold uppercase tracking-widest max-w-xs leading-loose">
-                      {d.libraryHero?.subtitle}
-                   </p>
-                </div>
+    <main className="min-h-screen bg-[#F8FAFC] pb-10 relative">
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 pt-4">
+        <div className="flex flex-col gap-4 lg:gap-6">
+           
+           <section className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+              <div className="lg:col-span-4 bg-white border border-gray-100 rounded-[40px] p-8 lg:p-12 flex flex-col justify-center relative overflow-hidden shadow-sm">
+                 <div className="px-5 py-1.5 bg-gray-50 text-[#004a8e] font-black rounded-full text-[9px] uppercase tracking-[0.2em] mb-6 w-fit border border-gray-100">
+                    <BookOpen size={14} className="inline mr-2" /> {d.libraryHero?.badge || 'Catalogue'}
+                 </div>
+                 <h1 className="text-3xl lg:text-4xl font-black font-heading leading-tight mb-8 tracking-tighter text-gray-900 uppercase break-words" dangerouslySetInnerHTML={{ __html: d.libraryHero?.titleHtml }} />
+                 <p className="text-gray-400 text-[10px] md:text-[11px] font-bold uppercase tracking-widest max-w-xs leading-relaxed">
+                    {d.libraryHero?.subtitle}
+                 </p>
+              </div>
 
-                <div className="md:col-span-8 flex flex-col gap-6">
-                   <div className="bg-[#1A1A1A] rounded-[30px] p-10 text-white flex flex-col lg:flex-row justify-between items-center group overflow-hidden relative border border-gray-800 shadow-2xl transition-transform hover:scale-[1.01] flex-grow">
-                      <div className="flex-1">
-                         <h3 className="text-2xl font-black uppercase tracking-[0.1em] leading-relaxed text-sm-blue mb-2">{d.actionStrip?.title}</h3>
-                         <p className="text-white/40 text-[10px] uppercase tracking-widest leading-loose max-w-sm">{d.actionStrip?.subtitle}</p>
-                      </div>
-                      <div className="flex gap-4 mt-8 lg:mt-0">
-                         <button className="px-8 py-4 bg-sm-blue text-white font-black rounded-full text-[10px] uppercase tracking-widest shadow-lg shadow-blue-500/20 active:scale-95 transition-all">{d.actionStrip?.btn1Text || 'Download'}</button>
-                         <button className="px-8 py-4 bg-white/10 backdrop-blur-md text-white border border-white/20 font-black rounded-full text-[10px] uppercase tracking-widest hover:bg-sm-blue hover:border-sm-blue transition-all">Request Hardcopy</button>
-                      </div>
-                   </div>
+              <div className="lg:col-span-8 flex flex-col gap-4">
+                 <div className="bg-white rounded-[40px] p-8 lg:p-14 text-gray-900 flex flex-col md:flex-row justify-between items-center relative border border-gray-100 shadow-sm flex-grow">
+                    <div className="flex-1 text-center md:text-left">
+                       <h3 className="text-2xl lg:text-4xl font-black uppercase tracking-[0.1em] text-[#004a8e] mb-4">{d.actionStrip?.title}</h3>
+                       <p className="text-gray-400 text-[10px] md:text-[11px] font-bold uppercase tracking-widest leading-loose max-w-sm mx-auto md:mx-0">{d.actionStrip?.subtitle}</p>
+                    </div>
+                    <div className="flex flex-wrap gap-3 mt-8 md:mt-0 justify-center">
+                       <button 
+                         onClick={(e) => handleDownload(e, catalogues[0])}
+                         className="px-8 py-5 bg-[#004a8e] text-white font-black rounded-full text-[10px] uppercase tracking-widest shadow-lg active:scale-95 transition-all flex items-center gap-2"
+                       >
+                          <Download size={14} /> {d.actionStrip?.btn1Text || 'Instant PDF'}
+                       </button>
+                    </div>
+                 </div>
 
-                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {(d.resourceTiles || []).map((t, i) => (
-                         <div key={i} className="bg-white rounded-[30px] p-8 border border-gray-100 shadow-sm flex flex-col justify-between group hover:border-sm-blue transition-all cursor-pointer hover:shadow-lg">
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 group-hover:text-sm-blue transition-colors leading-none mb-6">{t}</h4>
-                            <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-sm-blue group-hover:text-white transition-all self-end">
-                               <ArrowUpRight size={24} />
-                            </div>
-                         </div>
-                      ))}
-                   </div>
-                </div>
-             </section>
+                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 lg:gap-4">
+                    {(d.resourceTiles || []).map((t, i) => (
+                       <div key={i} className="bg-white rounded-[25px] p-6 border border-gray-100 shadow-sm flex flex-col justify-between group hover:border-[#004a8e] transition-all cursor-pointer">
+                          <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-gray-400 group-hover:text-[#004a8e] transition-colors leading-none mb-4">{t}</h4>
+                          <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-[#004a8e] group-hover:text-white transition-all self-end">
+                             <ArrowUpRight size={18} />
+                          </div>
+                       </div>
+                    ))}
+                 </div>
+              </div>
+           </section>
 
-             <section className="pb-12 px-2 overflow-hidden">
-                <div className="flex overflow-x-auto gap-12 pb-4 hide-scrollbar justify-start border-b border-gray-100">
-                  {(d.menuStrip || []).map((cat, i) => (
-                     <button key={i} className="flex-none text-[10px] font-black text-gray-400 hover:text-gray-900 uppercase tracking-[0.2em] transition-colors py-2 active:text-sm-blue">{cat}</button>
-                  ))}
-                </div>
-             </section>
+           {/* MAIN CATALOGUE GRID */}
+           <section className="py-2">
+              <div className="flex items-center justify-between py-4 mb-4">
+                 <h2 className="text-[14px] font-black text-gray-900 uppercase tracking-[0.2em] font-heading">Handbooks & Catalogues</h2>
+                 <div className="h-[1px] flex-grow mx-8 bg-gray-100" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                 {catalogues.map((item, i) => (
+                    <CatalogueCard 
+                       key={i}
+                       work={{ name: item.title, subcategory: item.category || item.description, image: item.img, fileUrl: item.fileUrl }} 
+                       isSelected={selectedItem?.title === item.title}
+                       onClick={() => setSelectedItem(selectedItem?.title === item.title ? null : item)}
+                       onAction={(e) => handleDownload(e, item)}
+                       actionText="Download PDF"
+                       themeColor="bg-[#004a8e]"
+                       ringColor="ring-blue-100"
+                       textColor="text-[#004a8e]"
+                    />
+                 ))}
+              </div>
+           </section>
 
-             <section className="py-12 border-t border-gray-100">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                   {catalogues.map((item, i) => (
-                      <CatalogueCard 
-                         key={i}
-                         work={{ name: item.title, subcategory: item.category || item.description, image: item.img, fileUrl: item.fileUrl }} 
-                         isSelected={selectedItem?.title === item.title}
-                         onClick={() => setSelectedItem(selectedItem?.title === item.title ? null : item)}
-                         themeColor="bg-sm-blue"
-                         ringColor="ring-blue-500"
-                         textColor="text-blue-400"
-                      />
-                   ))}
-                </div>
-             </section>
+           <section className="py-6 border-t border-gray-100 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center pt-10">
+              <div className="lg:col-span-6 bg-white p-8 lg:p-14 rounded-[40px] border border-gray-100 shadow-sm relative overflow-hidden group">
+                 <h2 className="text-3xl lg:text-5xl font-black text-gray-900 font-heading mb-8 leading-[0.9] uppercase tracking-tighter" dangerouslySetInnerHTML={{ __html: d.infoGrid?.titleHtml }} />
+                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {(d.infoGrid?.points || []).map((item, i) => (
+                       <div key={i} className="flex items-center gap-4 text-[9px] font-black uppercase tracking-widest bg-gray-50 p-5 rounded-2xl border border-transparent hover:border-[#004a8e]/20 transition-all">
+                          <CheckCircle2 size={16} className="text-[#004a8e]" />
+                          {item}
+                       </div>
+                    ))}
+                 </div>
+              </div>
+              <div className="lg:col-span-6 rounded-[40px] overflow-hidden border border-gray-100 shadow-sm h-[300px] lg:h-[450px]">
+                 <img src={d.infoGrid?.img || 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1000&q=80'} alt="Info" className="w-full h-full object-cover transition-all duration-1000" />
+              </div>
+           </section>
 
-             <section className="py-12 border-t border-gray-100 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-6">
-                <div className="order-2 lg:order-1 bg-white p-12 rounded-[40px] border border-gray-100 shadow-sm relative overflow-hidden group">
-                   <h2 className="text-4xl font-black text-gray-900 font-heading mb-8 leading-none uppercase tracking-tighter" dangerouslySetInnerHTML={{ __html: d.infoGrid?.titleHtml }} />
-                   <div className="grid grid-cols-2 gap-4">
-                      {(d.infoGrid?.points || []).map((item, i) => (
-                         <div key={i} className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest bg-gray-50 p-5 rounded-2xl border border-gray-50 hover:bg-sm-blue hover:text-white transition-all">
-                            <Layers size={16} className="text-sm-blue group-hover:text-white" />
-                            {item}
-                         </div>
-                      ))}
-                   </div>
-                </div>
-                
-                <div className="order-1 lg:order-2 rounded-[40px] overflow-hidden shadow-2xl h-[450px]">
-                   <img src={d.infoGrid?.img || 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1000&q=80'} alt="Info" className="w-full h-full object-cover brightness-95 hover:brightness-100 transition-all duration-1000" />
-                </div>
-             </section>
-           </div>
         </div>
       </div>
+
+      {/* REGISTRATION MODAL / CAUTION */}
+      {showCaution && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-in fade-in transition-all">
+           <div className="bg-white rounded-[40px] p-10 lg:p-16 max-w-xl w-full shadow-3xl text-center relative overflow-hidden border border-gray-100">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#004a8e]/5 rounded-full blur-3xl -mr-16 -mt-16" />
+              <button onClick={() => setShowCaution(false)} className="absolute top-8 right-8 text-gray-400 hover:text-gray-900 transition-colors">
+                 <X size={24} />
+              </button>
+              
+              <div className="w-20 h-20 bg-blue-50 text-[#004a8e] rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-sm">
+                 <Download size={40} strokeWidth={1.5} />
+              </div>
+              
+              <h2 className="text-3xl lg:text-5xl font-black text-gray-900 font-heading mb-6 leading-tight uppercase tracking-tighter">Identity <br/> <span className="text-[#004a8e]">Required.</span></h2>
+              <p className="text-gray-400 text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.2em] mb-12 leading-loose mx-auto max-w-sm">
+                 Our technical handbooks and pricing indices are gated for institutional institutional partners. Please join our network to unlock full access.
+              </p>
+              
+              <div className="space-y-4">
+                 <button 
+                   onClick={() => navigate('/registration')}
+                   className="w-full py-5 bg-[#004a8e] text-white font-black rounded-full uppercase tracking-widest text-[11px] shadow-2xl hover:bg-gray-900 transition-all flex items-center justify-center gap-3 active:scale-95"
+                 >
+                    Register For Access <ArrowUpRight size={18} />
+                 </button>
+                 <button 
+                   onClick={() => setShowCaution(false)}
+                   className="w-full py-5 bg-white text-gray-400 font-black rounded-full uppercase tracking-widest text-[9px] hover:text-gray-900 transition-colors"
+                 >
+                    Browse Public View
+                 </button>
+              </div>
+           </div>
+        </div>
+      )}
     </main>
   );
 };

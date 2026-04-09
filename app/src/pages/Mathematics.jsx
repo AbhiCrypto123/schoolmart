@@ -35,7 +35,7 @@ const Mathematics = () => {
     }
   }, [loading, cats, selectedCat]);
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center text-sm-blue font-bold tracking-widest uppercase">Loading Mathematics...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-sm-blue font-black tracking-widest uppercase py-20">Loading Mathematics...</div>;
 
 
   return (
@@ -43,7 +43,7 @@ const Mathematics = () => {
       <div className="max-w-7xl mx-auto px-4">
         
         <section className="pt-4 pb-6 grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
-           <div className="lg:col-span-12 bg-gray-900 rounded-[30px] p-12 text-white flex flex-col justify-center border border-gray-800 shadow-2xl relative overflow-hidden group min-h-[400px]">
+           <div className="lg:col-span-12 bg-gray-900 rounded-[40px] p-12 lg:p-20 text-white flex flex-col justify-center border border-gray-800 shadow-2xl relative overflow-hidden group min-h-[450px]">
               <CMSMedia 
                 mediaType={heroBlock.mediaType} 
                 mediaUrl={heroBlock.mediaUrl} 
@@ -54,9 +54,9 @@ const Mathematics = () => {
               <div className="px-4 py-1.5 bg-sm-blue text-white font-black rounded-full text-[9px] uppercase tracking-[0.2em] mb-6 w-fit scale-90 relative z-10">
                  <Hash size={12} className="inline mr-2" /> {heroBlock.badge || "Logic & Symmetry 2025"}
               </div>
-              <h1 className="text-5xl lg:text-7xl font-black font-heading leading-none mb-6 tracking-tighter uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Play <br/> <span className=\"text-sm-blue italic font-serif lowercase tracking-normal\">with</span> <br/> Numbers." }} />
-              <p className="text-gray-400 text-[11px] font-bold uppercase tracking-widest max-w-md leading-loose relative z-10">
-                 {heroBlock.subtitle || "We create gamified math labs where abstract concepts become tangible experiences through interactive equipment."}
+              <h1 className="text-5xl lg:text-8xl font-black font-heading leading-[0.9] mb-8 tracking-tighter uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Play <br/> <span class=\"text-sm-blue italic font-serif lowercase tracking-normal\">with</span> <br/> Numbers." }} />
+              <p className="text-gray-400 text-[10px] md:text-[11px] font-bold uppercase tracking-widest max-w-md leading-loose relative z-10">
+                 {heroBlock.subtitle || (heroBlock.data?.subtitle) || "We create gamified math labs where abstract concepts become tangible experiences through interactive equipment."}
               </p>
            </div>
         </section>
@@ -84,8 +84,8 @@ const Mathematics = () => {
            {/* MAIN CONTENT GALLERY */}
            <div className="flex-1 min-w-0">
               <div className="flex justify-between items-end mb-8 px-2">
-                 <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tighter">THE <span className="text-sm-blue italic font-serif lowercase tracking-normal text-lg ml-2">Lab-Kit</span></h2>
-                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Selected Works: Gr. 1-12</span>
+                 <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tighter" dangerouslySetInnerHTML={{ __html: blocks?.grid_heading?.leftHtml || `THE <span class="text-sm-blue italic font-serif lowercase tracking-normal text-lg ml-2">Lab-Kit</span>` }} />
+                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{blocks?.grid_heading?.rightStat || 'Selected Works: Gr. 1-12'}</span>
               </div>
               
               <div id="product-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
@@ -129,22 +129,28 @@ const Mathematics = () => {
            </div>
         </section>
 
-        {/* INFO SPLIT GRID */}
-        <section className="py-6 border-t border-gray-100 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mt-6">
-           <div className="bg-white p-12 rounded-[30px] border border-gray-100 shadow-sm relative group overflow-hidden">
-              <h2 className="text-4xl font-black text-gray-900 font-heading mb-8 leading-none uppercase tracking-tighter">Bespoke <br/> <span className="text-sm-blue">Planning Hub.</span></h2>
+        {/* INFO SPLIT GRID (HUB) */}
+        <section className="py-6 border-t border-gray-100 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mt-6 pt-12">
+           <div className="bg-white p-12 lg:p-16 rounded-[40px] border border-gray-100 shadow-sm relative group overflow-hidden">
+              <h2 className="text-4xl font-black text-gray-900 font-heading mb-8 leading-[0.9] uppercase tracking-tighter" dangerouslySetInnerHTML={{ __html: blocks?.info_split_grid?.heading || 'Bespoke <br/> <span class="text-sm-blue">Planning Hub.</span>' }} />
               <div className="grid grid-cols-2 gap-3">
-                 {['Curriculum Ready', 'Expert Training', '24/7 Support', 'GST Compliant'].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest bg-gray-50 p-4 rounded-xl border border-gray-50 hover:bg-sm-blue hover:text-white transition-all">
-                       <CheckCircle2 size={14} className="text-sm-blue group-hover:text-white" />
-                       {item}
+                 {(blocks?.info_split_grid?.points || ['Curriculum Ready', 'Expert Training', '24/7 Support', 'GST Compliant']).map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest bg-gray-50 p-5 rounded-2xl border border-transparent hover:border-sm-blue/20 transition-all">
+                       <CheckCircle2 size={16} className="text-sm-blue group-hover:text-white" />
+                       {typeof item === 'string' ? item : item.text}
                     </div>
                  ))}
               </div>
+              <Link 
+                 to={blocks?.info_split_grid?.ctaPath || "/registration"}
+                 className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-gray-900 text-white font-black rounded-full text-[10px] uppercase tracking-widest hover:bg-sm-blue transition-all"
+              >
+                 {blocks?.info_split_grid?.ctaLabel || "Request Site Visit"} <ArrowRight size={14} />
+              </Link>
            </div>
            
-           <div className="rounded-[30px] overflow-hidden shadow-2xl h-[400px]">
-              <img src="https://images.unsplash.com/photo-1596496181871-9681eacf9764?w=1000&q=80" alt="Laboratory" className="w-full h-full object-cover" />
+           <div className="rounded-[40px] overflow-hidden shadow-2xl h-[400px] border border-gray-100">
+              <img src={blocks?.info_split_grid?.image || "https://images.unsplash.com/photo-1596496181871-9681eacf9764?w=1000&q=80"} alt="Laboratory" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
            </div>
         </section>
       </div>

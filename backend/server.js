@@ -34,6 +34,9 @@ app.use('/api/products', require('./routes/products'));
 app.use('/api/quotes', require('./routes/quotes'));
 app.use('/api/contacts', require('./routes/contacts'));
 app.use('/api/upload', require('./routes/upload'));
+app.use('/api/formconfig', require('./routes/formconfig'));
+app.use('/api/settings', require('./routes/settings'));
+app.use('/api/users', require('./routes/users'));
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date() }));

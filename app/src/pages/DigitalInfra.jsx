@@ -43,7 +43,7 @@ const DigitalInfra = () => {
       <div className="max-w-7xl mx-auto px-4">
         {/* MODERN TECH HERO */}
         <section className="pt-4 pb-6 grid grid-cols-1 md:grid-cols-12 gap-3 items-stretch">
-           <div className="md:col-span-4 bg-[#0A0A0A] rounded-[25px] p-8 text-white flex flex-col justify-center border border-gray-800 shadow-xl relative overflow-hidden group min-h-[400px]">
+           <div className="md:col-span-4 bg-[#0A0A0A] rounded-[40px] p-8 text-white flex flex-col justify-center border border-gray-800 shadow-xl relative overflow-hidden group min-h-[400px]">
               <CMSMedia 
                 mediaType={heroBlock.mediaType} 
                 mediaUrl={heroBlock.mediaUrl} 
@@ -54,13 +54,13 @@ const DigitalInfra = () => {
               <div className="px-3 py-1 bg-sm-blue text-white font-black rounded-full text-[8px] uppercase tracking-[0.2em] mb-4 w-fit scale-90 relative z-10">
                  <Zap size={12} className="inline mr-2" /> {heroBlock.badge || "Digital Transformation 2025"}
               </div>
-              <h1 className="text-4xl lg:text-5xl font-black font-heading leading-tight mb-4 tracking-tighter uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Future <br/> <span className=\"text-sm-blue italic font-serif lowercase tracking-normal\">is</span> <br/> Digital." }} />
-              <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest max-w-xs leading-loose relative z-10">
+              <h1 className="text-4xl lg:text-6xl font-black font-heading leading-[0.9] mb-8 tracking-tighter uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Future <br/> <span class=\"text-sm-blue italic font-serif lowercase tracking-normal\">is</span> <br/> Digital." }} />
+              <p className="text-gray-400 text-[10px] md:text-[11px] font-bold uppercase tracking-widest max-w-xs leading-loose relative z-10">
                  {heroBlock.subtitle || "Deploying cutting-edge Ed-Tech and campus-wide smart infrastructure."}
               </p>
            </div>
            
-           <div className="md:col-span-8 rounded-[25px] overflow-hidden relative shadow-lg group border border-gray-100 min-h-[400px]">
+           <div className="md:col-span-8 rounded-[40px] overflow-hidden relative shadow-lg group border border-gray-100 min-h-[400px]">
               <CMSMedia 
                 mediaType={heroBlock.mediaType} 
                 mediaUrl={heroBlock.mediaUrl} 
@@ -141,25 +141,39 @@ const DigitalInfra = () => {
                        )}
                     </React.Fragment>
                  ))}
-                 
+              </div>
+
+              {/* FULL WIDTH DIGITAL AUDIT HUB */}
+              <div className="mt-16 pt-16 border-t border-gray-100">
                  <div 
-                   style={{ backgroundColor: (blocks?.feature_card?.bgColor || '#111827') }}
-                   className="rounded-[30px] p-8 text-white flex flex-col justify-center min-h-[300px] relative overflow-hidden group shadow-lg border border-white/5"
+                   style={{ backgroundColor: (blocks?.feature_card?.bgColor || '#0A0E14') }}
+                   className="rounded-[40px] p-8 lg:p-16 text-white flex flex-col md:flex-row items-center justify-between relative overflow-hidden group shadow-2xl border border-white/5 min-h-[300px]"
                  >
-                    <Laptop size={32} style={{ color: blocks?.feature_card?.btnColor || '#3B82F6' }} className="mb-6 border border-white/10 p-2 w-12 h-12 rounded-xl" />
-                    <h4 className="text-xl font-black font-heading mb-4 uppercase leading-none tracking-tighter">
-                       {blocks?.feature_card?.title || "Campus Audit Pro."}
-                    </h4>
-                    <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-6 leading-relaxed">
-                       {blocks?.feature_card?.subtitle || "Infrastructure Security & Performance."}
-                    </p>
-                    <Link 
-                      to={blocks?.feature_card?.btnPath || '#'}
-                      style={{ backgroundColor: blocks?.feature_card?.btnColor || '#3B82F6' }}
-                      className="px-6 py-2.5 text-white font-black rounded-full text-[8px] uppercase tracking-widest w-fit hover:bg-white hover:text-gray-900 transition-all shadow-xl shadow-blue-500/10 z-10"
-                    >
-                      {blocks?.feature_card?.btnLabel || "Request Site Visit"}
-                    </Link>
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sm-blue/10 rounded-full blur-[120px] -mr-64 -mt-64" />
+                    
+                    <div className="relative z-10 max-w-2xl text-center md:text-left">
+                       <div className="flex items-center gap-3 mb-6 justify-center md:justify-start">
+                          <Laptop size={32} style={{ color: blocks?.feature_card?.btnColor || '#3B82F6' }} />
+                          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Infrastructure Support</span>
+                       </div>
+                       <h4 className="text-4xl lg:text-5xl font-black font-heading tracking-tighter uppercase leading-[0.9] mb-6">
+                          {blocks?.feature_card?.title || "Digital Audit Pro."}
+                       </h4>
+                       <p className="text-white/40 text-xs lg:text-sm font-bold uppercase tracking-widest leading-loose max-w-lg">
+                          {blocks?.feature_card?.subtitle || "Deployment Security & System Performance Audits. Get your institutional hardware future-ready."}
+                       </p>
+                    </div>
+
+                    <div className="mt-10 md:mt-0 relative z-10">
+                       <Link 
+                         to={blocks?.feature_card?.btnPath || '/registration'}
+                         style={{ backgroundColor: blocks?.feature_card?.btnColor || '#3B82F6' }}
+                         className="px-10 py-5 text-white font-black rounded-full hover:bg-white hover:text-gray-900 transition-all text-[11px] uppercase tracking-widest shadow-2xl flex items-center gap-3 group"
+                       >
+                         {blocks?.feature_card?.btnLabel || "Request Site Visit"}
+                         <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                       </Link>
+                    </div>
                  </div>
               </div>
            </div>

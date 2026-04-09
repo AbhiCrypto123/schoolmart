@@ -1,136 +1,182 @@
-import { Target, Users, Rocket, Award, ShieldCheck, Heart, ArrowUpRight, CheckCircle2, LayoutGrid, Sparkles, Building2, Briefcase, Globe } from 'lucide-react';
+import React from 'react';
+import { getIcon } from '../utils/iconMap';
 import { useCMSPage } from '../hooks/useCMSBlock';
-import CMSMedia from '../components/ui/CMSMedia';
-
-const partners = [
-  { name: 'KVS Schools', cat: 'Central Govt', img: 'https://images.unsplash.com/photo-1544640808-32ca72ac7f37?w=400&q=80' },
-  { name: 'Podar Education', cat: 'Private Network', img: 'https://images.unsplash.com/photo-1522071823907-b712ec46597a?w=400&q=80' },
-  { name: 'JNV Academies', cat: 'Govt Residential', img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80' },
-];
+import { Globe, ArrowRight, MessageCircle, Phone } from 'lucide-react';
 
 const Corporate = () => {
   const { blocks, loading } = useCMSPage('corporate');
-  const d = blocks?.corporate_page_content || {};
-  const partnerBlock = blocks?.partners || {};
-  const currentPartners = partnerBlock.items || partners;
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center text-sm-blue font-bold tracking-widest uppercase">Loading Corporate...</div>;
+  const hero = blocks?.corporate_hero || {
+    badge: 'Foundational Intelligence',
+    titleHtml: 'All About <br/> <span class="text-[#004a8e] italic font-serif lowercase tracking-normal">Schoolmart</span> <br/> Consortium.',
+    description: 'SCHOOL MART IS A ONE STOP FOR ALL SCHOOL INFRASTRUCTURE NEEDS. A CONSORTIUM OF 16 PANEL ARCHITECTS, 20+ DESIGNERS, SCHOOL INNOVATORS, & EDTECH MAJORS WORKING FROM 4 COUNTRIES.',
+    ctaPitchDeck: 'Request Pitch Deck',
+    ctaWhatsapp: 'WhatsApp',
+    statsValue: '22',
+    statsLabel: 'States Active Operational Network'
+  };
+
+  const ecosystem = blocks?.corporate_ecosystem?.items || [
+    { t: 'Furniture', icon: 'Briefcase' },
+    { t: 'Architecture', icon: 'Building2' },
+    { t: 'Digital Infra', icon: 'Laptop' },
+    { t: 'School Designs', icon: 'Palette' },
+    { t: 'Digital Content', icon: 'Monitor' },
+    { t: 'Sports', icon: 'Trophy' },
+    { t: 'Mathematics', icon: 'CheckCircle2' },
+    { t: 'Science', icon: 'FlaskConical' },
+    { t: 'Labs / Libraries', icon: 'Library' },
+    { t: 'School Branding', icon: 'Target' },
+    { t: 'AR + VR Learning', icon: 'Zap' },
+    { t: 'Innovation', icon: 'Sparkles' }
+  ];
+
+  const strategy = blocks?.corporate_strategy || {
+    badge: 'Strategic Advisory',
+    title: 'Consultancy At Board Level.',
+    description: 'Exposé to latest innovations and edtech products at a lesser price for partner schools.',
+    points: ['IN-HOUSE MANUFACTURING', 'EDTECH INNOVATION ACCESS', 'GAMIFICATION SPECIALISTS', 'GLOBAL ARCHITECTURAL PANEL']
+  };
+
+  const pillars = blocks?.corporate_pillars?.pillars || [
+    { t: 'Quality Protocol', d: 'All products hold TS and ISO 9001 certifications. Durability, performance, and safety tests are audited by experts.', u: 'Standards', icon: 'ShieldCheck' },
+    { t: 'Rapid R&D', d: 'Iterative laboratory development ensures we stay at the forefront of global innovation.', u: 'Innovation', icon: 'Microscope' },
+    { t: 'Global Logistics', v: 'A rapidly growing network focused on mass production and efficient delivery.', u: 'Supply Chain', icon: 'Globe' },
+    { t: 'Expert Design', d: '16 Architects & 20+ Designers creating ergonomic spaces that promote creativity.', u: 'Architecture', icon: 'PenTool' }
+  ];
+
+  const cta = blocks?.cta_whatsapp || {
+    headline: 'Ready To Talk?',
+    description: 'WE HAVE THE EXPERTISE IN GUIDING YOU TO SET UP YOUR NEW CAMPUS PROJECT AND MAXIMIZE PERFORMANCE.',
+    whatsappNumber: '919966109191',
+    phone: '+91 9966109191'
+  };
+
+  if (loading) return <div className="min-h-screen bg-white flex items-center justify-center font-black uppercase tracking-widest text-[#004a8e] text-sm">Loading Corporate Ecosystem...</div>;
 
   return (
-    <main className="min-h-screen bg-white pt-10 pb-20 overflow-hidden relative">
-      {/* PROFESSIONAL BENTO HERO (Unique for Corporate) */}
-      <section className="px-4 py-8 max-w-7xl mx-auto">
-         <div className="grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-6 gap-6 min-h-[900px]">
+    <main className="min-h-screen bg-white">
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 pt-4 lg:pt-6">
+        {/* 01. VISIONARY HERO */}
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-stretch mb-6">
+          <div className="flex-[2] bg-white border border-gray-100 rounded-[30px] lg:rounded-[40px] p-8 lg:p-14 text-gray-900 relative flex flex-col justify-center min-h-[450px] lg:min-h-[550px] shadow-sm overflow-hidden group">
+            <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-50/50 via-transparent to-transparent pointer-events-none" />
             
-            {/* Main Statement Bento (Screenshot 2 Inspired) */}
-            <div className="lg:col-span-8 lg:row-span-4 bg-gray-900 rounded-[60px] p-12 lg:p-20 text-white relative overflow-hidden group shadow-3xl">
-               <CMSMedia 
-                 mediaType={d.hero?.mediaType} 
-                 mediaUrl={d.hero?.mediaUrl} 
-                 fallbackImg={d.hero?.img} 
-                 className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-40 transition-all duration-1000"
-               />
-               <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sm-blue opacity-10 rounded-full blur-[100px] group-hover:scale-110 transition-transform" />
-               <div className="relative z-10 flex flex-col h-full">
-                  <span className="inline-block px-5 py-2 bg-sm-blue text-white font-black rounded-full mb-10 text-[10px] uppercase tracking-widest shadow-lg">{d.hero?.badge || "Enterprise Solutions"}</span>
-                  <h1 className="text-5xl md:text-8xl font-black font-heading leading-[0.85] tracking-tighter uppercase mb-12" dangerouslySetInnerHTML={{ __html: d.hero?.titleHtml || "Strategic <br/> Infrastructure <br/> <span className=\"text-sm-blue italic font-serif\">Partnership.</span>" }} />
-                  <p className="text-white/40 text-lg md:text-xl max-w-xl leading-relaxed mb-auto font-medium uppercase tracking-widest">
-                     {d.hero?.subtitle || "We don't just supply; we strategize. Our corporate division handles institutional procurement for high-net school networks across 22 states."}
-                  </p>
-                  <div className="mt-12">
-                     <button className="px-10 py-5 bg-white text-gray-900 font-black rounded-3xl hover:bg-sm-blue hover:text-white transition-all shadow-xl uppercase tracking-widest text-[11px] active:scale-95 flex items-center gap-3">
-                        Institutional Pitch Deck <Briefcase size={18} />
-                     </button>
-                  </div>
-               </div>
+            <div className="inline-block px-5 py-1.5 bg-blue-50 text-[#004a8e] font-black rounded-full mb-8 text-[9px] uppercase tracking-[0.2em] w-fit border border-[#004a8e]/10 relative z-10">
+              {hero.badge}
             </div>
-
-            {/* Global Reach Bento */}
-            <div className="lg:col-span-4 lg:row-span-3 bg-sm-blue rounded-[60px] p-12 text-white flex flex-col justify-center text-center relative overflow-hidden group shadow-2xl">
-               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity" />
-               <Globe size={80} className="mx-auto mb-8 text-white/30 group-hover:scale-125 transition-transform duration-1000" />
-               <h3 className="text-5xl font-black mb-2 tracking-tight">22</h3>
-               <p className="text-[10px] font-black text-white/60 uppercase tracking-widest leading-loose">States Active <br/> Across PAN India</p>
+            
+            <h1 
+              className="text-4xl lg:text-7xl font-black leading-[0.9] tracking-tighter mb-8 uppercase max-w-2xl relative z-10"
+              dangerouslySetInnerHTML={{ __html: hero.titleHtml }}
+            />
+            
+            <p className="text-gray-400 text-[10px] lg:text-[11px] font-black uppercase tracking-[0.15em] max-w-lg mb-12 leading-relaxed relative z-10">
+              {hero.description}
+            </p>
+            
+            <div className="flex flex-wrap gap-4 relative z-10">
+              <button className="px-8 py-4 bg-[#004a8e] text-white font-black rounded-full hover:bg-gray-900 transition-all uppercase tracking-[0.15em] text-[10px] flex items-center gap-3 shadow-lg active:scale-95">
+                {hero.ctaPitchDeck} <ArrowRight size={16} />
+              </button>
+              <a href={`https://wa.me/${hero.ctaWhatsapp === 'WhatsApp' ? '919966109191' : hero.ctaWhatsapp}`} target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-white border border-gray-200 text-[#25D366] font-black rounded-full hover:bg-gray-50 transition-all uppercase tracking-[0.15em] text-[10px] flex items-center gap-3 shadow-sm">
+                WhatsApp <MessageCircle size={16} />
+              </a>
             </div>
+          </div>
 
-            {/* Ethics Bento */}
-            <div className="lg:col-span-4 lg:row-span-3 bg-white rounded-[60px] p-12 shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center group hover:shadow-2xl transition-all">
-               <ShieldCheck size={50} className="text-sm-blue mb-8 group-hover:scale-110 transition-transform" />
-               <h4 className="text-2xl font-black text-gray-900 mb-2 leading-tight uppercase font-heading tracking-tight">Transparency First</h4>
-               <p className="text-gray-400 text-[9px] font-bold uppercase tracking-widest leading-relaxed">Full ERP Integration for <br/> Institutional Audits.</p>
+          <div className="flex-1 bg-[#004a8e] rounded-[30px] lg:rounded-[40px] p-10 flex flex-col items-center justify-center text-center text-white shadow-sm relative overflow-hidden group">
+            <Globe className="w-24 h-24 text-white/10 mb-8" strokeWidth={1} />
+            <div className="relative z-10">
+              <span className="text-7xl lg:text-9xl font-black leading-none tracking-tighter block mb-2">{hero.statsValue}</span>
+              <p className="text-[10px] lg:text-[11px] font-black uppercase tracking-[0.2em] leading-tight opacity-70">
+                {hero.statsLabel.split(' ').slice(0, 2).join(' ')} <br/> {hero.statsLabel.split(' ').slice(2).join(' ')}
+              </p>
             </div>
+          </div>
+        </div>
 
-            {/* Partners Bento Grid (Screenshot 3 Style) */}
-            <div className="lg:col-span-8 lg:row-span-2 bg-gray-50 rounded-[60px] p-8 lg:p-12 flex flex-col lg:flex-row items-center justify-between gap-10 group shadow-inner">
-               <div className="flex-1">
-                  <h4 className="text-xl font-black text-gray-900 mb-2 uppercase font-heading tracking-tight leading-none">Our High-Impact Allies.</h4>
-                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest leading-loose">Serving 50,000+ students monthly.</p>
-               </div>
-                <div className="flex -space-x-8">
-                   {currentPartners.map((p, i) => (
-                     <div key={i} className="w-20 h-20 rounded-full border-8 border-gray-50 overflow-hidden shadow-xl hover:rotate-6 transition-all cursor-pointer">
-                        <img src={typeof p === 'string' ? p : p.img} alt={typeof p === 'string' ? `Partner ${i}` : p.name} className="w-full h-full object-cover" />
-                     </div>
-                   ))}
-                   {currentPartners.length > 3 && (
-                     <div className="w-20 h-20 rounded-full border-8 border-gray-50 bg-sm-blue flex items-center justify-center text-white text-xs font-black shadow-xl hover:-rotate-6 transition-all cursor-pointer">
-                        +{currentPartners.length - 3}
-                     </div>
-                   )}
+        {/* 02. ECOSYSTEM GRID */}
+        <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 mb-6 lg:mb-8">
+          {ecosystem.map((item, i) => {
+            const Icon = getIcon(item.icon);
+            return (
+              <div key={i} className="bg-white p-4 lg:p-6 rounded-[20px] lg:rounded-[30px] border border-gray-100 flex flex-col items-center justify-center gap-4 group hover:border-[#004a8e] transition-all cursor-pointer">
+                <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gray-50 rounded-xl lg:rounded-2xl flex items-center justify-center text-[#004a8e] group-hover:bg-[#004a8e] group-hover:text-white transition-all transform animate-in">
+                  <Icon size={24} />
                 </div>
-            </div>
+                <h3 className="text-[9px] lg:text-[10px] font-black uppercase tracking-[0.2em] text-center text-gray-500 group-hover:text-[#004a8e] transition-colors">{item.t}</h3>
+              </div>
+            );
+          })}
+        </div>
 
-         </div>
-      </section>
-
-      {/* STRATEGIC CAPABILITIES (Screenshot 4 Product Inspired Variation) */}
-      <section className="py-24 px-4 bg-white border-t border-gray-100">
-         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-20">
-            <div className="flex-1 text-center lg:text-left order-2 lg:order-1">
-               <h2 className="text-5xl md:text-8xl font-black text-gray-900 font-heading leading-tight mb-8 tracking-tighter uppercase">Boardroom <br/> <span className="text-sm-blue">Consultancy.</span></h2>
-               <div className="space-y-6">
-                  {(d.capabilities?.length ? d.capabilities : [
-                    { t: 'Multi-Phase Procurement', d: 'Structured budgets across fiscal years.' },
-                    { t: 'Turnkey Campus Ready', d: 'Design-Build-Supply-Maintain workflow.' },
-                    { t: 'Bulk Logistics Hub', d: 'Priority delivery for school networks.' },
-                  ]).map((item, i) => (
-                    <div key={i} className="flex items-center gap-6 p-8 rounded-[40px] bg-gray-50 border border-transparent group hover:bg-white hover:border-sm-blue hover:shadow-3xl transition-all cursor-pointer">
-                       <div className="w-14 h-14 bg-blue-50 text-sm-blue group-hover:bg-sm-blue group-hover:text-white rounded-2xl flex items-center justify-center transition-all">
-                          <Target size={24} />
-                       </div>
-                       <div>
-                          <h5 className="text-xl font-black text-gray-900 mb-1 leading-tight uppercase font-heading">{item.t}</h5>
-                          <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">{item.d}</p>
-                       </div>
-                    </div>
-                  ))}
-               </div>
-            </div>
-
-            <div className="flex-1 w-full order-1 lg:order-2">
-               <div className="relative rounded-[70px] overflow-hidden shadow-2xl skew-x-1 group-hover:skew-x-0 transition-transform duration-1000 h-[600px] border-8 border-white">
-                  <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1000&q=80" alt="Corporate Office" className="w-full h-full object-cover transition-all duration-1000 h-full" />
-                  <div className="absolute inset-0 bg-sm-blue/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute top-10 right-10 flex gap-2">
-                     <span className="px-6 py-2 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-black tracking-widest uppercase shadow-lg text-sm-blue border border-blue-50">Headquarters BLR</span>
+        {/* 03. STRATEGIC NARRATIVE & PILLARS */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch mb-6 lg:mb-8">
+          <div className="lg:col-span-4 bg-gray-50 rounded-[30px] lg:rounded-[40px] p-8 lg:p-12 flex flex-col justify-center border border-gray-100">
+            <div className="space-y-6">
+              <div>
+                <span className="text-[9px] font-black text-[#004a8e] uppercase tracking-[0.3em] block mb-4">{strategy.badge}</span>
+                <h2 className="text-3xl lg:text-5xl font-black text-gray-900 font-heading leading-tight uppercase tracking-tighter">
+                  {strategy.title.split(' ').slice(0, 1).join(' ')} <br/> {strategy.title.split(' ').slice(1, 3).join(' ')} <br/> {strategy.title.split(' ').slice(3).join(' ')}
+                </h2>
+              </div>
+              <p className="text-[10px] lg:text-[11px] text-gray-400 font-bold uppercase tracking-[0.05em] leading-relaxed">
+                {strategy.description}
+              </p>
+              <div className="space-y-2 pt-2">
+                {strategy.points.map((p, i) => (
+                  <div key={i} className="flex items-center gap-3 bg-white p-3 rounded-2xl border border-gray-100">
+                    <ArrowRight size={16} className="text-[#004a8e]" />
+                    <span className="text-[8px] lg:text-[9px] font-black text-gray-900 uppercase tracking-widest">{p}</span>
                   </div>
-               </div>
+                ))}
+              </div>
             </div>
-         </div>
-      </section>
+          </div>
 
-      {/* FINAL CTA ENVELOPE (Unique for Corporate) */}
-      <section className="py-24 px-4 bg-gray-50">
-         <div className="max-w-5xl mx-auto rounded-[80px] bg-white p-12 lg:p-20 text-center relative shadow-3xl border border-gray-100 group transition-all hover:scale-[1.02]">
-            <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 bg-sm-blue rounded-[50px] flex items-center justify-center text-white shadow-2xl group-hover:rotate-12 transition-all">
-               <Rocket size={48} />
-            </div>
-            <h5 className="text-gray-900 text-3xl md:text-5xl font-black font-heading leading-tight mb-10 tracking-tighter uppercase mt-10" dangerouslySetInnerHTML={{ __html: d.cta?.titleHtml || "Scale Your Institutional <br/> <span className=\"text-sm-blue decoration-yellow-400 decoration-4 underline underline-offset-[16px]\">Impact.</span>" }} />
-            <button className="px-12 py-5 bg-gray-900 text-white font-black rounded-3xl hover:bg-sm-blue transition-all shadow-xl uppercase tracking-widest text-[11px] active:scale-95 flex items-center justify-center gap-3 mx-auto">
-               {d.cta?.btnText || 'Request Management Consultation'} <ArrowUpRight size={20} />
-            </button>
-         </div>
-      </section>
+          <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+            {pillars.map((box, i) => {
+              const Icon = getIcon(box.icon);
+              return (
+                <div key={i} className="bg-white p-8 rounded-[30px] lg:rounded-[40px] border border-gray-100 flex flex-col justify-between group hover:border-[#004a8e] transition-all">
+                  <div className="flex items-center justify-between mb-8">
+                    <span className="text-[8px] font-black text-[#004a8e] uppercase tracking-[0.2em]">{box.u}</span>
+                    <div className="text-gray-300 group-hover:text-[#004a8e] transition-colors">
+                      <Icon size={24} />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl lg:text-2xl font-black text-gray-900 uppercase tracking-tight mb-3 leading-none">{box.t}</h3>
+                    <p className="text-[9px] lg:text-[10px] text-gray-400 font-bold uppercase tracking-tight leading-relaxed">
+                      {box.d || box.v}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 04. INSTITUTIONAL CTA */}
+        <div className="bg-[#004a8e] rounded-[30px] lg:rounded-[50px] p-10 lg:p-16 text-center text-white relative overflow-hidden flex flex-col items-center">
+          <h2 className="text-4xl lg:text-7xl font-black font-heading leading-[0.9] tracking-tighter mb-8 uppercase">
+            {cta.headline}
+          </h2>
+          <p className="text-[10px] lg:text-[12px] font-black uppercase tracking-[0.2em] max-w-xl mx-auto opacity-70 leading-relaxed mb-10">
+            {cta.description}
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center px-4">
+            <a href={`https://wa.me/${cta.whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="px-10 py-5 bg-[#25D366] text-white font-black rounded-full hover:scale-105 transition-all uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-3 shadow-xl">
+               Connect On WhatsApp <MessageCircle size={20} />
+            </a>
+            <a href={`tel:${cta.phone || cta.whatsappNumber}`} className="px-10 py-5 bg-white text-[#004a8e] font-black rounded-full hover:bg-gray-100 transition-all uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-3 shadow-xl">
+               Call {cta.phone || cta.whatsappNumber} <Phone size={20} />
+            </a>
+          </div>
+        </div>
+      </div>
     </main>
   );
 };

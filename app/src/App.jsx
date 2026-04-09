@@ -13,7 +13,9 @@ import AboutUs from './pages/AboutUs';
 import Manufacturing from './pages/Manufacturing';
 import Catalogues from './pages/Catalogues';
 import Environments from './pages/Environments';
+import EnvironmentPost from './pages/EnvironmentPost';
 import Guides from './pages/Guides';
+import GuidePost from './pages/GuidePost';
 import ContactUs from './pages/ContactUs';
 import Furniture from './pages/Furniture';
 import Architecture from './pages/Architecture';
@@ -32,17 +34,6 @@ import SetupGuide from './pages/SetupGuide';
 import Workshops from './pages/Workshops';
 import Fundraising from './pages/Fundraising';
 import GenericInnerPage from './pages/GenericInnerPage';
-import DigitizationGuide from './pages/DigitizationGuide';
-import SetupSchoolIndia from './pages/SetupSchoolIndia';
-import ProductCatalog2025 from './pages/ProductCatalog2025';
-import SkillLabGuide from './pages/SkillLabGuide';
-import PlayFurnitureLookbook from './pages/PlayFurnitureLookbook';
-import MathResources from './pages/MathResources';
-import CompletedProjects from './pages/CompletedProjects';
-import SchoolDesignIdeas from './pages/SchoolDesignIdeas';
-import LibraryTrends from './pages/LibraryTrends';
-import JobOpenings from './pages/JobOpenings';
-import Influencers from './pages/Influencers';
 
 // Admin Pages
 import AdminLogin from './pages/admin/AdminLogin';
@@ -52,6 +43,9 @@ import CMSEditor from './pages/admin/CMSEditor';
 import ProductManager from './pages/admin/ProductManager';
 import QuotesInbox from './pages/admin/QuotesInbox';
 import ContactsInbox from './pages/admin/ContactsInbox';
+import FormConfigEditor from './pages/admin/FormConfigEditor';
+import UserManager from './pages/admin/UserManager';
+import GlobalSettings from './pages/admin/GlobalSettings';
 
 const MainLayout = () => (
   <div className="min-h-screen flex flex-col">
@@ -78,7 +72,9 @@ function App() {
             <Route path="/manufacturing" element={<Manufacturing />} />
             <Route path="/catalogues" element={<Catalogues />} />
             <Route path="/environments" element={<Environments />} />
+            <Route path="/environments/:slug" element={<EnvironmentPost />} />
             <Route path="/guides" element={<Guides />} />
+            <Route path="/guides/:slug" element={<GuidePost />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/furniture" element={<Furniture />} />
             <Route path="/school-building-design" element={<Architecture />} />
@@ -89,25 +85,15 @@ function App() {
             <Route path="/gamified-math-labs" element={<Mathematics />} />
             <Route path="/science-is-fun" element={<Science />} />
             <Route path="/labs" element={<LabsLibraries />} />
-            <Route path="/registration-new-form" element={<Registration />} />
+            <Route path="/registration" element={<Registration />} />
             <Route path="/my-account" element={<Login />} />
             <Route path="/school-sale" element={<SchoolSale />} />
             <Route path="/partnerships" element={<Partnerships />} />
             <Route path="/setup-guide" element={<SetupGuide />} />
             <Route path="/workshops" element={<Workshops />} />
             <Route path="/fundraising" element={<Fundraising />} />
-            {/* Resource Hub Routes */}
-            <Route path="/p/digitization-guide" element={<DigitizationGuide />} />
-            <Route path="/p/setup-school-india" element={<SetupSchoolIndia />} />
-            <Route path="/p/product-catalog-2025" element={<ProductCatalog2025 />} />
-            <Route path="/p/skill-lab-guide" element={<SkillLabGuide />} />
-            <Route path="/p/play-furniture-lookbook" element={<PlayFurnitureLookbook />} />
-            <Route path="/p/gamified-math-resources" element={<MathResources />} />
-            <Route path="/p/completed-projects" element={<CompletedProjects />} />
-            <Route path="/p/school-design-ideas" element={<SchoolDesignIdeas />} />
-            <Route path="/p/library-trends" element={<LibraryTrends />} />
-            <Route path="/p/job-openings" element={<JobOpenings />} />
-            <Route path="/p/influencers" element={<Influencers />} />
+            
+            {/* Unified Dynamic Resource Hub Routes */}
             <Route path="/p/:slug" element={<GenericInnerPage />} />
           </Route>
 
@@ -120,6 +106,9 @@ function App() {
             <Route path="products" element={<ProductManager />} />
             <Route path="quotes" element={<QuotesInbox />} />
             <Route path="contacts" element={<ContactsInbox />} />
+            <Route path="form-config/:slug" element={<FormConfigEditor />} />
+            <Route path="users" element={<UserManager />} />
+            <Route path="settings" element={<GlobalSettings />} />
           </Route>
         </Routes>
       </Router>

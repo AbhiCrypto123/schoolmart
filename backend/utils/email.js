@@ -42,4 +42,4 @@ const sendOTP = async (email, otp, type = 'Verification') => {
   await sendEmail(email, subject, html);
 };
 
-module.exports = { sendOTP };
+module.exports = { sendOTP, sendEmail };

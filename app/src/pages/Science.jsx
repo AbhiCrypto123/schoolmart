@@ -35,7 +35,7 @@ const Science = () => {
     }
   }, [loading, cats, selectedCat]);
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center text-sm-blue font-bold tracking-widest uppercase">Loading Science...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-sm-blue font-black tracking-widest uppercase py-20">Loading Science...</div>;
 
 
   return (
@@ -43,7 +43,7 @@ const Science = () => {
       <div className="max-w-7xl mx-auto px-4">
         
         <section className="pt-4 pb-6 grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
-           <div className="lg:col-span-8 bg-emerald-50 rounded-[25px] p-8 flex flex-col justify-center border border-emerald-100 shadow-sm relative overflow-hidden group min-h-[400px]">
+           <div className="lg:col-span-8 bg-emerald-50 rounded-[40px] p-8 lg:p-14 flex flex-col justify-center border border-emerald-100 shadow-sm relative overflow-hidden group min-h-[400px]">
               <CMSMedia 
                 mediaType={heroBlock.mediaType} 
                 mediaUrl={heroBlock.mediaUrl} 
@@ -54,20 +54,24 @@ const Science = () => {
               <div className="px-3 py-1 bg-emerald-500 text-white font-black rounded-full text-[8px] uppercase tracking-[0.2em] mb-4 w-fit scale-90 relative z-10">
                  <Activity size={12} className="inline mr-2 animate-pulse" /> {heroBlock.badge || "Experimental Discovery 2025"}
               </div>
-              <h1 className="text-4xl lg:text-5xl font-black font-heading leading-tight mb-4 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Science <br/> <span className=\"text-emerald-500 italic font-serif lowercase tracking-normal\">is</span> <br/> Pure Fun." }} />
-              <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest max-w-sm leading-loose relative z-10">
+              <h1 className="text-4xl lg:text-7xl font-black font-heading leading-[0.9] mb-8 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Science <br/> <span class=\"text-emerald-500 italic font-serif lowercase tracking-normal\">is</span> <br/> Pure Fun." }} />
+              <p className="text-gray-400 text-[10px] md:text-[11px] font-bold uppercase tracking-widest max-w-sm leading-loose relative z-10">
                  {heroBlock.subtitle || "From periodic tables to precision workbenches, we create spaces where curiosity triggers action."}
               </p>
            </div>
 
            <div className="lg:col-span-4 flex flex-col gap-3">
-              <div className="flex-grow rounded-[25px] overflow-hidden relative shadow-lg group border border-gray-100">
+              <div className="flex-grow rounded-[40px] overflow-hidden relative shadow-lg group border border-gray-100 min-h-[250px]">
                  <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80" className="w-full h-full object-cover brightness-90 transition-all duration-700 hover:scale-110" alt="Lab" />
                  <div className="absolute inset-0 bg-emerald-900/10 group-hover:bg-transparent transition-all" />
               </div>
-              <div className="bg-[#1A1A1A] rounded-[25px] p-6 text-white flex flex-col justify-between group overflow-hidden relative border border-gray-800 shadow-2xl transition-transform hover:scale-[1.02]">
-                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] relative z-10 leading-relaxed text-emerald-400">Zero-Leaking <br/> Security <br/> Performance.</h3>
-                 <button className="p-3 bg-emerald-500 text-white rounded-full self-end mt-4 shadow-xl active:scale-95"><ArrowUpRight size={20} /></button>
+              <div 
+                style={{ backgroundColor: blocks?.feature_card?.bgColor || '#1A1A1A' }}
+                className="rounded-[40px] p-8 text-white flex flex-col justify-between group overflow-hidden relative border border-gray-800 shadow-2xl transition-transform hover:scale-[1.02]">
+                 <h3 className="text-[12px] font-black uppercase tracking-[0.2em] relative z-10 leading-relaxed" style={{ color: blocks?.feature_card?.accentColor || '#34D399' }} dangerouslySetInnerHTML={{ __html: (blocks?.feature_card?.title || "Zero-Leaking <br/> Security <br/> Performance.").replace(/\n/g, '<br/>') }} />
+                 <Link to={blocks?.feature_card?.btnPath || "/contact-us"}
+                   style={{ backgroundColor: blocks?.feature_card?.btnColor || '#10B981' }}
+                   className="p-4 text-white rounded-full self-end mt-4 shadow-xl active:scale-95 hover:bg-white hover:text-emerald-500 transition-all"><ArrowUpRight size={24} /></Link>
               </div>
            </div>
         </section>
@@ -95,8 +99,8 @@ const Science = () => {
            {/* MAIN CONTENT GALLERY */}
            <div className="flex-1 min-w-0">
               <div className="flex justify-between items-end mb-8 px-2">
-                 <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tighter">CHEMISTRY <span className="text-emerald-500 italic font-serif lowercase tracking-normal text-lg ml-2">Apparatus</span></h2>
-                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Selected Kits for Gr. 8-12</span>
+                 <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tighter" dangerouslySetInnerHTML={{ __html: blocks?.grid_heading?.leftHtml || 'CHEMISTRY <span class="text-emerald-500 italic font-serif lowercase tracking-normal text-lg ml-2">Apparatus</span>' }} />
+                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{blocks?.grid_heading?.rightStat || 'Selected Kits for Gr. 8-12'}</span>
               </div>
               
               <div id="product-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
@@ -137,22 +141,28 @@ const Science = () => {
            </div>
         </section>
 
-        {/* INFO SPLIT GRID */}
-        <section className="py-6 border-t border-gray-100 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mt-6">
-           <div className="bg-white p-12 rounded-[30px] border border-gray-100 shadow-sm relative group overflow-hidden">
-              <h2 className="text-4xl font-black text-gray-900 font-heading mb-8 leading-none uppercase tracking-tighter">Security <br/> <span className="text-emerald-500">Performance.</span></h2>
+        {/* INFO SPLIT GRID (HUB) */}
+        <section className="py-6 border-t border-gray-100 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mt-6 pt-12">
+           <div className="bg-white p-12 lg:p-16 rounded-[40px] border border-gray-100 shadow-sm relative group overflow-hidden">
+              <h2 className="text-4xl font-black text-gray-900 font-heading mb-8 leading-[0.9] uppercase tracking-tighter" dangerouslySetInnerHTML={{ __html: blocks?.info_split_grid?.heading || 'Science <br/> <span class="text-emerald-500">Performance.</span>' }} />
               <div className="grid grid-cols-2 gap-3">
-                 {['Acid Resistant', 'Safe Plumbing', 'SEFA Certified', 'Custom Fitting'].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest bg-gray-50 p-4 rounded-xl border border-gray-50 hover:bg-emerald-500 hover:text-white transition-all">
-                       <CheckCircle2 size={14} className="text-emerald-500 group-hover:text-white" />
-                       {item}
+                 {(blocks?.info_split_grid?.points || ['Acid Resistant', 'Safe Plumbing', 'SEFA Certified', 'Custom Fitting']).map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest bg-gray-50 p-5 rounded-2xl border border-transparent hover:border-emerald-500/20 transition-all group/point">
+                       <CheckCircle2 size={16} className="text-emerald-500" />
+                       {typeof item === 'string' ? item : item.text}
                     </div>
                  ))}
               </div>
+              <Link 
+                 to={blocks?.info_split_grid?.ctaPath || "/registration"}
+                 className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-gray-900 text-white font-black rounded-full text-[10px] uppercase tracking-widest hover:bg-emerald-500 transition-all"
+              >
+                 {blocks?.info_split_grid?.ctaLabel || "Request Site Visit"} <ArrowRight size={14} />
+              </Link>
            </div>
            
-           <div className="rounded-[30px] overflow-hidden shadow-2xl h-[400px]">
-              <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1000&q=80" alt="Laboratory" className="w-full h-full object-cover" />
+           <div className="rounded-[40px] overflow-hidden shadow-2xl h-[400px] border border-gray-100">
+              <img src={blocks?.info_split_grid?.image || "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1000&q=80"} alt="Laboratory" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
            </div>
         </section>
       </div>

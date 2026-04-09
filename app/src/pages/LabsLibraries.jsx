@@ -32,7 +32,7 @@ const LabsLibraries = () => {
     }
   }, [loading, cats, selectedCat]);
 
-  if (loading) return null;
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-sm-blue font-black tracking-widest uppercase py-20">Loading Composite Labs...</div>;
 
 
   return (
@@ -40,7 +40,7 @@ const LabsLibraries = () => {
       <div className="max-w-7xl mx-auto px-4">
         
         <section className="pt-4 pb-6 grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
-           <div className="lg:col-span-12 bg-white rounded-[30px] p-12 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group min-h-[400px]">
+           <div className="lg:col-span-12 bg-white rounded-[40px] p-12 lg:p-20 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group min-h-[450px]">
               <CMSMedia 
                 mediaType={heroBlock.mediaType} 
                 mediaUrl={heroBlock.mediaUrl} 
@@ -51,15 +51,15 @@ const LabsLibraries = () => {
               <div className="px-3 py-1 bg-emerald-100 text-emerald-700 font-black rounded-full text-[8px] uppercase tracking-[0.2em] mb-4 w-fit scale-90 relative z-10 border border-emerald-200">
                  <Activity size={12} className="inline mr-2 animate-pulse" /> {heroBlock.badge || "Integrated Lab Solutions"}
               </div>
-              <h1 className="text-5xl lg:text-7xl font-black font-heading leading-tight mb-4 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Composite <br/> <span className=\"text-emerald-500 italic font-serif lowercase tracking-normal\">Skill</span> <br/> Labs." }} />
-              <p className="text-gray-400 text-[10px] font-bold uppercase tracking-[0.3em] max-w-sm leading-loose relative z-10">
+              <h1 className="text-5xl lg:text-8xl font-black font-heading leading-[0.9] mb-8 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Composite <br/> <span class=\"text-emerald-500 italic font-serif lowercase tracking-normal\">Skill</span> <br/> Labs." }} />
+              <p className="text-gray-400 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] max-w-sm leading-loose relative z-10">
                  {heroBlock.subtitle || "The next generation of multidisciplinary spaces where science meets future-ready architecture."}
               </p>
            </div>
         </section>
 
         {/* CATEGORY NAV & MAIN CONTENT GALLERY */}
-        <section className="py-8 flex flex-col md:flex-row gap-8 items-start">
+        <section className="py-8 border-t border-gray-100 flex flex-col md:flex-row gap-8 items-start">
            {/* LEFT CATEGORY NAV */}
            <div className="w-full md:w-64 shrink-0 space-y-2 sticky top-24">
               <div className="flex items-center gap-3 mb-6 px-4">
@@ -81,10 +81,8 @@ const LabsLibraries = () => {
            {/* MAIN CONTENT GALLERY */}
            <div className="flex-1 min-w-0">
               <div className="flex justify-between items-end mb-8 px-2">
-                 <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tighter">
-                   {selectedCat || 'LAB'} <span className="text-emerald-600 italic font-serif lowercase tracking-normal text-lg ml-2">& library</span>
-                 </h2>
-                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Masterpieces: 500+ Projects</span>
+                 <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tighter" dangerouslySetInnerHTML={{ __html: blocks?.grid_heading?.leftHtml || `${selectedCat || 'LAB'} <span class="text-emerald-600 italic font-serif lowercase tracking-normal text-lg ml-2">& library</span>` }} />
+                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{blocks?.grid_heading?.rightStat || 'Masterpieces: 500+ Projects'}</span>
               </div>
               
               <div id="product-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
@@ -125,22 +123,28 @@ const LabsLibraries = () => {
            </div>
         </section>
 
-        {/* INFO SPLIT GRID */}
-        <section className="py-6 border-t border-gray-100 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mt-6">
-           <div className="bg-white p-12 rounded-[30px] border border-gray-100 shadow-sm relative group overflow-hidden">
-              <h2 className="text-4xl font-black text-gray-900 font-heading mb-8 leading-none uppercase tracking-tighter">Bespoke <br/> <span className="text-emerald-600">Planning Hub.</span></h2>
+        {/* INFO SPLIT GRID (HUB) */}
+        <section className="py-6 border-t border-gray-100 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mt-6 pt-12">
+           <div className="bg-white p-12 lg:p-16 rounded-[40px] border border-gray-100 shadow-sm relative group overflow-hidden">
+              <h2 className="text-4xl font-black text-gray-900 font-heading mb-8 leading-[0.9] uppercase tracking-tighter" dangerouslySetInnerHTML={{ __html: blocks?.info_split_grid?.heading || 'Bespoke <br/> <span class="text-emerald-600">Planning Hub.</span>' }} />
               <div className="grid grid-cols-2 gap-3">
-                 {['Free Consultation', 'BIFMA Certified', 'Custom Fitting', 'GST Ready'].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest bg-gray-50 p-4 rounded-xl border border-gray-50 hover:bg-emerald-600 hover:text-white transition-all">
-                       <CheckCircle2 size={14} className="text-emerald-600 group-hover:text-white" />
-                       {item}
+                 {(blocks?.info_split_grid?.points || ['Free Consultation', 'BIFMA Certified', 'Custom Fitting', 'GST Ready']).map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest bg-gray-50 p-5 rounded-2xl border border-transparent hover:border-emerald-600/20 transition-all group/point">
+                       <CheckCircle2 size={16} className="text-emerald-600" />
+                       {typeof item === 'string' ? item : item.text}
                     </div>
                  ))}
               </div>
+              <Link 
+                 to={blocks?.info_split_grid?.ctaPath || "/registration"}
+                 className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-gray-900 text-white font-black rounded-full text-[10px] uppercase tracking-widest hover:bg-emerald-600 transition-all"
+              >
+                 {blocks?.info_split_grid?.ctaLabel || "Request Site Visit"} <ArrowRight size={14} />
+              </Link>
            </div>
            
-           <div className="rounded-[30px] overflow-hidden shadow-2xl h-[400px]">
-              <img src="https://images.unsplash.com/photo-1541829070764-84a7d30dee62?w=1000&q=80" alt="Planning" className="w-full h-full object-cover" />
+           <div className="rounded-[40px] overflow-hidden shadow-2xl h-[400px] border border-gray-100">
+              <img src={blocks?.info_split_grid?.image || "https://images.unsplash.com/photo-1541829070764-84a7d30dee62?w=1000&q=80"} alt="Planning" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
            </div>
         </section>
       </div>

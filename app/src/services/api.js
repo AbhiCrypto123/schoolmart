@@ -70,3 +70,26 @@ export const submitContact = (data) => request('POST', '/contacts', data);
 export const getContacts = () => request('GET', '/contacts');
 export const updateContactStatus = (id, status) => request('PATCH', `/contacts/${id}/status`, { status });
 export const deleteContact = (id) => request('DELETE', `/contacts/${id}`);
+
+// ─── Form Config (Registration/Login) ────────
+export const getFormConfig = (slug) => request('GET', `/formconfig/${slug}`);
+export const updateFormConfig = (slug, data) => request('PUT', `/formconfig/${slug}`, data);
+
+// ─── Site Settings (Footer, Branding, PDF) ────
+export const getSetting = (key) => request('GET', `/settings/${key}`);
+export const getAllSettings = () => request('GET', '/settings');
+export const updateSetting = (key, data) => request('PUT', `/settings/${key}`, { data });
+
+// ─── User Management (Admin) ─────────────────
+export const getUsers = (params = {}) => {
+  const qs = new URLSearchParams(params).toString();
+  return request('GET', `/users${qs ? '?' + qs : ''}`);
+};
+export const getUser = (id) => request('GET', `/users/${id}`);
+export const updateUser = (id, data) => request('PATCH', `/users/${id}`, data);
+export const deleteUser = (id) => request('DELETE', `/users/${id}`);
+export const getUsersExportUrl = () => `${BASE_URL}/users/export/csv`;
+
+// ─── Auth Extended ───────────────────────────
+export const forgotPassword = (email) => request('POST', '/auth/forgot-password', { email });
+export const resetPassword = (email, otp, newPassword) => request('POST', '/auth/reset-password', { email, otp, newPassword });

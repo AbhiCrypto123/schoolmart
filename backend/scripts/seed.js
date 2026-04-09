@@ -720,76 +720,141 @@ async function seed() {
     },
 
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€ MANUFACTURING PAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ───────────────── MANUFACTURING PAGE ─────────────────
     {
       pageSlug: 'manufacturing',
       pageTitle: 'Manufacturing',
       blocks: [
         {
-          blockType: 'page_hero',
+          blockType: 'manufacturing_hero',
           order: 0,
           data: {
-            title: 'Manufacturing',
-            subtitle: 'State-of-the-art manufacturing for school furniture and equipment',
-            bgGradient: 'from-gray-900 to-gray-700',
-            img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80',
-          },
+            badge: 'In-House Precision',
+            titleHtml: 'Look At <br/> <span class="text-[#004a8e]">Schoolmart\'s</span> <br/> Manufacturing.',
+            description: 'WE TAKE PRIDE IN OUR IN-HOUSE MANUFACTURING FACILITIES, WHICH ENCOMPASS MODULAR FURNITURE MACHINERY, SOLID WOOD MANUFACTURING, METAL WORKS, AND POWDER COATING.',
+            images: [
+              'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80',
+              'https://images.unsplash.com/photo-1565034946487-077786996e27?w=600&q=80'
+            ],
+            partnerStat: '4K+',
+            partnerLabel: 'Partner Schools'
+          }
         },
         {
-          blockType: 'text_content',
+          blockType: 'manufacturing_capabilities',
           order: 1,
           data: {
-            heading: 'Our Manufacturing Capabilities',
-            body: "SchoolMart operates its own manufacturing units across India, ensuring quality control, customization flexibility, and competitive pricing. We manufacture over 1200 SKUs including school furniture, lab equipment, and sports accessories.",
-          },
+            heading: 'Core Capabilities',
+            subline: 'Institutional Grade Execution',
+            items: [
+              { t: 'Modular Furniture', d: 'High-precision systems for institutional scalability.', u: 'WOODWORKING', icon: 'Layers' },
+              { t: 'Solid Wood Unit', d: 'Traditional craftsmanship integrated with modern tech.', u: 'ARTISANAL', icon: 'PenTool' },
+              { t: 'Advanced Metal Works', d: 'Industrial grade fabrication for heavy-use environments.', u: 'STRUCTURAL', icon: 'Box' },
+              { t: 'Powder Coating Lab', d: 'automated durability finishes for zero-maintenance results.', u: 'FINISHING', icon: 'Drill' },
+              { t: 'Robotic Welding', d: 'Consistent precision in structural joint integrity.', u: 'P.4.0 SYSTEMS', icon: 'Cpu' },
+              { t: 'Internal R&D', d: 'Continuous improvement on ergonomics and materials.', u: 'INNOVATION', icon: 'Microscope' }
+            ]
+          }
+        },
+        {
+          blockType: 'manufacturing_quality',
+          order: 2,
+          data: {
+            titleHtml: 'Quality <br/> <span class="not-italic text-[#004a8e]">Assurance.</span>',
+            description: 'OUR STATE-OF-THE-ART MANUFACTURING FACILITIES ADHERE TO STRINGENT QUALITY TESTING PRACTICES.',
+            boxes: [
+              { t: 'Material Selection', d: 'Sourcing of high-grade raw materials with verified stress-test certificates.', icon: 'ShieldCheck' },
+              { t: 'Technical Inspection', d: 'Multi-stage QC checkpoints ensuring zero-defect production cycles.', icon: 'Zap' }
+            ]
+          }
         },
         {
           blockType: 'cta_whatsapp',
-          order: 2,
+          order: 3,
           data: {
-            badge: 'Manufacturing',
-            headline: 'Bulk orders? We manufacture.',
-            description: 'Custom manufacturing for large school chains and government projects.',
-            whatsappNumber: '919966109191',
-            phone: '+91 9966109191',
-          },
-        },
+            headline: 'Institutional Infrastructure Excellence.',
+            description: 'AN INITIATIVE OF THE THIRDEYE GROUP, UTILIZING PROPRIETARY IN-HOUSE MANUFACTURING UNITS ACROSS INDIA.',
+            stats: [
+              { value: '7+', label: 'YEARS EXP' },
+              { value: '100%', label: 'IN-HOUSE' }
+            ],
+            whatsappNumber: '919966109191'
+          }
+        }
       ],
     },
 
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€ CORPORATE PAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ───────────────── CORPORATE PAGE ─────────────────
     {
       pageSlug: 'corporate',
       pageTitle: 'Corporate',
       blocks: [
         {
-          blockType: 'page_hero',
+          blockType: 'corporate_hero',
           order: 0,
           data: {
-            title: 'Corporate',
-            subtitle: 'Your trusted partner for school infrastructure at scale',
-            bgGradient: 'from-blue-900 to-blue-700',
-            img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
-          },
+            badge: 'Foundational Intelligence',
+            titleHtml: 'All About <br/> <span class="text-[#004a8e] italic font-serif lowercase tracking-normal">Schoolmart</span> <br/> Consortium.',
+            description: 'SCHOOL MART IS A ONE STOP FOR ALL SCHOOL INFRASTRUCTURE NEEDS. A CONSORTIUM OF 16 PANEL ARCHITECTS, 20+ DESIGNERS, SCHOOL INNOVATORS, & EDTECH MAJORS WORKING FROM 4 COUNTRIES.',
+            ctaPitchDeck: 'Request Pitch Deck',
+            ctaWhatsapp: 'WhatsApp',
+            statsValue: '22',
+            statsLabel: 'States Active Operational Network'
+          }
         },
         {
-          blockType: 'text_content',
+          blockType: 'corporate_ecosystem',
           order: 1,
           data: {
-            heading: 'Corporate Solutions',
-            body: "We work with school chains, management groups, and CSR programs to deliver infrastructure at scale. Our corporate division handles large-volume procurement, multi-campus projects, and turnkey school setup.",
-          },
+            items: [
+              { t: 'Furniture', icon: 'Briefcase' },
+              { t: 'Architecture', icon: 'Building2' },
+              { t: 'Digital Infra', icon: 'Laptop' },
+              { t: 'School Designs', icon: 'Palette' },
+              { t: 'Digital Content', icon: 'Monitor' },
+              { t: 'Sports', icon: 'Trophy' },
+              { t: 'Mathematics', icon: 'CheckCircle2' },
+              { t: 'Science', icon: 'FlaskConical' },
+              { t: 'Labs / Libraries', icon: 'Library' },
+              { t: 'School Branding', icon: 'Target' },
+              { t: 'AR + VR Learning', icon: 'Zap' },
+              { t: 'Innovation', icon: 'Sparkles' }
+            ]
+          }
+        },
+        {
+          blockType: 'corporate_strategy',
+          order: 2,
+          data: {
+            badge: 'Strategic Advisory',
+            title: 'Consultancy At Board Level.',
+            description: 'Exposé to latest innovations and edtech products at a lesser price for partner schools.',
+            points: ['IN-HOUSE MANUFACTURING', 'EDTECH INNOVATION ACCESS', 'GAMIFICATION SPECIALISTS', 'GLOBAL ARCHITECTURAL PANEL']
+          }
+        },
+        {
+          blockType: 'corporate_pillars',
+          order: 3,
+          data: {
+            pillars: [
+              { t: 'Quality Protocol', d: 'All products hold TS and ISO 9001 certifications. Durability, performance, and safety tests are audited by experts.', u: 'Standards', icon: 'ShieldCheck' },
+              { t: 'Rapid R&D', d: 'Iterative laboratory development ensures we stay at the forefront of global innovation.', u: 'Innovation', icon: 'Microscope' },
+              { t: 'Global Logistics', v: 'A rapidly growing network focused on mass production and efficient delivery.', u: 'Supply Chain', icon: 'Globe' },
+              { t: 'Expert Design', d: '16 Architects & 20+ Designers creating ergonomic spaces that promote creativity.', u: 'Architecture', icon: 'PenTool' }
+            ]
+          }
         },
         {
           blockType: 'cta_whatsapp',
-          order: 2,
+          order: 4,
           data: {
-            badge: 'Corporate',
-            headline: 'Running a school chain?',
-            description: 'Let us handle your bulk requirements with dedicated Account Managers.',
+            headline: 'Ready To Talk?',
+            description: 'WE HAVE THE EXPERTISE IN GUIDING YOU TO SET UP YOUR NEW CAMPUS PROJECT AND MAXIMIZE PERFORMANCE.',
             whatsappNumber: '919966109191',
-            phone: '+91 9966109191',
-          },
-        },
+            phone: '+91 9966109191'
+          }
+        }
       ],
     },
 
@@ -999,12 +1064,87 @@ async function seed() {
       pageSlug: 'partnerships',
       pageTitle: 'Partnerships',
       blocks: [
-        { blockType: 'inner_page_hero', data: { titleHtml: 'Strategic <br/> Institutional <span class="text-sm-blue italic font-serif leading-none lowercase">Alliances.</span>', subtitle: 'Building the future of education through high-impact corporate and academic collaborations.', theme: 'Collaboration' }, order: 0 },
-        { blockType: 'categories', data: { items: [
-          { title: 'Channel Partners', icon: 'Award', color: 'bg-blue-50 text-blue-600', items: ['Exclusive Zonal Distribution Rights', 'Joint Marketing & Lead Generation', 'Pre-qualified Institutional Leads', 'Complete Product Training & Support'] },
-          { title: 'Vendor Network', icon: 'Zap', color: 'bg-orange-50 text-orange-600', items: ['Direct Bulk Procurement Access', 'Unified Digital Invoicing System', 'Supply Chain Priority Fulfillment', 'Multi-year Institutional Mandates'] },
-        ]}, order: 1 },
-        { blockType: 'cta_whatsapp', data: { headline: 'speak with our alliance head', whatsappNumber: '919966109191' }, order: 2 },
+        {
+          blockType: 'partnerships_hero',
+          order: 0,
+          data: {
+            badge: 'Institutional Alliance',
+            titleHtml: 'Strategic <span class="text-sm-blue italic font-serif lowercase tracking-normal">Partnerships.</span>',
+            description: 'Join India\'s largest educational ecosystem. From academic excellence to infrastructure growth, we provide the toolkit for high-performing institutions.',
+            stats: [
+              { value: '4K+', label: 'Schools' },
+              { value: '28', label: 'States' }
+            ]
+          }
+        },
+        {
+          blockType: 'partnerships_programs',
+          order: 1,
+          data: {
+            programs: [
+              {
+                category: 'Academic Partnerships',
+                title: 'Elevate Educational Quality',
+                desc: 'Integrate specialized coaching, curriculum planning, and performance tracking into your school.',
+                color: 'bg-sm-blue',
+                icon: 'BookOpen',
+                items: [
+                  'IIT / NEET Coaching Integration',
+                  'Advanced Curriculum Mapping (NEP 2020)',
+                  'Faculty Training & Empowerment',
+                  'Student Performance Analytics'
+                ]
+              },
+              {
+                category: 'Operational Partnerships',
+                title: 'School Development & Facilities',
+                desc: 'End-to-end infrastructure management and sports program development for modern campuses.',
+                color: 'bg-emerald-600',
+                icon: 'Construction',
+                items: [
+                  'Infrastructure Evaluation & Roadmaps',
+                  'Sports Academy Development',
+                  'Campus Maintenance Audits',
+                  'Vendor Ecosystem Management'
+                ]
+              },
+              {
+                category: 'Financial Partnerships',
+                title: 'Fundraising & Advisory',
+                desc: 'Access specialized capital, CSR grants, and investor networks for institutional growth.',
+                color: 'bg-amber-600',
+                icon: 'TrendingUp',
+                items: [
+                  'CSR Grant Facilitation',
+                  'Investor & HNI Introductions',
+                  'Project Proposal Handholding',
+                  'Operational Yield Management'
+                ]
+              }
+            ]
+          }
+        },
+        {
+          blockType: 'partnerships_rewards',
+          order: 2,
+          data: {
+            title: 'Institutional Rewards',
+            subtitle: 'Exclusive benefits for partner schools.',
+            rewards: [
+              { title: 'Bulk Discounts', desc: 'Special institutional pricing for large-scale procurement.', icon: 'TrendingUp' },
+              { title: 'Loyalty Points', desc: 'Earn points on every order redeemable for upgrades.', icon: 'Star' },
+              { title: 'Pilot Access', desc: 'First-mover advantage on new EdTech and Lab tools.', icon: 'Zap' }
+            ]
+          }
+        },
+        {
+          blockType: 'cta_whatsapp',
+          order: 3,
+          data: {
+            headline: 'speak with our alliance head',
+            whatsappNumber: '919966109191'
+          }
+        }
       ],
     },
     {
@@ -1036,43 +1176,440 @@ async function seed() {
       pageSlug: 'digitization-guide',
       pageTitle: 'Guide to Digitization',
       blocks: [
-        { blockType: 'inner_page_hero', data: { titleHtml: 'Complete <br/> Guide <span class="text-sm-blue italic">to</span> <br/> Digitization.', subtitle: 'A comprehensive roadmap for the digital transformation of your institution.', theme: 'Tech' }, order: 0 },
-        { blockType: 'text_content', data: { body: '<p>Standardizing digital infrastructure is the first step towards a future-ready campus. Our guide covers everything from server deployment to AI integration.</p>' }, order: 1 },
+        { 
+          blockType: 'inner_page_hero', 
+          data: { 
+            titleHtml: 'Complete Guide <br /> <span class="text-sm-blue italic font-serif lowercase tracking-normal">to</span> School Digitization.', 
+            subtitle: 'v2.0 Digitization Mastery',
+            description: "India's most comprehensive blueprint for transforming traditional schools into AI-enabled smart campuses.",
+            badge: 'v2.0 Digitization',
+            icon: 'Smartphone',
+            theme: 'Dark',
+            stats: [
+              { value: '100%', label: 'Secure' },
+              { value: '2025', label: 'Ready' }
+            ]
+          }, 
+          order: 0 
+        },
+        { 
+          blockType: 'resource_grid', 
+          data: { 
+            items: [
+              {
+                title: 'Hardware Infrastructure',
+                desc: 'Campus-wide Wi-Fi, Interactive Flat Panels, and Student Computing Devices.',
+                icon: 'Laptop',
+                color: 'bg-sm-blue',
+                items: ['6E Wireless Access Points', '75/86" 4K Smart Panels', 'Cloud-managed Networking'],
+              },
+              {
+                title: 'ERP & LMS Ecosystem',
+                desc: 'Unified school management and learning platforms for seamless administration.',
+                icon: 'Settings',
+                color: 'bg-emerald-600',
+                items: ['Automated Fee Management', 'Student Attendance App', 'Learning Progress Tracking'],
+              },
+              {
+                title: 'Teacher Empowerment',
+                desc: 'Continuous training modules for staff to master digital pedagogy tools.',
+                icon: 'Award',
+                color: 'bg-rose-500',
+                items: ['EdTech Certification', 'Content Creation Tools', 'Collaborative Workshops'],
+              },
+            ]
+          }, 
+          order: 1 
+        },
+        {
+          blockType: 'inner_page_cta',
+          data: {
+            title: 'Need a customized audit for your school?',
+            actionText: 'Book Free Digital Audit',
+            actionLink: '/contact-us',
+            theme: 'Blue'
+          },
+          order: 2
+        }
       ],
     },
     {
-      pageSlug: 'catalogue-2025',
+      pageSlug: 'product-catalog-2025',
       pageTitle: 'Product Catalog 2025',
       blocks: [
-        { blockType: 'inner_page_hero', data: { titleHtml: 'Master <br/> Catalogue <span class="text-sm-blue italic">2025.</span>', subtitle: 'Explore over 5000+ premium school products and infrastructure solutions.', theme: 'Gallery' }, order: 0 },
+        { 
+          blockType: 'inner_page_hero', 
+          data: { 
+            titleHtml: 'Institutional <br /> <span class="text-sm-blue italic font-serif lowercase tracking-normal">Catalogues.</span>', 
+            subtitle: 'New v2025 Release',
+            description: 'Download the definitive guide to modern school infrastructure. 12+ categories, 2000+ products, and premium institutional designs.',
+            badge: 'New v2025 Release',
+            icon: 'Download',
+            theme: 'Light',
+            stats: [
+              { value: '2k+', label: 'Products Catalogue' },
+              { value: '15+', label: 'National Awards' }
+            ]
+          }, 
+          order: 0 
+        },
+        {
+          blockType: 'catalog_grid',
+          data: {
+            catalogs: [
+              {
+                title: 'Play Furniture',
+                subtitle: 'Pre-Primary Collections',
+                pages: '124 Pages',
+                size: '14MB PDF',
+                img: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&q=80',
+                color: 'bg-rose-500',
+              },
+              {
+                title: 'Lab & STEM',
+                subtitle: 'Modular Equipment',
+                pages: '86 Pages',
+                size: '9MB PDF',
+                img: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=80',
+                color: 'bg-emerald-600',
+              },
+              {
+                title: 'Digital Hub',
+                subtitle: 'Smart Solutions',
+                pages: '48 Pages',
+                size: '6MB PDF',
+                img: 'https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=800&q=80',
+                color: 'bg-sm-blue',
+              },
+            ]
+          },
+          order: 1
+        },
+        {
+          blockType: 'inner_page_cta',
+          data: {
+            title: 'Need a printed hardcover edition?',
+            subtitle: 'Complimentary master catalogues for institutional partners.',
+            actionText: 'Request Printing Curation',
+            actionLink: '/contact-us',
+            theme: 'LightGray'
+          },
+          order: 2
+        }
       ],
+    },
+    {
+      pageSlug: 'setup-school-india',
+      pageTitle: 'Setting Up School in India',
+      blocks: [
+        { 
+          blockType: 'inner_page_hero', 
+          data: { 
+            titleHtml: 'Setting Up A <br /> <span class="text-sm-blue italic font-serif lowercase tracking-normal">School</span> In India.', 
+            subtitle: 'Compliance Masterclass',
+            description: 'From legal foundation to CBSE/ICSE board norms, our institutional roadmap ensures your school project stays on track and compliant.',
+            badge: 'Compliance Masterclass',
+            icon: 'Building2',
+            theme: 'Light',
+            stats: [
+              { value: '150+', label: 'Facilitated Setup' },
+              { value: 'Trust', label: 'Legal & Strategy' }
+            ]
+          }, 
+          order: 0 
+        },
+        {
+          blockType: 'resource_grid',
+          data: {
+            items: [
+              {
+                phase: 'Trust & Society',
+                title: 'Legal Foundation',
+                desc: 'Registering your educational society or trust with specialized bylaws to support institutional growth.',
+                icon: 'Shield',
+                color: 'bg-sm-blue',
+                items: ['Trust Deed Registration', 'Bylaws Drafting', 'Educational Clause Norms'],
+              },
+              {
+                phase: 'Infrastructure',
+                title: 'Site & Architecture',
+                desc: 'Site survey and design that meets board-specific land norms and student safety standards.',
+                icon: 'Building2',
+                color: 'bg-emerald-600',
+                items: ['CBSE/ICSE Land Norms', 'Campus Master Planning', 'Building Safety Certificates'],
+              },
+              {
+                phase: 'Affiliation',
+                title: 'Registration & Finalize',
+                desc: 'Documentation and process handholding for online registration with board portals.',
+                icon: 'Target',
+                color: 'bg-amber-600',
+                items: ['Documentation Audit', 'Inspection Mock Drills', 'On-site Compliance Check'],
+              },
+            ]
+          },
+          order: 1
+        },
+        {
+          blockType: 'inner_page_cta',
+          data: {
+            title: 'Expert Affiliation & Legal Consultation.',
+            actionText: 'Schedule Strategy Call',
+            actionLink: 'tel:+919966109191',
+            theme: 'Black'
+          },
+          order: 2
+        }
+      ]
     },
     {
       pageSlug: 'skill-lab-guide',
       pageTitle: 'How to Setup Composite Skill Lab',
       blocks: [
-        { blockType: 'inner_page_hero', data: { titleHtml: 'Composite <br/> Skill <span class="text-sm-blue italic">Lab</span> Setup.', subtitle: 'Comprehensive design and equipment guide for modern skill-based learning.', theme: 'Lab' }, order: 0 },
+        { 
+          blockType: 'inner_page_hero', 
+          data: { 
+            titleHtml: 'Setting Up <br /> <span class="text-sm-blue italic font-serif lowercase tracking-normal">Composite</span> Skill Labs.', 
+            subtitle: 'v2025 Blueprints',
+            description: 'Technical blueprints for building future-ready skill hubs. 100% compliant with NITI Aayog & NEP 2020 guidelines for STEM education.',
+            badge: 'v2025 Blueprints',
+            icon: 'Zap',
+            theme: 'Dark',
+            stats: [
+              { value: '500+', label: 'Labs Installed' },
+              { value: '100%', label: 'Compliance Rate' }
+            ]
+          }, 
+          order: 0 
+        },
+        {
+          blockType: 'resource_grid',
+          data: {
+            items: [
+              {
+                title: 'Composite Skill Lab',
+                badge: 'Multi-Disciplinary',
+                desc: 'Integrated space for Coding, IoT, and AI prototyping with industry-standard hardware.',
+                icon: 'Cpu',
+                color: 'bg-sm-blue',
+                items: ['AI Micro-controllers', 'IoT Sensors Kit', 'Digital Prototyping Board'],
+              },
+              {
+                title: 'Robotics & STEM',
+                badge: 'Hardware Centric',
+                desc: 'Modular building blocks and programming tools for robotics competitions and physics experiments.',
+                icon: 'Settings',
+                color: 'bg-emerald-600',
+                items: ['LEGO Education Kits', 'Drone Tech Hub', 'Industrial Robot Arms'],
+              },
+              {
+                title: 'ATL & Innovation',
+                badge: 'Creative Making',
+                desc: 'Dedicated tinkering space with 3D printers, laser cutters, and traditional toolsets.',
+                icon: 'Activity',
+                color: 'bg-rose-500',
+                items: ['3D Printing Station', 'Laser Cutting Tools', 'Mechanical Workbench'],
+              },
+            ]
+          },
+          order: 1
+        },
+        {
+          blockType: 'inner_page_cta',
+          data: {
+            title: 'Book a technical facility audit.',
+            subtitle: 'On-site infrastructure assessments & technical handholding.',
+            actionText: 'Schedule Audit',
+            theme: 'Blue'
+          },
+          order: 2
+        }
       ],
     },
     {
       pageSlug: 'play-furniture-lookbook',
       pageTitle: 'Lookbook - Play Furniture',
       blocks: [
-        { blockType: 'inner_page_hero', data: { titleHtml: 'Play <br/> Furniture <span class="text-sm-blue italic">Lookbook.</span>', subtitle: 'Vibrant and ergonomic furniture designs for joyful early learning.', theme: 'Play' }, order: 0 },
+        { 
+          blockType: 'inner_page_hero', 
+          data: { 
+            titleHtml: 'Play Furniture <br /> <span class="text-rose-500 italic font-serif lowercase tracking-normal text-6xl">Lookbook.</span>', 
+            subtitle: 'Lookbook v2025',
+            description: 'Inspiring early childhood spaces designed with safety, ergonomics, and aesthetic joy at their core.',
+            badge: 'Lookbook v2025',
+            icon: 'Sparkles',
+            theme: 'Rose',
+            stats: [
+              { value: '500+', label: 'Installations Across India' },
+              { value: '100%', label: 'Child Safe Materals' }
+            ]
+          }, 
+          order: 0 
+        },
+        {
+          blockType: 'lookbook_grid',
+          data: {
+            collections: [
+              {
+                title: 'Pre-Primary Hub',
+                subtitle: 'Nursery & LKG Ready',
+                desc: 'Ergonomic, colorful, and sustainable furniture designed for the first steps of learning.',
+                img: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&q=80',
+                color: 'bg-rose-500',
+              },
+              {
+                title: 'Outdoor Adventure',
+                subtitle: 'Safe Play Area',
+                desc: 'Heavy-duty multiplay systems, swings, and slides with international safety certification.',
+                img: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=800&q=80',
+                color: 'bg-emerald-600',
+              },
+              {
+                title: 'Soft Play Zone',
+                subtitle: 'Early Childhood',
+                desc: 'Safe, cushioned environments for toddlers to explore physical coordination and play.',
+                img: 'https://images.unsplash.com/photo-1608447714925-599deeb5a682?w=800&q=80',
+                color: 'bg-sm-blue',
+              },
+            ]
+          },
+          order: 1
+        },
+        {
+          blockType: 'inner_page_cta',
+          data: {
+            title: 'Ready to design your play environment?',
+            actionText: 'Book Design Consultation',
+            theme: 'Rose'
+          },
+          order: 2
+        }
       ],
     },
     {
       pageSlug: 'math-resources',
       pageTitle: 'Gamified Math Resources',
       blocks: [
-        { blockType: 'inner_page_hero', data: { titleHtml: 'Gamified <br/> Math <span class="text-sm-blue italic">Resources.</span>', subtitle: 'Engaging tools and frameworks for conceptual mathematics mastery.', theme: 'Math' }, order: 0 },
+        { 
+          blockType: 'inner_page_hero', 
+          data: { 
+            titleHtml: 'Gamified Math <br /> <span class="text-emerald-600 italic font-serif lowercase tracking-normal text-6xl">Resources.</span>', 
+            subtitle: 'Gamified v2025',
+            description: 'Making mathematics intuitive through play and gamification. 100% aligned with NEP 2020 foundation & primary stage guidelines.',
+            badge: 'Gamified v2025',
+            icon: 'Calculator',
+            theme: 'Emerald',
+            stats: [
+              { value: '5k+', label: 'Students Reached' },
+              { value: '100%', label: 'Retention Rate' }
+            ]
+          }, 
+          order: 0 
+        },
+        {
+          blockType: 'resource_grid',
+          data: {
+            items: [
+              {
+                title: 'Gamified Math Kits',
+                subtitle: 'Elementary & Middle School',
+                desc: 'Interactive physical boards and manipulatives that transform abstract concepts into tangible play.',
+                icon: 'Calculator',
+                color: 'bg-emerald-600',
+                items: ['Number Sense Boards', 'Fraction Manipulatives', 'Geometry Building Sets'],
+              },
+              {
+                title: 'Digital Maths Lab',
+                subtitle: 'High School Ready',
+                desc: 'Advanced software ecosystems with real-time analytics and personalized learning paths.',
+                icon: 'Zap',
+                color: 'bg-sm-blue',
+                items: ['AI Problem Solvers', '3D Graphing Tools', 'Progress Dashboards'],
+              },
+              {
+                title: 'Teacher Handbooks',
+                subtitle: 'Pedagogy & Training',
+                desc: 'Step-by-step guides for educators to implement gamified learning effectively in classrooms.',
+                icon: 'BookOpen',
+                color: 'bg-amber-600',
+                items: ['Activity Planners', 'Assessment Kits', 'Workshop Materials'],
+              },
+            ]
+          },
+          order: 1
+        },
+        {
+          blockType: 'inner_page_cta',
+          data: {
+            title: 'Ready to transform your math lab?',
+            actionText: 'Book Strategy Consultation',
+            theme: 'Emerald'
+          },
+          order: 2
+        }
       ],
     },
     {
       pageSlug: 'completed-projects',
       pageTitle: 'Completed Projects',
       blocks: [
-        { blockType: 'inner_page_hero', data: { titleHtml: 'Our <br/> Execution <span class="text-sm-blue italic">Legacy.</span>', subtitle: 'Browse through 1000+ successfully completed institutional projects.', theme: 'Projects' }, order: 0 },
+        { 
+          blockType: 'inner_page_hero', 
+          data: { 
+            titleHtml: 'Completed <br /> <span class="text-sm-blue italic font-serif lowercase tracking-normal text-6xl">Portfolios.</span>', 
+            subtitle: 'Institutional Portfolio',
+            description: 'Exploring 500+ campus success stories across India. From boutique preschools to massive K-12 institutional hubs.',
+            badge: 'Institutional Portfolio',
+            icon: 'Target',
+            theme: 'Dark',
+            stats: [
+              { value: '12', label: 'States Covered' },
+              { value: '500+', label: 'Completed Projects' }
+            ]
+          }, 
+          order: 0 
+        },
+        {
+          blockType: 'portfolio_grid',
+          data: {
+            projects: [
+              {
+                title: 'Greenfield K-12 Campus',
+                subtitle: 'Hyderabad, India',
+                desc: 'Complete campus setup including furniture, STEM labs, and sports infrastructure.',
+                img: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80',
+                tags: ['A-Z Implementation', 'Modern Architecture'],
+                color: 'bg-sm-blue',
+              },
+              {
+                title: 'Digital Play Space Revamp',
+                subtitle: 'Bangalore, India',
+                desc: 'Transforming traditional preschools into tech-enabled creative play zones.',
+                img: 'https://images.unsplash.com/photo-1544640808-32ca72ac7f37?w=800&q=80',
+                tags: ['Soft Play', 'Digitization'],
+                color: 'bg-rose-500',
+              },
+              {
+                title: 'NITI Aayog Skill Hub',
+                subtitle: 'Delhi NCR, India',
+                desc: 'Turnkey setup of composite skill labs with AI and Robotics modules.',
+                img: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&q=80',
+                tags: ['Technical Lab', 'Skill Centre'],
+                color: 'bg-emerald-600',
+              },
+            ]
+          },
+          order: 1
+        },
+        {
+          blockType: 'inner_page_cta',
+          data: {
+            title: 'Discuss your campus transformation.',
+            actionText: 'Schedule Project Review',
+            theme: 'LightGray'
+          },
+          order: 2
+        }
       ],
     },
     {
@@ -1093,14 +1630,119 @@ async function seed() {
       pageSlug: 'job-openings',
       pageTitle: 'Job Openings',
       blocks: [
-        { blockType: 'inner_page_hero', data: { titleHtml: 'Join <br/> the <span class="text-sm-blue italic">Team.</span>', subtitle: 'Help us build the institutions of tomorrow. Explore careers at SchoolMart.', theme: 'Careers' }, order: 0 },
+        { 
+          blockType: 'inner_page_hero', 
+          data: { 
+            titleHtml: 'Join the <br /> <span class="text-sm-blue italic font-serif lowercase tracking-normal text-6xl">Growth</span> Engine.', 
+            subtitle: 'Careers v2025',
+            description: "We're looking for visionary consultants, designers, and engineers to redefine Indian education infrastructure.",
+            badge: 'Careers v2025',
+            icon: 'Briefcase',
+            theme: 'Dark',
+            stats: [
+              { value: '12+', label: 'Open Roles' },
+              { value: 'Global', label: 'Team' }
+            ]
+          }, 
+          order: 0 
+        },
+        {
+          blockType: 'job_listings',
+          data: {
+            jobs: [
+              {
+                role: 'Academic Consultant',
+                type: 'Full Time',
+                location: 'Hyderabad / REMOTE',
+                dept: 'Institutional Growth',
+                desc: 'Advising schools on academic transformation and NEP implementation strategies.',
+              },
+              {
+                role: 'Product Designer (Institutional)',
+                type: 'Full Time',
+                location: 'Bangalore',
+                dept: 'Design Lab',
+                desc: 'Creating next-gen furniture and spatial layouts for modern K-12 campuses.',
+              },
+              {
+                role: 'Technical Project Manager',
+                type: 'Full Time',
+                location: 'Delhi NCR',
+                dept: 'Infrastructure',
+                desc: 'Managing turnkey school setup projects from site survey to final handover.',
+              },
+            ]
+          },
+          order: 1
+        },
+        {
+          blockType: 'inner_page_cta',
+          data: {
+            title: "Don't see a role that fits?",
+            actionText: 'Submit Open Application',
+            theme: 'LightGray'
+          },
+          order: 2
+        }
       ],
     },
     {
       pageSlug: 'influencer-program',
       pageTitle: 'Join as Influencers',
       blocks: [
-        { blockType: 'inner_page_hero', data: { titleHtml: 'Influencer <br/> & <span class="text-sm-blue italic">Affiliate</span> Partner.', subtitle: 'Partner with India\'s leading school solution provider and grow your influence.', theme: 'Affiliate' }, order: 0 },
+        { 
+          blockType: 'inner_page_hero', 
+          data: { 
+            titleHtml: 'Join as <br /> <span class="text-sm-blue italic font-serif lowercase tracking-normal text-6xl">Influencers.</span>', 
+            subtitle: 'Partner v2025',
+            description: "Collaborate with India's fastest-growing institutional brand. Driving impact across 500+ premium campuses nationwide.",
+            badge: 'Partner v2025',
+            icon: 'Star',
+            theme: 'Light',
+          }, 
+          order: 0 
+        },
+        {
+          blockType: 'resource_grid',
+          data: {
+            items: [
+              {
+                title: 'Content Creators',
+                subtitle: 'Micro-Influencers',
+                desc: 'Education-focused creators with 10k+ reach. Focused on campus tours and product reviews.',
+                icon: 'Camera',
+                color: 'bg-rose-500',
+                items: ['Free Product Kits', 'Campus Access', 'Affiliate Commissions'],
+              },
+              {
+                title: 'Academic Advocacy',
+                subtitle: 'Institutional Voices',
+                desc: 'Senior educators or architects who advocate for modern, safe learning environments.',
+                icon: 'Users',
+                color: 'bg-emerald-600',
+                items: ['Thought Leadership', 'Expert Panels', 'Design Collaboration'],
+              },
+              {
+                title: 'Brand Ambassadors',
+                subtitle: 'Exclusive Partners',
+                desc: 'Select individuals who embody our mission to transform global education infrastructure.',
+                icon: 'Award',
+                color: 'bg-sm-blue',
+                items: ['Annual Retainer', 'Media Presence', 'Exclusive Events'],
+              },
+            ]
+          },
+          order: 1
+        },
+        {
+          blockType: 'inner_page_cta',
+          data: {
+            title: 'Building institutional brand excellence, together.',
+            actionText: 'Apply for Partnerships',
+            theme: 'Black'
+          },
+          order: 2
+        }
       ],
     },
   ];
