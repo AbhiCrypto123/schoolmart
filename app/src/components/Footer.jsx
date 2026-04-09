@@ -3,15 +3,23 @@ import { Link } from 'react-router-dom';
 import { Facebook, Twitter, Youtube } from 'lucide-react';
 
 const Footer = () => {
-  const howItWorksLinks = [
+  const brandHelp = [
     { name: 'How it works', path: '#' },
-    { name: 'Brand Help', path: '#' },
     { name: 'Sell on schoolmart', path: '#' },
     { name: 'Pricing', path: '#' },
     { name: 'Seller Help', path: '#' },
     { name: 'Shipping Policy', path: '#' },
     { name: 'Cancellation Policy', path: '#' },
     { name: 'Replacement & Return', path: '#' },
+    { name: 'Order Rejection Policy', path: '#' },
+    { name: 'Payments', path: '#' },
+  ];
+
+  const schoolHelp = [
+    { name: 'Shipping Policy', path: '#' },
+    { name: 'Cancellation Policy', path: '#' },
+    { name: 'Replacement & Return', path: '#' },
+    { name: 'Payment Policy', path: '#' },
     { name: 'Order Rejection Policy', path: '#' },
   ];
 
@@ -21,21 +29,6 @@ const Footer = () => {
     { name: 'Report Issue', path: '#' },
     { name: 'Blog', path: '#' },
     { name: 'Delivery Locations', path: '#' },
-  ];
-
-  const categoryLinks = [
-    { name: 'FURNITURE - PRIMARY & HIGH SCHOOL', path: '/furniture' },
-    { name: 'KINDERGARTEN', path: '/furniture' },
-    { name: 'OFFICE FURNITURE', path: '/furniture' },
-    { name: 'LABS & LIBRARIES - CHEMISTRY LABS', path: '/labs' },
-    { name: 'BIOLOGY LAB', path: '/labs' },
-    { name: 'STEM LABS', path: '/labs' },
-    { name: 'MATH LABS', path: '/gamified-math-labs' },
-    { name: 'COMPUTER LABS', path: '/labs' },
-    { name: 'LIBRARY', path: '/labs' },
-    { name: 'SPORTS - SPORTS SURFACES', path: '/sports' },
-    { name: 'TECHNOLOGY - INTERACTIVE BOARDS', path: '/digital' },
-    { name: 'ENVIRONMENT ROOMS', path: '/environments' },
   ];
 
   const trendingLinks = [
@@ -56,14 +49,14 @@ const Footer = () => {
   return (
     <footer className="bg-sm-navy text-white">
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Column 1 - About Us */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 font-heading">About Us</h3>
-            <div className="text-sm text-gray-300 space-y-3 leading-relaxed">
+          <div className="space-y-4">
+            <h3 className="text-lg font-black uppercase tracking-widest text-[#FFDB00] font-heading">About Us</h3>
+            <div className="text-[13px] text-gray-300 space-y-4 leading-relaxed font-medium">
               <p>
-                <Link to="/" className="text-sm-green hover:text-white transition-colors duration-200">
+                <Link to="/" className="text-white hover:text-[#FFDB00] transition-colors duration-200 font-bold border-b border-white/20">
                   schoolmart.in
                 </Link>{' '}
                 is a consortium of architects, designers, school innovators who strive to bring the learning outcome through latest infrastructure and edtech.
@@ -72,23 +65,23 @@ const Footer = () => {
                 We help schools in setting up new schools, expanding to new schools, design to execution, new environments, NEP ready environments, labs, libraries, sports infra etc.
               </p>
               <p>
-                <Link to="/" className="text-sm-green hover:text-white transition-colors duration-200">
+                <Link to="/" className="text-white hover:text-[#FFDB00] transition-colors duration-200 font-bold border-b border-white/20">
                   Schoolmart.in
                 </Link>{' '}
-                is an initiative of thirdeye group. Schoolmart has <span className="text-sm-yellow font-semibold">4000+</span> partner schools across India and helping them build their infrastructure since <span className="text-sm-yellow font-semibold">7 years</span>.
+                is an initiative of thirdeye group. Schoolmart has <span className="text-[#FFDB00] font-black">4000+</span> partner schools across India and helping them build their infrastructure since <span className="text-[#FFDB00] font-black">7 years</span>.
               </p>
             </div>
           </div>
 
-          {/* Column 2 - How it Works */}
+          {/* Column 2 - Brand & Seller Help */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 font-heading">How it Works</h3>
-            <ul className="space-y-2">
-              {howItWorksLinks.map((link) => (
+            <h3 className="text-sm font-black uppercase tracking-[0.2em] text-[#FFDB00] mb-6 font-heading">Brand & Seller Help</h3>
+            <ul className="space-y-3">
+              {brandHelp.map((link) => (
                 <li key={link.name}>
                   <Link 
                     to={link.path} 
-                    className="text-sm text-gray-300 hover:text-white transition-colors duration-200"
+                    className="text-[13px] text-gray-300 hover:text-white hover:translate-x-1 inline-block transition-all duration-200 font-medium"
                   >
                     {link.name}
                   </Link>
@@ -97,32 +90,32 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 3 - Business */}
+          {/* Column 3 - School Help */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 font-heading">Business</h3>
-            <ul className="space-y-2">
+            <h3 className="text-sm font-black uppercase tracking-[0.2em] text-[#FFDB00] mb-6 font-heading">School Help</h3>
+            <ul className="space-y-3">
+              {schoolHelp.map((link) => (
+                <li key={link.name}>
+                  <Link 
+                    to={link.path} 
+                    className="text-[13px] text-gray-300 hover:text-white hover:translate-x-1 inline-block transition-all duration-200 font-medium"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 4 - Business */}
+          <div>
+            <h3 className="text-sm font-black uppercase tracking-[0.2em] text-[#FFDB00] mb-6 font-heading">Business</h3>
+            <ul className="space-y-3">
               {businessLinks.map((link) => (
                 <li key={link.name}>
                   <Link 
                     to={link.path} 
-                    className="text-sm text-gray-300 hover:text-white transition-colors duration-200"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Column 4 - Categories */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 font-heading">Categories</h3>
-            <ul className="space-y-2">
-              {categoryLinks.map((link) => (
-                <li key={link.name}>
-                  <Link 
-                    to={link.path} 
-                    className="text-sm text-gray-300 hover:text-white transition-colors duration-200"
+                    className="text-[13px] text-gray-300 hover:text-white hover:translate-x-1 inline-block transition-all duration-200 font-medium"
                   >
                     {link.name}
                   </Link>
@@ -133,13 +126,13 @@ const Footer = () => {
         </div>
 
         {/* Trending Section */}
-        <div className="mt-4 pt-4 border-t border-white/10">
-          <h3 className="text-base font-semibold mb-2 font-heading">What's Trending on SchoolMart</h3>
-          <div className="flex flex-wrap gap-2">
+        <div className="mt-8 pt-8 border-t border-white/10">
+          <h3 className="text-xs font-black uppercase tracking-[0.3em] text-gray-500 mb-4 font-heading">Industry Insights & Trends</h3>
+          <div className="flex flex-wrap gap-x-6 gap-y-3">
             {trendingLinks.map((item) => (
               <span 
                 key={item} 
-                className="text-xs text-gray-400 hover:text-white cursor-pointer transition-colors duration-200"
+                className="text-[11px] font-black uppercase tracking-[0.1em] text-gray-400 hover:text-[#FFDB00] cursor-pointer transition-colors duration-200"
               >
                 {item}
               </span>
