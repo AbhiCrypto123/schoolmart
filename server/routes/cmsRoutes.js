@@ -1,0 +1,18 @@
+const express = require('express');
+const router = express.Router();
+const { getAllPages, getPageContent, updateBlock, addBlock, deleteBlock } = require('../controllers/cmsController');
+const { protect, admin } = require('../middleware/authMiddleware');
+
+// Public routes for frontend fetching
+router.get('/pages', getAllPages);
+router.get('/pages/:slug', getPageContent);
+
+// Protected Admin routes
+router.post('/blocks', protect, admin, addBlock);
+router.put('/blocks', protect, admin, updateBlock);
+router.delete('/blocks/:id', protect, admin, deleteBlock);
+
+module.exports = router;
+
+
+

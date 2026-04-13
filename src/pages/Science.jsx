@@ -1,0 +1,154 @@
+// src/pages/Science.jsx
+import React, { useState, useEffect } from 'react';
+import { useCMSPage } from '../hooks/useCMSBlock';
+import { getProducts } from '../services/api';
+import { Link } from 'react-router-dom';
+import { FlaskConical, Beaker, Atom, Microscope, Dna, Zap, ArrowRight, ArrowUpRight, Download, Eye, FileText, Activity, Layers, CheckCircle2, Stars, ChevronRight, Building2, ChevronDown } from 'lucide-react';
+import InlineQuickView from '../components/InlineQuickView';
+import CMSMedia from '../components/ui/CMSMedia';
+import CatalogueCard from '../components/CatalogueCard';
+import SidebarWidget from '../components/SidebarWidget';
+
+const Science = () => {
+   const { blocks, loading } = useCMSPage('science');
+   const [items, setItems] = useState([]);
+   const [selectedCat, setSelectedCat] = useState('');
+   const [selectedItem, setSelectedItem] = useState(null);
+
+   const sidebarCategories = blocks?.sidebar_categories || {};
+   const heroBlock = blocks?.inner_page_hero || {};
+   
+   useEffect(() => {
+    getProducts({ category: 'Science' }).then(res => {
+         setItems(res || []);
+         const defaultCat = sidebarCategories.categories?.[0] || 'Chemistry';
+         setSelectedCat(defaultCat);
+      });
+   }, [sidebarCategories]);
+
+   const sidebarResources = blocks?.sidebar_resources || {};
+   const sidebarTrending = blocks?.sidebar_trending || {};
+
+   const cats = sidebarCategories.categories || [];
+   const filteredItems = items.filter(p => !selectedCat || (p.subcategory || '').toUpperCase() === selectedCat.toUpperCase());
+
+
+
+
+   return (
+      <main className="min-h-screen bg-white pt-6 pb-4">
+         <div className="max-w-7xl mx-auto px-4">
+
+            <section className="pt-4 pb-6 grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-4 items-stretch">
+               {/* TEXT BLOCK */}
+               <div className="lg:col-span-5 bg-white rounded-[40px] p-8 lg:p-14 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group min-h-[300px] lg:min-h-[400px]">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full -mr-16 -mt-16 blur-3xl" />
+                  <div className="px-3 py-1 bg-emerald-50 text-emerald-600 font-black rounded-full text-[8px] uppercase tracking-[0.2em] mb-6 w-fit border border-emerald-100 relative z-10">
+                     <Activity size={12} className="inline mr-2 animate-pulse" /> {heroBlock.badge || "Experimental Discovery 2025"}
+                  </div>
+                  <h1 className="text-4xl lg:text-6xl font-black font-heading leading-[0.9] mb-8 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Science <br/> <span class=\"text-emerald-500 italic font-serif lowercase tracking-normal\">is</span> <br/> Pure Fun." }} />
+                  <p className="text-gray-400 text-[12px] lg:text-[13px] font-bold uppercase tracking-widest max-w-sm leading-loose relative z-10">
+                     {heroBlock.subtitle || "From periodic tables to precision workbenches, we create spaces where curiosity triggers action."}
+                  </p>
+               </div>
+
+               {/* IMAGE BLOCK */}
+               <div className="lg:col-span-4 bg-emerald-50 rounded-[40px] overflow-hidden border border-emerald-100 shadow-sm relative group h-full">
+                  <CMSMedia
+                     mediaType={heroBlock.mediaType}
+                     mediaUrl={heroBlock.mediaUrl}
+                     fallbackImg={heroBlock.img || "https://images.unsplash.com/photo-1541829070764-84a7d30dee62?w=1000&q=80"}
+                     className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+               </div>
+
+               {/* FEATURE CARD */}
+               <div className="lg:col-span-3 flex flex-col gap-3 lg:gap-4">
+                  <div className="flex-grow bg-emerald-600 rounded-[40px] p-8 text-white flex flex-col justify-between shadow-lg relative overflow-hidden group hover:bg-emerald-700 transition-colors">
+                     <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+                     <span className="text-[12px] font-black uppercase tracking-[0.3em] opacity-60 relative z-10">Safety & Tech</span>
+                     <h3 className="text-2xl font-black uppercase tracking-tighter leading-tight mt-10 mb-2 relative z-10" dangerouslySetInnerHTML={{ __html: (blocks?.feature_card?.title || "Security <br/> Performance.").replace(/\n/g, '<br/>') }} />
+                     <p className="text-white/60 text-[8px] font-black uppercase tracking-widest mb-8 relative z-10">Zero-Leaking Infrastructure</p>
+                     <Link to={blocks?.feature_card?.btnPath || "/contact-us"}
+                        className="w-full py-4 bg-white text-emerald-600 font-black rounded-2xl text-[12px] uppercase tracking-widest active:scale-95 transition-all shadow-xl flex items-center justify-center gap-2 group/btn">
+                        Explore Labs <ArrowUpRight size={14} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                     </Link>
+                  </div>
+               </div>
+            </section>
+
+            {/* SIDEBAR GRID LAYOUT */}
+            <section className="py-8 border-t border-gray-100 flex flex-col lg:flex-row gap-12 items-start">
+               {/* LEFT SIDEBAR CATEGORY */}
+               <div className="w-full lg:w-64 shrink-0 space-y-6 sticky top-24">
+                  {/* Relevant Sub-categories */}
+                   <div className="space-y-4">
+                  <div className="flex items-center gap-2 px-4">
+                     <span className="w-1 h-4 bg-sm-blue rounded-full" />
+                     <h3 className="text-[11px] font-black uppercase text-gray-400 tracking-[0.2em]">COLLECTIONS</h3>
+                  </div>
+                  <div className="flex flex-col gap-2 px-2">
+                     {[...new Set([...['Physics Lab', 'Chemistry Hub', 'Biology Sets', 'Safe Chemicals', 'Microscopes'], ...cats])].map((c, i) => (
+                        <button 
+                          key={i} 
+                          onClick={() => { setSelectedCat(c); document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' }); }} 
+                          className={`w-full text-left px-5 py-4 rounded-xl text-[13px] font-black uppercase tracking-[0.05em] transition-all flex items-center justify-between group ${selectedCat.toUpperCase() === c.toUpperCase() ? 'bg-gray-900 text-white shadow-xl' : 'bg-white border border-gray-100 text-gray-800 hover:border-sm-blue hover:text-sm-blue hover:bg-blue-50/30'}`}
+                        >
+                           {c}
+                           <ChevronDown size={14} className={`transition-transform ${selectedCat.toUpperCase() === c.toUpperCase() ? 'rotate-180' : 'opacity-20'}`} />
+                        </button>
+                     ))}
+                  </div>
+                </div>
+               </div>
+
+               {/* MAIN CONTENT GALLERY */}
+               <div className="flex-1 min-w-0">
+
+
+                  <div id="product-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start scroll-mt-[200px]">
+                     {filteredItems.map((work, i) => (
+                        <React.Fragment key={i}>
+                           <CatalogueCard
+                              work={work}
+                              isSelected={selectedItem?.name === work.name}
+                              onClick={() => setSelectedItem(selectedItem?.name === work.name ? null : work)}
+                           />
+
+                           {/* INLINE EXPANSION LOGIC */}
+                           {/* Mobile */}
+                           {selectedItem?.name === work.name && (
+                              <div className="md:hidden col-span-full">
+                                 <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
+                              </div>
+                           )}
+
+                           {/* Tablet (2 cols) */}
+                           {(i % 2 === 1 || i === filteredItems.length - 1) &&
+                              filteredItems.slice(Math.floor(i / 2) * 2, i + 1).some(dw => dw.name === selectedItem?.name) && (
+                                 <div className="hidden md:block lg:hidden col-span-full">
+                                    <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
+                                 </div>
+                              )}
+
+                           {/* Desktop (3 cols) */}
+                           {(i % 3 === 2 || i === filteredItems.length - 1) &&
+                              filteredItems.slice(Math.floor(i / 3) * 3, i + 1).some(dw => dw.name === selectedItem?.name) && (
+                                 <div className="hidden lg:block col-span-full">
+                                    <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
+                                 </div>
+                              )}
+                        </React.Fragment>
+                     ))}
+                  </div>
+               </div>
+            </section>
+
+
+         </div>
+      </main>
+   );
+};
+
+export default Science;

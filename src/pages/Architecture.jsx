@@ -1,0 +1,146 @@
+// src/pages/Architecture.jsx
+import React, { useState, useEffect } from 'react';
+import { useCMSPage } from '../hooks/useCMSBlock';
+import { getProducts } from '../services/api';
+import { Link } from 'react-router-dom';
+import { Building2, Compass, Pencil, Lightbulb, Layout, ArrowRight, ArrowUpRight, Eye, Stars, Download, Layers, FileText, CheckCircle2, ChevronRight, ChevronDown } from 'lucide-react';
+import InlineQuickView from '../components/InlineQuickView';
+import CMSMedia from '../components/ui/CMSMedia';
+import CatalogueCard from '../components/CatalogueCard';
+import SidebarWidget from '../components/SidebarWidget';
+
+const Architecture = () => {
+  const { blocks, loading } = useCMSPage('architecture');
+  const [items, setItems] = useState([]);
+  const [selectedCat, setSelectedCat] = useState('');
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const heroBlock = blocks?.inner_page_hero || {};
+  const sidebarCategories = blocks?.sidebar_categories || {};
+
+  useEffect(() => {
+    getProducts({ category: 'Architecture' }).then(res => {
+      setItems(res || []);
+      const defaultCat = sidebarCategories.categories?.[0] || '3D Plans';
+      setSelectedCat(defaultCat);
+    });
+  }, [sidebarCategories]);
+
+  const sidebarResources = blocks?.sidebar_resources || {};
+  const sidebarTrending = blocks?.sidebar_trending || {};
+  
+  const cats = sidebarCategories.categories || [];
+  const filteredItems = items.filter(p => !selectedCat || (p.subcategory || '').toUpperCase() === selectedCat.toUpperCase());
+
+
+
+
+
+
+  return (
+    <main className="min-h-screen bg-gray-50 pt-6 pb-4">
+      <div className="max-w-7xl mx-auto px-4">
+        
+        {/* MODERN BESPOKE HERO - SPLIT */}
+        <section className="pt-4 pb-6 flex flex-col lg:flex-row gap-4 items-stretch">
+           {/* TEXT BLOCK - LEFT */}
+           <div className="flex-1 bg-white rounded-[40px] p-8 lg:p-14 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group min-h-[400px]">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-sm-blue/5 rounded-full blur-3xl -mr-16 -mt-16" />
+              <div className="px-3 py-1 bg-sm-blue text-white font-black rounded-full text-[13px] uppercase tracking-[0.2em] mb-6 w-fit scale-90 relative z-10">
+                 <Stars size={12} className="inline mr-2" /> Global Studio 2025
+              </div>
+              <h1 className="text-4xl md:text-6xl font-black font-heading leading-tight mb-6 tracking-tighter text-gray-900 uppercase relative z-10">
+                School <br /> Building <br /> Design
+              </h1>
+              <p className="text-gray-400 text-[13px] font-bold uppercase tracking-widest max-w-sm leading-loose relative z-10">
+                 NEP-READY CAMPUS PLANNING BY EXPERT ARCHITECTS
+              </p>
+           </div>
+
+           {/* IMAGE BLOCK - RIGHT */}
+           <div className="lg:col-span-1 lg:w-[500px] rounded-[40px] overflow-hidden relative shadow-lg group">
+              <CMSMedia 
+                mediaType={heroBlock.mediaType} 
+                mediaUrl={heroBlock.mediaUrl} 
+                fallbackImg={heroBlock.img || "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80"}
+                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+              {/* Subtle Overlay to match the clean look */}
+              <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+           </div>
+        </section>
+
+         {/* SIDEBAR GALLERY LAYOUT */}
+        <section className="py-8 border-t border-gray-100 flex flex-col lg:flex-row gap-12 items-start">
+            {/* LEFT SIDEBAR CATEGORY */}
+            <div className="w-full lg:w-64 shrink-0 space-y-6 sticky top-24">
+               <div className="space-y-4">
+                  <div className="flex items-center gap-2 px-4">
+                     <span className="w-1 h-4 bg-sm-blue rounded-full" />
+                     <h3 className="text-[11px] font-black uppercase text-gray-400 tracking-[0.2em]">COLLECTIONS</h3>
+                  </div>
+                  <div className="flex flex-col gap-2 px-2">
+                     {[...new Set([...['3D Plans', 'Site Prep', 'Interior Design', 'Landscape', 'Infrastructure'], ...cats])].map((c, i) => (
+                        <button 
+                          key={i} 
+                          onClick={() => { setSelectedCat(c); document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' }); }} 
+                          className={`w-full text-left px-5 py-4 rounded-xl text-[13px] font-black uppercase tracking-[0.05em] transition-all flex items-center justify-between group ${selectedCat.toUpperCase() === c.toUpperCase() ? 'bg-gray-900 text-white shadow-xl' : 'bg-white border border-gray-100 text-gray-800 hover:border-sm-blue hover:text-sm-blue hover:bg-blue-50/30'}`}
+                        >
+                           {c}
+                           <ChevronDown size={14} className={`transition-transform ${selectedCat.toUpperCase() === c.toUpperCase() ? 'rotate-180' : 'opacity-20'}`} />
+                        </button>
+                     ))}
+                  </div>
+               </div>
+           </div>
+
+           {/* MAIN CONTENT GALLERY */}
+           <div className="flex-1 min-w-0">
+
+              
+              <div id="product-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start scroll-mt-[200px]">
+                 {filteredItems.map((work, i) => (
+                    <React.Fragment key={i}>
+                       <CatalogueCard 
+                         work={work} 
+                         isSelected={selectedItem?.name === work.name} 
+                         onClick={() => setSelectedItem(selectedItem?.name === work.name ? null : work)} 
+                         themeColor="bg-sm-blue"
+                         ringColor="ring-blue-500"
+                         textColor="text-blue-400"
+                       />
+
+                       {/* INLINE EXPANSION LOGIC */}
+                       {/* Mobile */}
+                       {selectedItem?.name === work.name && (
+                          <div className="md:hidden col-span-full">
+                             <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
+                          </div>
+                       )}
+                       
+                       {/* Tablet (2 cols) */}
+                       {(i % 2 === 1 || i === filteredItems.length - 1) && 
+                         filteredItems.slice(Math.floor(i/2)*2, i+1).some(dw => dw.name === selectedItem?.name) && (
+                          <div className="hidden md:block lg:hidden col-span-full">
+                             <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
+                          </div>
+                       )}
+
+                       {/* Desktop (3 cols) */}
+                       {(i % 3 === 2 || i === filteredItems.length - 1) && 
+                         filteredItems.slice(Math.floor(i/3)*3, i+1).some(dw => dw.name === selectedItem?.name) && (
+                          <div className="hidden lg:block col-span-full">
+                             <InlineQuickView isOpen={true} onClose={() => setSelectedItem(null)} data={selectedItem} />
+                          </div>
+                       )}
+                    </React.Fragment>
+                 ))}
+              </div>
+           </div>
+        </section>
+      </div>
+    </main>
+  );
+};
+
+export default Architecture;
