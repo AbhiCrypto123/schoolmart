@@ -35,7 +35,14 @@ const ClientLogos = () => {
     icon: ICON_MAP[c.icon] || ICONS_LIST[i % ICONS_LIST.length],
     color: c.color || COLORS[i % COLORS.length],
   }));
-  const allClients = [...clients, ...clients];
+
+  // Ensure enough items to fill the marquee (at least 20 entries for smooth scroll)
+  const minItems = 20;
+  const repeats = Math.ceil(minItems / Math.max(clients.length, 1));
+  const allClients = Array.from({ length: repeats * 2 }, (_, r) =>
+    clients.map((c, i) => ({ ...c, _key: `${r}-${i}` }))
+  ).flat();
+
   const stats = d.stats || DEFAULTS.stats;
 
   return (
@@ -56,12 +63,12 @@ const ClientLogos = () => {
         <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10"></div>
 
         {/* Scrolling Content */}
-        <div className="flex animate-marquee">
+        <div className="flex animate-marquee" key={clients.length}>
           {allClients.map((client, index) => {
             const Icon = client.icon;
             return (
               <div
-                key={`${client.name}-${index}`}
+                key={client._key || `${client.name}-${index}`}
                 className="flex-shrink-0 mx-8 flex items-center gap-3 group"
               >
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors duration-300">
@@ -81,7 +88,10 @@ const ClientLogos = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {stats.map((stat, i) => (
             <div key={i} className="text-center p-4">
-              <p className={`text-4xl font-bold font-heading ${STAT_COLORS[i % STAT_COLORS.length]}`}>{stat.value}</p>
+              <p
+                className="text-4xl font-bold font-heading"
+                style={{ color: stat.color && stat.color.startsWith('#') ? stat.color : ['#0057A8','#22C55E','#F97316','#8B5CF6'][i % 4] }}
+              >{stat.value}</p>
               <p className="text-gray-600 mt-1">{stat.label}</p>
             </div>
           ))}

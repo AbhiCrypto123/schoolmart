@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import SchoolReel from './SchoolReel';
 import { useCMSBlock } from '../hooks/useCMSBlock';
-import VideoPlayer from './ui/VideoPlayer';
+import CMSMedia from './ui/CMSMedia';
 
 const DEFAULTS = {
   badge: 'Price · Quality · Range Promise',
@@ -32,7 +32,10 @@ const BannerSection = () => {
               <p className="text-[12px] font-black text-sm-orange uppercase tracking-[0.3em] mb-4">
                 {d.badge}
               </p>
-              <h2 className="text-4xl lg:text-6xl font-black text-gray-900 font-heading leading-[1] mb-2 uppercase tracking-tighter">
+              <h2
+                className="text-4xl lg:text-6xl font-black font-heading leading-[1] mb-2 uppercase tracking-tighter"
+                style={{ color: d.textColor || '#111827' }}
+              >
                 {d.headline1}
               </h2>
               <h2
@@ -51,7 +54,8 @@ const BannerSection = () => {
                 </Link>
                 <Link
                   to={d.cta2?.path || '/catalogues'}
-                  className="inline-flex items-center justify-center gap-3 px-10 py-4 bg-white border border-gray-200 text-gray-900 font-black rounded-2xl hover:bg-gray-50 transition-all duration-300 text-[12px] uppercase tracking-widest"
+                  className="inline-flex items-center justify-center gap-3 px-10 py-4 bg-white border border-gray-200 font-black rounded-2xl hover:bg-gray-50 transition-all duration-300 text-[12px] uppercase tracking-widest"
+                  style={{ color: d.textColor || '#111827' }}
                 >
                   {d.cta2?.label || 'Institutional Catalogues'}
                 </Link>
@@ -61,11 +65,12 @@ const BannerSection = () => {
             {/* Right — School Reel / Image / Video */}
             <div className="flex-1 p-4 lg:p-5 flex items-center">
               <div className="w-full relative h-[260px] rounded-2xl overflow-hidden shadow-2xl bg-gray-900/40">
-                <img 
-                  src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=900&q=85" 
-                  alt="School Infrastructure"
-                  className="w-full h-full object-cover" 
-                />
+                  <CMSMedia 
+                    mediaType={d.mediaType} 
+                    mediaUrl={d.mediaUrl} 
+                    fallbackImg="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=900&q=85" 
+                    className="w-full h-full object-cover" 
+                  />
                 
                 {/* Branding Overlays */}
                 <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10">

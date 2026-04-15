@@ -1,210 +1,49 @@
 import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Share2, Printer, MapPin, ChevronRight, MessageSquare, Download } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Share2, MapPin, MessageSquare, Download } from 'lucide-react';
+import { useCMSPage } from '../hooks/useCMSBlock';
 
-
-// Placeholder data - in a real app, this would come from a CMS or API
+// Fallback data for slugs not yet in the CMS
 const RESOURCE_DATA = {
     'how-it-works': {
         title: 'How It Works: Connecting Education & Innovation',
         subtitle: 'A seamless journey from discovery to implementation.',
         image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                SchoolMart simplifies the procurement and design process for educational institutions. We bring together architects, educators, and technology providers on a single platform.
-            </p>
-            <h2 className="text-2xl font-black text-gray-900 mb-4 uppercase tracking-tight">The 3-Step Process</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
-                    <span className="text-sm-blue font-black text-3xl mb-4 block">01</span>
-                    <h3 className="font-black text-sm uppercase tracking-widest mb-2">Discovery</h3>
-                    <p className="text-xs text-gray-500">Browse curated designs and technology solutions.</p>
-                </div>
-                <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
-                    <span className="text-sm-blue font-black text-3xl mb-4 block">02</span>
-                    <h3 className="font-black text-sm uppercase tracking-widest mb-2">Consultation</h3>
-                    <p className="text-xs text-gray-500">Talk to our experts about layouts and budgets.</p>
-                </div>
-                <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
-                    <span className="text-sm-blue font-black text-3xl mb-4 block">03</span>
-                    <h3 className="font-black text-sm uppercase tracking-widest mb-2">Execution</h3>
-                    <p className="text-xs text-gray-500">White-glove delivery and professional setup.</p>
-                </div>
-            </div>
-        `,
+        content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">SchoolMart simplifies the procurement and design process for educational institutions. We bring together architects, educators, and technology providers on a single platform.</p><h2 class="text-2xl font-black text-gray-900 mb-4 uppercase tracking-tight">The 3-Step Process</h2>`,
         specs: ['Needs Assessment', 'Custom Layouts', 'Vendor Vetting'],
         tags: ['Process', 'Onboarding', 'Guide']
     },
-    'pricing': {
-        title: 'Transparent Pricing: Value-Driven Innovation',
-        subtitle: 'Optimized costs for maximum institutional impact.',
-        image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                We believe in fair, transparent pricing that helps schools stretch their budgets without compromising on quality.
-            </p>
-            <h2 className="text-2xl font-black text-gray-900 mb-4 uppercase tracking-tight">Direct-to-School Pricing</h2>
-            <p className="text-gray-600 mb-6">
-                By eliminating intermediaries and working directly with manufacturers, we ensure you get the best rates for high-end furniture, labs, and digital infrastructure.
-            </p>
-        `,
-        specs: ['Bulk Discounts', 'Institutional Rates', 'GST Invoicing'],
-        tags: ['Finance', 'Budgeting', 'Procurement']
-    },
-    'shipping-policy': {
-        title: 'Shipping & Delivery Policy',
-        subtitle: 'Safe, timely, and professional delivery across India.',
-        image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                We understand the specific requirements of school deliveries, including restricted hours and sensitive handling.
-            </p>
-            <h2 className="text-2xl font-black text-gray-900 mb-4 uppercase tracking-tight">White-Glove Service</h2>
-            <p className="text-gray-600 mb-6">
-                Most school large-scale infrastructure items include professional installation and debris removal as part of the shipping service.
-            </p>
-        `,
-        specs: ['Pan-India Delivery', 'Scheduled Slots', 'Professional Handling'],
-        tags: ['Logistics', 'Policy', 'Support']
-    },
-    'cancellation-policy': {
-        title: 'Cancellation & Refund Framework',
-        subtitle: 'Clear guidelines for institutional orders.',
-        image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                Institutional orders have unique timelines and commitment structures. Our cancellation policy is designed to be fair to both the school and our manufacturing partners.
-            </p>
-        `,
-        specs: ['Timeline Based', 'Order Modification', 'Refund processing'],
-        tags: ['Policy', 'Legal', 'Support']
-    },
-    'sell-on-schoolmart': {
-        title: 'Partner with SchoolMart: Empowering Manufacturers',
-        subtitle: 'Join India\'s leading marketplace for school infrastructure.',
-        image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                Reach thousands of schools across Bharat. Showcase your innovative products to school founders, architects, and decision makers.
-            </p>
-        `,
-        specs: ['Merchant Dashboard', 'Quality QC', 'Payment Security'],
-        tags: ['Partnership', 'Business', 'Growth']
-    },
-    'replacement-return': {
-        title: 'Replacement & Return Framework',
-        subtitle: 'Ensuring quality and satisfaction for every school project.',
-        image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                Our QC teams ensure that every item meets institutional durability standards. In the rare event of damage, we have a fast-track replacement policy.
-            </p>
-        `,
-        specs: ['QC Documentation', 'Impact Reporting', 'Fast-track Logistics'],
-        tags: ['Policy', 'Quality', 'Support']
-    },
-    'payments': {
-        title: 'Secure Academic Payments',
-        subtitle: 'Flexible and secure transaction methods for institutions.',
-        image: 'https://images.unsplash.com/photo-1554224155-16974a4ea2da?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                We support corporate banking, LC, and milestone-based payments for large infrastructure projects.
-            </p>
-        `,
-        specs: ['PCI DSS Compliant', 'GST Invoicing', 'Escrow Support'],
-        tags: ['Finance', 'Legal', 'Infrastructure']
-    },
-    'order-rejection-policy': {
-        title: 'Order Rejection & Dispute Resolution',
-        subtitle: 'Protecting your interests throughout the delivery process.',
-        image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                Guidelines for rejecting shipments at the time of delivery due to visible damage or mismatch.
-            </p>
-        `,
-        specs: ['Delivery Inspection', 'Immediate Reporting', 'Resolution Timelines'],
-        tags: ['Policy', 'Support', 'Quality']
-    },
-    'aboutus': {
-        title: 'About SchoolMart: The Future of Campus Planning',
-        subtitle: 'A collective of 4000+ schools and leading architects.',
-        image: 'https://images.unsplash.com/photo-152305085306e-8c333bf48974?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                SchoolMart was founded on the belief that environment is the "third teacher." We help schools create spaces that spark curiosity and foster holistic development.
-            </p>
-        `,
-        specs: ['Institutional Expertise', 'NEP 2020 Ready', 'Certified Partners'],
-        tags: ['Corporate', 'Identity', 'Vision']
-    },
-    'immersive-learning': {
-        title: 'Immersive Learning: VR & AR in Education',
-        subtitle: 'Transforming classrooms into infinite worlds of discovery.',
-        image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                Virtual and Augmented Reality are no longer futuristic concepts; they are powerful pedagogical tools that are reshaping how students perceive and interact with complex information.
-            </p>
-        `,
-        specs: ['VR Headsets', 'AR Content Library', 'Teacher Training'],
-        tags: ['Technology', 'STEM', 'Innovation']
-    },
-    'kindergarten-design': {
-        title: 'Kindergarten Design: Playful Learning Spaces',
-        subtitle: 'Designing spaces that nurture curiosity, creativity, and joy.',
-        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                Early childhood environments play a critical role in a child's development. Our design philosophy focuses on "Play as Learning," where every corner of the room is an opportunity for discovery.
-            </p>
-        `,
-        specs: ['Ergonomic Seating', 'Sensory Zones', 'Flexible Layouts'],
-        tags: ['Interiors', 'Design', 'Early Years']
-    },
-    'skill-labs': {
-        title: 'Composite Skill Labs: Future-Ready Education',
-        subtitle: 'Preparing students for the challenges of tomorrow.',
-        image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                Our Composite Skill Labs are designed as multi-disciplinary hubs where Science, Technology, Engineering, and Art converge. 
-            </p>
-        `,
-        specs: ['Modular Workbenches', 'Robotics Kits', 'Safety Equipment'],
-        tags: ['STEM', 'Innovation', 'Laboratories']
-    },
-    'library-innovations': {
-        title: 'Library Innovations: Modern Reading Spaces',
-        subtitle: 'From quiet zones to collaborative digital hubs.',
-        image: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                The modern school library is no longer just a warehouse for books; it is the heartbeat of a research-driven campus.
-            </p>
-        `,
-        specs: ['Acoustic Seating', 'Digital Catalogs', 'Quiet Pods'],
-        tags: ['Interiors', 'Reading', 'Digital']
-    },
-    'interactive-panels': {
-        title: '16 Latest Interactive Panels for Classrooms',
-        subtitle: 'The ultimate tool for the modern educator.',
-        image: 'https://images.unsplash.com/photo-1548544149-4835e62ee5b3?w=1200&q=80',
-        content: `
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                Interactive panels are the centerpiece of the smart classroom, bridging the gap between student engagement and instructional efficiency.
-            </p>
-        `,
-        specs: ['4K UHD Display', 'Multi-touch Tech', 'Android/Windows OS'],
-        tags: ['Technology', 'EdTech', 'Classroom']
-    }
+    'pricing': { title: 'Transparent Pricing: Value-Driven Innovation', subtitle: 'Optimized costs for maximum institutional impact.', image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&q=80', content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">We believe in fair, transparent pricing that helps schools stretch their budgets without compromising on quality.</p>`, specs: ['Bulk Discounts', 'Institutional Rates', 'GST Invoicing'], tags: ['Finance', 'Budgeting', 'Procurement'] },
+    'shipping-policy': { title: 'Shipping & Delivery Policy', subtitle: 'Safe, timely, and professional delivery across India.', image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&q=80', content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">We understand the specific requirements of school deliveries, including restricted hours and sensitive handling.</p>`, specs: ['Pan-India Delivery', 'Scheduled Slots', 'Professional Handling'], tags: ['Logistics', 'Policy', 'Support'] },
+    'cancellation-policy': { title: 'Cancellation & Refund Framework', subtitle: 'Clear guidelines for institutional orders.', image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=80', content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">Institutional orders have unique timelines and commitment structures.</p>`, specs: ['Timeline Based', 'Order Modification', 'Refund processing'], tags: ['Policy', 'Legal', 'Support'] },
+    'sell-on-schoolmart': { title: 'Partner with SchoolMart', subtitle: "Join India's leading marketplace for school infrastructure.", image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80', content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">Reach thousands of schools across Bharat.</p>`, specs: ['Merchant Dashboard', 'Quality QC', 'Payment Security'], tags: ['Partnership', 'Business', 'Growth'] },
+    'replacement-return': { title: 'Replacement & Return Framework', subtitle: 'Ensuring quality and satisfaction for every school project.', image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&q=80', content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">Our QC teams ensure every item meets institutional durability standards.</p>`, specs: ['QC Documentation', 'Impact Reporting', 'Fast-track Logistics'], tags: ['Policy', 'Quality', 'Support'] },
+    'payments': { title: 'Secure Academic Payments', subtitle: 'Flexible and secure transaction methods for institutions.', image: 'https://images.unsplash.com/photo-1554224155-16974a4ea2da?w=1200&q=80', content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">We support corporate banking, LC, and milestone-based payments for large infrastructure projects.</p>`, specs: ['PCI DSS Compliant', 'GST Invoicing', 'Escrow Support'], tags: ['Finance', 'Legal', 'Infrastructure'] },
+    'order-rejection-policy': { title: 'Order Rejection & Dispute Resolution', subtitle: 'Protecting your interests throughout the delivery process.', image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=80', content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">Guidelines for rejecting shipments at the time of delivery due to visible damage or mismatch.</p>`, specs: ['Delivery Inspection', 'Immediate Reporting', 'Resolution Timelines'], tags: ['Policy', 'Support', 'Quality'] },
+    'immersive-learning': { title: 'Immersive Learning: VR & AR in Education', subtitle: 'Transforming classrooms into infinite worlds of discovery.', image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80', content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">Virtual and Augmented Reality are powerful pedagogical tools reshaping how students interact with complex information.</p>`, specs: ['VR Headsets', 'AR Content Library', 'Teacher Training'], tags: ['Technology', 'STEM', 'Innovation'] },
+    'kindergarten-design': { title: 'Kindergarten Design: Playful Learning Spaces', subtitle: 'Designing spaces that nurture curiosity, creativity, and joy.', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80', content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">Early childhood environments play a critical role in a child's development.</p>`, specs: ['Ergonomic Seating', 'Sensory Zones', 'Flexible Layouts'], tags: ['Interiors', 'Design', 'Early Years'] },
+    'skill-labs': { title: 'Composite Skill Labs: Future-Ready Education', subtitle: 'Preparing students for the challenges of tomorrow.', image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1200&q=80', content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">Our Composite Skill Labs are designed as multi-disciplinary hubs where Science, Technology, Engineering, and Art converge.</p>`, specs: ['Modular Workbenches', 'Robotics Kits', 'Safety Equipment'], tags: ['STEM', 'Innovation', 'Laboratories'] },
+    'library-innovations': { title: 'Library Innovations: Modern Reading Spaces', subtitle: 'From quiet zones to collaborative digital hubs.', image: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1200&q=80', content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">The modern school library is no longer just a warehouse for books.</p>`, specs: ['Acoustic Seating', 'Digital Catalogs', 'Quiet Pods'], tags: ['Interiors', 'Reading', 'Digital'] },
+    'interactive-panels': { title: '16 Latest Interactive Panels for Classrooms', subtitle: 'The ultimate tool for the modern educator.', image: 'https://images.unsplash.com/photo-1548544149-4835e62ee5b3?w=1200&q=80', content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">Interactive panels are the centerpiece of the smart classroom.</p>`, specs: ['4K UHD Display', 'Multi-touch Tech', 'Android/Windows OS'], tags: ['Technology', 'EdTech', 'Classroom'] },
 };
 
 const ResourcePost = () => {
     const navigate = useNavigate();
     const { slug } = useParams();
-    const resource = RESOURCE_DATA[slug] || RESOURCE_DATA['immersive-learning'];
+    // Try CMS first, fallback to static RESOURCE_DATA
+    const { blocks } = useCMSPage(`resource-${slug}`);
+    const heroBlock = blocks?.page_hero || {};
+    const contentBlock = blocks?.page_content || {};
+    const specsBlock = blocks?.resource_specs || {};
+    const fallback = RESOURCE_DATA[slug] || RESOURCE_DATA['immersive-learning'];
+    const resource = {
+        title: heroBlock.titleHtml || heroBlock.title || fallback.title,
+        subtitle: heroBlock.subtitle || fallback.subtitle,
+        image: heroBlock.img || fallback.image,
+        content: contentBlock.content || fallback.content,
+        specs: specsBlock.specs || fallback.specs,
+        tags: specsBlock.tags || fallback.tags,
+    };
 
     return (
         <div className="bg-white flex flex-col font-sans">

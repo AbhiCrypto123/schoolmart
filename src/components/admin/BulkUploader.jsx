@@ -15,7 +15,13 @@ export default function BulkUploader() {
     setUploading(true);
     try {
       const data = await bulkUploadFiles(files);
-      setResults(prev => [...data, ...prev]);
+      // API returns { urls: [...], message: '...' } — extract the urls array
+      const urlList = Array.isArray(data) ? data : (data.urls || []);
+      const mapped = urlList.map((url, i) => ({
+        url,
+        originalName: files[i]?.name || `file-${i}`
+      }));
+      setResults(prev => [...mapped, ...prev]);
     } catch (err) {
       alert('Bulk upload failed: ' + err.message);
     } finally {

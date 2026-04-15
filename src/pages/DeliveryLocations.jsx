@@ -1,41 +1,32 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin } from 'lucide-react';
+import { useCMSPage } from '../hooks/useCMSBlock';
+
+const FALLBACK = `<h2>Delivery Coverage</h2>
+<p>We deliver to all major cities and towns across India including Tier 1, Tier 2, and Tier 3 cities. Remote and rural deliveries are available for bulk institutional orders with special logistics arrangements.</p>
+<h2>State Coverage</h2>
+<p>Currently serving: Andhra Pradesh, Telangana, Karnataka, Tamil Nadu, Maharashtra, Delhi NCR, Gujarat, Rajasthan, Uttar Pradesh, West Bengal, and 10 more states.</p>
+<h2>International Shipping</h2>
+<p>Export orders to Middle East, Southeast Asia, and Africa are available for select product categories. Contact us for international procurement.</p>`;
 
 const DeliveryLocations = () => {
     const navigate = useNavigate();
-
-    const regions = [
-        { name: 'South India', hubs: ['Hyderabad', 'Bangalore', 'Chennai', 'Vijayawada'] },
-        { name: 'North India', hubs: ['Delhi NCR', 'Chandigarh', 'Jaipur', 'Lucknow'] },
-        { name: 'West India', hubs: ['Mumbai', 'Pune', 'Ahmedabad', 'Surat'] },
-        { name: 'East India', hubs: ['Kolkata', 'Bhubaneswar', 'Guwahati'] }
-    ];
-
+    const { blocks } = useCMSPage('delivery-locations');
+    const hero = blocks?.page_hero || {};
+    const content = blocks?.page_content || {};
     return (
         <div className="bg-white min-h-screen">
-            <div className="max-w-7xl mx-auto px-6 py-20">
-                <h1 className="text-5xl lg:text-7xl font-black text-gray-900 uppercase tracking-tighter mb-4">Delivery <span className="text-sm-blue">Hubs</span></h1>
-                <p className="text-xl text-gray-500 mb-20 max-w-2xl">Serving educational institutions across the lengths and breadths of India with dedicated academic logistics.</p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-                    {regions.map((region) => (
-                        <div key={region.name} className="space-y-6">
-                            <h3 className="text-sm font-black uppercase tracking-[0.2em] text-gray-400 border-b border-gray-100 pb-4">{region.name}</h3>
-                            <ul className="space-y-3">
-                                {region.hubs.map(city => (
-                                    <li key={city} className="flex items-center gap-2 text-[13px] font-bold text-gray-800">
-                                        <div className="w-1 h-1 rounded-full bg-sm-blue" />
-                                        {city}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
-                </div>
+            <div className="max-w-4xl mx-auto px-6 py-20">
+                <button onClick={() => navigate(-1)} className="text-[11px] font-black uppercase tracking-widest text-gray-400 hover:text-sm-blue transition-colors flex items-center gap-2 mb-16">
+                    <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center">←</div>Back
+                </button>
+                <h1 className="text-4xl lg:text-6xl font-black text-gray-900 uppercase tracking-tighter mb-4">
+                    {hero.titleHtml ? <span dangerouslySetInnerHTML={{ __html: hero.titleHtml }} /> : <>Delivery <span className="text-sm-blue">Locations</span></>}
+                </h1>
+                <p className="text-xl text-gray-500 mb-12">{hero.subtitle || 'Pan-India delivery network for institutional orders.'}</p>
+                <div className="prose prose-blue max-w-none" dangerouslySetInnerHTML={{ __html: content.content || FALLBACK }} />
             </div>
         </div>
     );
 };
-
 export default DeliveryLocations;

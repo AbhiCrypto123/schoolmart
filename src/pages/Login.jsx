@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Send, Lock, UserCheck, ShieldCheck, Mail, ArrowRight, Sparkles, Building2, Key } from 'lucide-react';
 import { login, verifyOtp, resendOtp } from '../services/api';
+import { useCMSPage } from '../hooks/useCMSBlock';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,6 +13,10 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+
+  const { blocks } = useCMSPage('login');
+  const dHero = blocks?.login_hero || {};
+  const dFields = blocks?.login_fields || {};
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -78,13 +83,11 @@ const Login = () => {
          {/* UNIQUE LOGIN STORY */}
          <div className="flex-1 text-center lg:text-left hidden lg:block">
             <span className="inline-block px-5 py-2 bg-emerald-50 text-emerald-600 font-black rounded-full mb-8 text-[13px] uppercase tracking-widest border border-emerald-100 shadow-sm">
-               <ShieldCheck size={16} className="inline mr-2" /> Secure Institutional Portal
+               <ShieldCheck size={16} className="inline mr-2" /> {dHero.badge || 'Secure Institutional Portal'}
             </span>
-            <h1 className="text-6xl lg:text-9xl font-black text-gray-900 font-heading leading-[0.85] tracking-tighter mb-8 uppercase">
-               Welcome <br/> <span className="text-sm-blue italic font-serif opacity-80 decoration-sm-blue decoration-4 underline underline-offset-[20px]">Back.</span>
-            </h1>
+            <h1 className="text-6xl lg:text-9xl font-black text-gray-900 font-heading leading-[0.85] tracking-tighter mb-8 uppercase" dangerouslySetInnerHTML={{ __html: dHero.heading || 'Welcome <br/> <span class="text-sm-blue italic font-serif opacity-80 decoration-sm-blue decoration-4 underline underline-offset-[20px]">Back.</span>' }} />
             <p className="text-lg text-gray-500 leading-relaxed max-w-sm mb-10 font-medium">
-               Manage your project timelines, view your quotation history, and access exclusive design resources from one dashboard.
+               {dHero.description || 'Manage your project timelines, view your quotation history, and access exclusive design resources from one dashboard.'}
             </p>
 
             <div className="flex items-center gap-6 mt-16">
@@ -94,8 +97,8 @@ const Login = () => {
                  </div>
                ))}
                <div>
-                  <h4 className="text-sm font-black text-gray-900 uppercase tracking-widest leading-none">Member Circle</h4>
-                  <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest mt-1">15k+ Institutions Online</p>
+                  <h4 className="text-sm font-black text-gray-900 uppercase tracking-widest leading-none">{dHero.memberTitle || 'Member Circle'}</h4>
+                  <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest mt-1">{dHero.memberSubtitle || '15k+ Institutions Online'}</p>
                </div>
             </div>
          </div>
@@ -110,10 +113,10 @@ const Login = () => {
                      {step === 1 ? <UserCheck size={step === 1 ? 32 : 36} /> : <Key size={32} />}
                   </div>
                   <h2 className="text-2xl lg:text-3xl font-black text-gray-900 font-heading tracking-tight mb-2 uppercase tracking-[0.2em] leading-none">
-                    {step === 1 ? 'SIGN IN' : '2FA VERIFY'}
+                    {step === 1 ? (dFields.formTitle || 'SIGN IN') : '2FA VERIFY'}
                   </h2>
                   <p className="text-gray-400 text-[11px] lg:text-[12px] font-bold uppercase tracking-widest">
-                    {step === 1 ? 'Everything a school needs is within reach.' : 'Enter the code from your email'}
+                    {step === 1 ? (dFields.formSubtitle || 'Everything a school needs is within reach.') : 'Enter the code from your email'}
                   </p>
                </div>
                
@@ -143,7 +146,7 @@ const Login = () => {
 
                     <div className="pt-2">
                        <button disabled={loading} className="w-full py-4 lg:py-5 bg-gray-900 text-white font-black rounded-2xl lg:rounded-3xl shadow-3xl hover:bg-[#004a8e] transition-all uppercase tracking-[0.3em] text-[12px] lg:text-[13px] flex items-center justify-center gap-3 active:scale-[0.98]">
-                          {loading ? 'Authorizing...' : 'Authorize Portal'} <ArrowRight size={18} />
+                          {loading ? 'Authorizing...' : (dFields.submitLabel || 'Authorize Portal')} <ArrowRight size={18} />
                        </button>
                     </div>
                  </form>

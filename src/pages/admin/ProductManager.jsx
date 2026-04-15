@@ -258,28 +258,46 @@ export default function ProductManager({ fixedPage, liveCategories }) {
 
   // Auto-build list of pages and subcategories for the dropdowns
   const assignablePages = pagesData
-    // We only care about the 9 catalogue pages for assigning cards
     .filter(p => ['furniture', 'architecture', 'digital', 'sports', 'libraries', 'labs', 'mathematics', 'science', 'design'].includes(p.slug || p.pageSlug))
     .map(p => {
       const pSlug = p.slug || p.pageSlug;
       const pTitle = p.title || p.pageTitle;
-      // Pull subcategories directly defined in the CMS block
-      let blockCats = p.blocks?.find(b => b.blockType === 'sidebar_categories')?.data?.categories || [];
+      // Pull subcategories from the sidebar_categories CMS block
+      // The block can be stored with key or type field (not blockType)
+      let blockCats = (
+        p.blocks?.find(b => b.key === 'sidebar_categories' || b.type === 'sidebar_categories')
+      )?.data?.categories || [];
 
       // If this IS the fixedPage we are editing in CMSEditor, use the LIVE unsaved categories
       if (liveCategories && (fixedPage === pTitle || fixedPage === pSlug)) {
         blockCats = liveCategories;
       }
 
-      // Intelligently scan all existing products assigned to this page to see what subcategories actually exist
-      const productCats = products.filter(prod => prod.category === pTitle).map(prod => prod.subcategory).filter(Boolean);
+      // CMS sidebar_categories is the single source of truth for subcategory tabs.
+      // Only fall back to scanning products if no CMS block exists at all.
+      let finalCats;
+      if (blockCats.length > 0) {
+        finalCats = blockCats.filter(Boolean);
+      } else {
+        // Fallback: scan existing products (legacy data before CMS was populated)
+        finalCats = [...new Set(
+          products
+            .filter(prod => prod.category === pTitle || prod.category === pSlug)
+            .map(prod => prod.subcategory)
+            .filter(Boolean)
+        )];
+      }
 
       return {
         title: pTitle,
-        categories: [...new Set([...blockCats, ...productCats])] // Combine and deduplicate
+        slug: pSlug,
+        categories: finalCats
       };
     });
 
+  // Helper: find assignable page entry by either title or slug (for fixedPage matching)
+  const findPageEntry = (key) =>
+    assignablePages.find(p => p.title === key || p.slug === key);
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -363,7 +381,7 @@ export default function ProductManager({ fixedPage, liveCategories }) {
             <div className="relative">
               <select required value={editing.subcategory || ''} onChange={e => setEditing({ ...editing, subcategory: e.target.value })} className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none font-bold text-gray-700" disabled={!fixedPage && !editing.category}>
                 <option value="">Select Tab...</option>
-                {assignablePages.find(p => p.title === (fixedPage || editing.category))?.categories?.map(c => (
+                {findPageEntry(fixedPage || editing.category)?.categories?.map(c => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>
@@ -542,7 +560,7 @@ export default function ProductManager({ fixedPage, liveCategories }) {
         <CSVProductImporter
           fixedPage={fixedPage}
           onImport={handleBulkImport}
-          availableSubcategories={assignablePages.find(p => p.title === fixedPage)?.categories || []}
+          availableSubcategories={findPageEntry(fixedPage)?.categories || []}
         />
       </div>
       {/* Search + Filter + Add Card — second row */}
@@ -582,13 +600,13 @@ export default function ProductManager({ fixedPage, liveCategories }) {
           <p className="text-sm text-gray-500">Try adjusting your search or add a new card.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map(p => {
             const pId = p.id || p.id;
             return (
             <div key={pId} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all group overflow-hidden flex flex-col">
               {/* Image Area */}
-              <div className="aspect-square bg-gray-50 p-6 relative flex items-center justify-center">
+              <div className="aspect-square bg-gray-50 p-3 relative flex items-center justify-center">
                 {p.images?.[0] ? (
                   <img src={p.images[0]} alt={p.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" onError={e => e.target.src = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800'} />
                 ) : (

@@ -22,13 +22,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
   fileFilter: (req, file, cb) => {
-    const filetypes = /jpeg|jpg|png|webp/;
+    const filetypes = /jpeg|jpg|png|webp|gif|svg|pdf/;
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
-    if (extname && mimetype) return cb(null, true);
-    cb(new Error('Images only (JPG, PNG, WEBP)'));
+    const mimetype = /image\/|application\/pdf|image\/svg/.test(file.mimetype);
+    if (extname || mimetype) return cb(null, true);
+    cb(new Error('Allowed: JPG, PNG, WEBP, GIF, SVG, PDF'));
   }
 });
 
@@ -40,10 +40,21 @@ router.post('/', upload.single('file'), (req, res) => {
 });
 
 // Multiple Files Upload
-router.post('/bulk', upload.array('files', 10), (req, res) => {
+router.post('/bulk', upload.array('files', 20), (req, res) => {
   if (!req.files || req.files.length === 0) return res.status(400).json({ message: 'No files uploaded' });
   const urls = req.files.map(f => `http://localhost:5000/uploads/${f.filename}`);
   res.json({ urls, message: 'Bulk upload successful' });
+});
+
+// Multer error handler — returns JSON instead of Express default HTML
+router.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({ message: `Upload error: ${err.message}` });
+  }
+  if (err) {
+    return res.status(400).json({ message: err.message || 'Upload failed' });
+  }
+  next();
 });
 
 module.exports = router;

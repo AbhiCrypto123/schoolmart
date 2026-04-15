@@ -12,19 +12,41 @@ const GenericInnerPage = ({ explicitSlug }) => {
   const params = useParams();
   const slug = explicitSlug || params.slug;
   const { blocks, loading } = useCMSPage(slug);
+  const { blocks: homeBlocks } = useCMSPage('home');
   const [items, setItems] = useState([]);
   const [selectedCat, setSelectedCat] = useState('');
 
-  const heroBlock = blocks?.inner_page_hero || {};
-  const textContent = blocks?.text_content || { title: '', body: '' };
+  // Find matching tile from home page tiles block
+  const homeTiles = homeBlocks?.tiles?.tiles || [];
+  const matchingTile = homeTiles.find(t => {
+    const tilePath = (t.path || '').replace(/^\//, '').replace(/^\/p\//, '');
+    const currentSlug = slug || '';
+    return t.path === `/p/${currentSlug}` || t.path === `/${currentSlug}` || tilePath === currentSlug;
+  });
+  const tileInner = matchingTile?.inner || {};
+
+  // Merge: dedicated page blocks take priority, tile inner is fallback
+  const heroBlock = { ...Object.keys(tileInner).length ? {
+    badge: tileInner.badge,
+    titleHtml: tileInner.heading,
+    title: tileInner.heading,
+    description: tileInner.description,
+    img: tileInner.heroImg,
+  } : {}, ...(blocks?.inner_page_hero || {}) };
+
+  const tileBodyContent = tileInner.content || '';
+  const tileCtaLabel = tileInner.ctaLabel || '';
+  const tileCtaPath = tileInner.ctaPath || '';
+
+  const textContent = blocks?.text_content || { title: '', body: tileBodyContent };
   const resourceGrid = blocks?.resource_grid || null;
   const catalogGrid = blocks?.catalog_grid || null;
   const portfolioGrid = blocks?.portfolio_grid || null;
   const lookbookGrid = blocks?.lookbook_grid || null;
   const jobListings = blocks?.job_listings || null;
-  const innerPageCta = blocks?.inner_page_cta || null;
-
+  const innerPageCta = blocks?.inner_page_cta || (tileCtaLabel ? { title: tileCtaLabel, actionLink: tileCtaPath, actionText: tileCtaLabel } : null);
   const pageTitle = (slug || '').replace(/-/g, ' ').toUpperCase();
+  const tileTitle = matchingTile?.title || pageTitle;
 
   const FALLBACK_CATEGORIES = {
     'school-sale': ['Premium Campuses', 'Lease Opportunities', 'Operational Schools', 'Greenfield Projects'],
@@ -106,23 +128,30 @@ const GenericInnerPage = ({ explicitSlug }) => {
       {/* ──────────────────────────────────────────
           1. HERO SECTION
       ────────────────────────────────────────── */}
-      <section className={`${themeClasses.bg} py-16 px-6 relative overflow-hidden border-b border-gray-100`}>
+      <section
+        className={`${themeClasses.bg} py-16 px-6 relative overflow-hidden border-b border-gray-100`}
+        style={heroBlock.img || (matchingTile?.img) ? {
+          backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.97) 55%, rgba(255,255,255,0) 100%), url(${ heroBlock.img || matchingTile?.img})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center right',
+        } : {}}
+      >
         <div className={`absolute top-0 right-0 w-1/4 h-full ${themeClasses.hr} skew-x-12 -mr-12 pointer-events-none`} />
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
           <div className="max-w-2xl">
             <div className={`inline-flex items-center gap-2 px-3 py-1 ${themeClasses.badge} rounded-full mb-6 border`}>
               <HeroIcon size={12} />
-              <span className="text-[11px] font-black uppercase tracking-widest">{heroBlock.badge || 'Resource Hub'}</span>
+              <span className="text-[11px] font-black uppercase tracking-widest">{heroBlock.badge || matchingTile?.subtitle || 'Resource Hub'}</span>
             </div>
-            <h1 
+            <h1
               className={`text-4xl lg:text-5xl font-black uppercase tracking-tighter leading-none mb-6 ${themeClasses.text}`}
-              dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || heroBlock.title || pageTitle }}
+              dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || heroBlock.title || tileTitle }}
             />
             <p className={`${themeClasses.subtitle} text-[13px] font-black uppercase tracking-widest leading-loose max-w-lg mb-10`}>
-              {heroBlock.description || heroBlock.subtitle || textContent.title || `Accelerating ${pageTitle.toLowerCase()} strategies through modern infrastructure.`}
+              {heroBlock.description || heroBlock.subtitle || textContent.title || `Accelerating ${(tileTitle || pageTitle).toLowerCase()} strategies through modern infrastructure.`}
             </p>
             <div className="flex gap-4">
-              <button 
+              <button
                 onClick={() => document.getElementById('content-grid')?.scrollIntoView({ behavior: 'smooth' })}
                 className="px-8 py-3.5 bg-sm-blue text-white font-black rounded-xl text-[12px] uppercase tracking-widest hover:bg-gray-900 transition-all shadow-xl shadow-blue-500/20"
               >
@@ -300,9 +329,9 @@ const GenericInnerPage = ({ explicitSlug }) => {
           {/* F. FALLBACK: TEXT CONTENT / NOT FOUND */}
           {!resourceGrid && !catalogGrid && !portfolioGrid && !lookbookGrid && !jobListings && filteredItems.length === 0 && (
             <div className="bg-gray-50 rounded-[30px] border border-gray-100 p-10 text-center min-h-[400px] flex items-center justify-center">
-              {textContent.body ? (
+              {(textContent.body || tileBodyContent) ? (
                 <div className="text-left w-full prose-sm max-w-none">
-                  <div className="text-gray-600 leading-loose" dangerouslySetInnerHTML={{ __html: textContent.body }} />
+                  <div className="text-gray-600 leading-loose" dangerouslySetInnerHTML={{ __html: textContent.body || tileBodyContent }} />
                 </div>
               ) : (
                 <div className="max-w-xs text-center">

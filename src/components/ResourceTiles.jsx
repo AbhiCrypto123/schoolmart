@@ -1,8 +1,7 @@
 // src/components/ResourceTiles.jsx
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, MessageSquare, FileText } from 'lucide-react';
-import ImageOverlayCard from './ImageOverlayCard';
+import { ArrowRight, MessageSquare } from 'lucide-react';
 import { submitQuote } from '../services/api';
 import { useCMSPage } from '../hooks/useCMSBlock';
 import ProductCarousel from './ProductCarousel';
@@ -96,50 +95,6 @@ const tiles = [
   },
 ];
 
-const solutions = [
-  {
-    title: 'School Furniture',
-    description: '1200+ ergonomic products for every classroom, lab and library',
-    path: '/furniture',
-    badge: { label: 'Furniture', color: '#F97316' },
-    img: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80',
-  },
-  {
-    title: 'Digital Infrastructure',
-    description: 'Cutting-edge ed-tech, interactive panels and smart classrooms',
-    path: '/digital',
-    badge: { label: 'Technology', color: '#3B82F6' },
-    img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80',
-  },
-  {
-    title: 'Sports Infrastructure',
-    description: 'Professional-grade courts, equipment and sports facilities',
-    path: '/sports',
-    badge: { label: 'Sports', color: '#22C55E' },
-    img: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80',
-  },
-  {
-    title: 'School Architecture',
-    description: 'NEP-ready campus planning and interior design by expert architects',
-    path: '/school-building-design',
-    badge: { label: 'Architecture', color: '#8B5CF6' },
-    img: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&q=80',
-  },
-  {
-    title: 'Learning Environments',
-    description: 'STEM labs, libraries, maker-spaces and activity rooms',
-    path: '/environments',
-    badge: { label: 'Environments', color: '#0EA5E9' },
-    img: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&q=80',
-  },
-  {
-    title: 'School Design & Planning',
-    description: 'End-to-end campus setup, expansion and renovation services',
-    path: '/design',
-    badge: { label: 'Design', color: '#EC4899' },
-    img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
-  },
-];
 
 const ResourceTiles = () => {
   const [quoteForm, setQuoteForm] = useState({ schoolName: '', phone: '', pinCode: '', message: '' });
@@ -148,8 +103,6 @@ const ResourceTiles = () => {
   // Fetch CMS data — fall back to static arrays above
   const { blocks } = useCMSPage('home');
   const cmsTiles = blocks?.tiles?.tiles;
-  const cmsSolutions = blocks?.solutions?.items;
-  const cmsTicker = blocks?.ticker;
   const sidebarTrending = blocks?.sidebar_trending || {};
   const sidebarResources = blocks?.sidebar_resources || {};
   const sidebarBanners = blocks?.sidebar_banners || {};
@@ -157,7 +110,6 @@ const ResourceTiles = () => {
     ...t,
     height: t.height || ['h-64','h-48','h-56','h-72','h-52','h-64','h-48','h-60','h-56','h-48','h-52','h-64'][i % 12],
   }));
-  const activeSolutions = cmsSolutions?.length ? cmsSolutions : solutions;
 
   const handleQuoteSubmit = async (e) => {
     e.preventDefault();
@@ -218,51 +170,7 @@ const ResourceTiles = () => {
               ))}
             </div>
 
-            <div className="mt-6 mb-4">
-              <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-2">
-                <h2 className="text-gray-900 text-xl font-black font-heading uppercase tracking-tight">
-                  {blocks?.solutions?.heading || 'Explore Our Solutions'}
-                </h2>
-              </div>
-              
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-                {activeSolutions.map((item) => (
-                  <Link key={item.title} to={item.path} className="flex flex-col items-center text-center group">
-                    {/* Circle Image Container */}
-                    <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden shadow-xl mb-3 transition-all duration-500 group-hover:shadow-2xl group-hover:scale-95 border-2 border-gray-300">
-                      <img 
-                        src={item.img} 
-                        alt={item.title} 
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      
-                      {/* Floating Indicator */}
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                         <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/30">
-                           <ArrowRight size={24} />
-                         </div>
-                      </div>
-                    </div>
 
-                    {/* Content below Circle */}
-                    <div>
-                      <span 
-                        className="px-3 py-1 text-[11px] font-bold text-white uppercase tracking-[0.15em] rounded-full shadow-sm mb-2 inline-block"
-                        style={{ backgroundColor: item.badge.color }}
-                      >
-                        {item.badge.label}
-                      </span>
-                      <h3 className="text-gray-900 font-bold text-base font-heading mb-1 transition-colors group-hover:text-sm-blue">
-                        {item.title}
-                      </h3>
-                      <p className="text-gray-500 text-[12px] leading-relaxed line-clamp-2 max-w-[180px] opacity-80">
-                        {item.description}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Sidebar */}
@@ -351,24 +259,27 @@ const ResourceTiles = () => {
               </div>
             </div>
 
+            {/* Sidebar Bottom Banners from CMS */}
             <div className="space-y-3">
-              <Link to="/govt" className="block relative h-16 rounded-2xl overflow-hidden shadow-sm group">
-                <div className="absolute inset-0 bg-sm-blue flex flex-col items-center justify-center text-white">
-                  <p className="text-[11px] uppercase tracking-[0.2em] font-medium">Products for</p>
-                  <p className="text-sm font-bold uppercase">Govt Schools</p>
-                </div>
-              </Link>
-              <Link to="/renovation" className="block relative h-16 rounded-2xl overflow-hidden shadow-sm group">
-                <div className="absolute inset-0 bg-purple-600 flex flex-col items-center justify-center text-white">
-                  <p className="text-sm font-bold uppercase">School Renovation</p>
-                  <p className="text-[11px] uppercase tracking-[0.2em] font-medium">Services</p>
-                </div>
-              </Link>
-              <Link to="/ideas" className="block relative h-16 rounded-2xl overflow-hidden shadow-sm group">
-                <div className="absolute inset-0 bg-orange-500 flex flex-col items-center justify-center text-white">
-                  <p className="text-sm font-bold uppercase">20 Smart School Ideas</p>
-                </div>
-              </Link>
+              {(sidebarBanners?.banners?.length ? sidebarBanners.banners : [
+                { label: 'Products for', sublabel: 'Govt Schools', color: '#0057A8', path: '/govt' },
+                { label: 'School Renovation', sublabel: 'Services', color: '#9333ea', path: '/renovation' },
+                { label: '20 Smart School Ideas', sublabel: '', color: '#f97316', path: '/ideas' },
+              ]).map((banner, i) => (
+                <Link
+                  key={i}
+                  to={banner.path || '/'}
+                  className="block relative h-16 rounded-2xl overflow-hidden shadow-sm group"
+                >
+                  <div
+                    className="absolute inset-0 flex flex-col items-center justify-center text-white transition-opacity group-hover:opacity-90"
+                    style={{ backgroundColor: banner.color || '#0057A8' }}
+                  >
+                    <p className="text-sm font-bold uppercase">{banner.label}</p>
+                    {banner.sublabel && <p className="text-[11px] uppercase tracking-[0.2em] font-medium opacity-80">{banner.sublabel}</p>}
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         </div>

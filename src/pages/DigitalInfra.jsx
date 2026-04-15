@@ -54,9 +54,9 @@ const DigitalInfra = () => {
               {/* Branding Overlays */}
               <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
               <div className="absolute bottom-10 left-10 right-10 flex justify-between items-end z-10 font-heading">
-                 <div>
-                    <span className="text-[12px] font-black text-white uppercase tracking-[0.3em] block mb-3 opacity-80">{heroBlock.badge || "Network Infrastructure"}</span>
-                    <h2 className="text-4xl lg:text-5xl font-black text-white uppercase leading-[0.9] tracking-tighter" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Campus <br/> Connectivity." }} />
+                 <div style={{ color: heroBlock.textColor || 'white' }}>
+                    <span className="text-[12px] font-black uppercase tracking-[0.3em] block mb-3 opacity-80">{heroBlock.badge || "Network Infrastructure"}</span>
+                    <h2 className="text-4xl lg:text-5xl font-black uppercase leading-[0.9] tracking-tighter" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Campus <br/> Connectivity." }} />
                  </div>
                  <button className="px-8 py-4 bg-white text-gray-900 font-black rounded-2xl text-[12px] uppercase tracking-widest shadow-2xl hover:bg-sm-blue hover:text-white transition-all transform hover:translate-y-[-2px]">
                    {heroBlock.btnLabel || "System Audit"}
@@ -104,7 +104,7 @@ const DigitalInfra = () => {
                      <h3 className="text-[11px] font-black uppercase text-gray-400 tracking-[0.2em]">COLLECTIONS</h3>
                   </div>
                   <div className="flex flex-col gap-2 px-2">
-                     {[...new Set([...['Smart Boards', 'Networking', 'Servers', 'Audio Systems', 'Security'], ...cats])].map((c, i) => (
+                     {cats.map((c, i) => (
                         <button 
                           key={i} 
                           onClick={() => { setSelectedCat(c); document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' }); }} 

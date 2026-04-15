@@ -43,7 +43,7 @@ const Sports = () => {
               <div className="px-3 py-1 bg-sm-blue text-white font-black rounded-full text-[8px] uppercase tracking-[0.2em] mb-4 w-fit scale-90">
                  <Zap size={12} className="inline mr-2" /> {heroBlock.badge || "Performance 2025"}
               </div>
-              <h1 className="text-4xl lg:text-5xl font-black font-heading leading-[0.9] mb-4 tracking-tighter text-gray-900 uppercase" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || 'Built <br/> <span class="text-sm-blue italic font-serif lowercase tracking-normal">for</span> <br/> Champions.' }} />
+              <h1 style={{ color: heroBlock.textColor || undefined }} className="text-4xl lg:text-5xl font-black font-heading leading-[0.9] mb-4 tracking-tighter text-gray-900 uppercase" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || 'Built <br/> <span class="text-sm-blue italic font-serif lowercase tracking-normal">for</span> <br/> Champions.' }} />
               <p className="text-gray-400 text-[12px] md:text-[13px] font-bold uppercase tracking-widest max-w-xs leading-loose">
                  {heroBlock.subtitle || "Engineering high-performance athletic surfaces for the next generation of athletes."}
               </p>
@@ -94,7 +94,7 @@ const Sports = () => {
                      <h3 className="text-[11px] font-black uppercase text-gray-400 tracking-[0.2em]">COLLECTIONS</h3>
                   </div>
                   <div className="flex flex-col gap-2 px-2">
-                     {[...new Set([...['Track & Field', 'Playground', 'Indoor Courts', 'Equipment', 'Gym Tech'], ...cats])].map((c, i) => (
+                     {cats.map((c, i) => (
                         <button 
                           key={i} 
                           onClick={() => { setSelectedCat(c); document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' }); }} 

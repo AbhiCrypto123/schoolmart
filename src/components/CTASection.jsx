@@ -36,10 +36,16 @@ const CTASection = () => {
                 <div className="w-2 h-2 rounded-full bg-sm-blue animate-pulse" />
                 {d.badge}
               </div>
-              <h2 className="text-4xl md:text-6xl font-black text-gray-900 font-heading mb-6 tracking-tighter uppercase leading-[0.95]">
+              <h2
+                className="text-4xl md:text-6xl font-black font-heading mb-6 tracking-tighter uppercase leading-[0.95]"
+                style={{ color: d.textColor || '#111827' }}
+              >
                 {d.headline}
               </h2>
-              <p className="text-gray-400 text-sm md:text-base font-bold uppercase tracking-widest leading-loose max-w-xl">
+              <p
+                className="text-sm md:text-base font-bold uppercase tracking-widest leading-loose max-w-xl"
+                style={{ color: d.textColor ? `${d.textColor}99` : '#9ca3af' }}
+              >
                 {d.description}
               </p>
             </div>

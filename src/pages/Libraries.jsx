@@ -58,7 +58,7 @@ const Libraries = () => {
               <div className="px-3 py-1 bg-gray-900 text-white font-black rounded-full text-[8px] uppercase tracking-[0.2em] mb-4 w-fit scale-90 relative z-10">
                  <Bookmark size={12} className="inline mr-2" /> {heroBlock.badge || "Modern Library Concepts 2025"}
               </div>
-              <h1 className="text-4xl lg:text-7xl font-black font-heading leading-[0.9] mb-8 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Read <br/> <span class=\"text-sm-blue italic font-serif lowercase tracking-normal\">and</span> <br/> Reflect." }} />
+              <h1 style={{ color: heroBlock.textColor || undefined }} className="text-4xl lg:text-7xl font-black font-heading leading-[0.9] mb-8 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Read <br/> <span class=\"text-sm-blue italic font-serif lowercase tracking-normal\">and</span> <br/> Reflect." }} />
               <p className="text-gray-400 text-[12px] md:text-[13px] font-bold uppercase tracking-widest max-w-sm leading-loose relative z-10">
                  {heroBlock.subtitle || "Transforming traditional book repositories into collaborative, tech-enabled social learning hubs."}
               </p>
@@ -101,7 +101,7 @@ const Libraries = () => {
                      <h3 className="text-[11px] font-black uppercase text-gray-400 tracking-[0.2em]">COLLECTIONS</h3>
                   </div>
                   <div className="flex flex-col gap-2 px-2">
-                     {[...new Set([...['Reading Zones', 'Stack Systems', 'Study Pods', 'Librarian Hubs', 'Digital Kiosks'], ...cats])].map((c, i) => (
+                     {cats.map((c, i) => (
                         <button 
                           key={i} 
                           onClick={() => { setSelectedCat(c); document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' }); }} 

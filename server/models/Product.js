@@ -14,12 +14,66 @@ const Product = sequelize.define('Product', {
   },
   slug: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,  // relaxed so bulk imports don't fail
     unique: true
   },
   description: {
     type: DataTypes.TEXT
   },
+  // ── Direct string fields (used by CMS admin UI) ──────────────────────────
+  category: {
+    type: DataTypes.STRING,
+    allowNull: true   // e.g. 'Furniture', 'Sports'
+  },
+  subcategory: {
+    type: DataTypes.STRING,
+    allowNull: true   // e.g. 'Desks', 'Seating'
+  },
+  image: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  isFeatured: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  isNewProduct: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  stats: {
+    type: DataTypes.JSONB,
+    defaultValue: []
+  },
+  resources: {
+    type: DataTypes.JSONB,
+    defaultValue: []
+  },
+  featuresTitle: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  executionTitle: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  ctaLabel: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  ctaLink: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  chatLabel: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  chatLink: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  // ── Legacy / relational fields ────────────────────────────────────────────
   price: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: true
@@ -29,7 +83,7 @@ const Product = sequelize.define('Product', {
     defaultValue: []
   },
   features: {
-    type: DataTypes.JSONB, // Flexible JSON storage for product specs
+    type: DataTypes.JSONB,
     defaultValue: {}
   },
   isInstitutional: {

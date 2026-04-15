@@ -52,7 +52,7 @@ const SchoolDesigns = () => {
               <div className="px-3 py-1 bg-gray-900 text-white font-black rounded-full text-[8px] uppercase tracking-[0.2em] mb-6 w-fit scale-90 relative z-10">
                  <Stars size={12} className="inline mr-2" /> {heroBlock.badge || "Design Studio 2024"}
               </div>
-              <h1 className="text-4xl md:text-6xl font-black font-heading leading-[0.9] mb-6 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Imagine <br/> <span class=\"text-sm-blue italic font-serif lowercase tracking-normal\">the</span> <br/> Infinite." }} />
+              <h1 style={{ color: heroBlock.textColor || undefined }} className="text-4xl md:text-6xl font-black font-heading leading-[0.9] mb-6 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Imagine <br/> <span class=\"text-sm-blue italic font-serif lowercase tracking-normal\">the</span> <br/> Infinite." }} />
               <p className="text-gray-400 text-[12px] md:text-[13px] font-bold uppercase tracking-widest max-w-xs leading-loose relative z-10">
                  {heroBlock.subtitle || "We create non-linear, adaptive spaces where students explore, discover, and flourish."}
               </p>
@@ -90,7 +90,7 @@ const SchoolDesigns = () => {
                      <h3 className="text-[11px] font-black uppercase text-gray-400 tracking-[0.2em]">COLLECTIONS</h3>
                   </div>
                   <div className="flex flex-col gap-2 px-2">
-                     {[...new Set([...['Modern Classrooms', 'Activity Hubs', 'Outdoor Spaces', 'Admin Blocks', 'Auditoriums'], ...cats])].map((c, i) => (
+                     {cats.map((c, i) => (
                         <button 
                           key={i} 
                           onClick={() => { setSelectedCat(c); document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' }); }} 

@@ -13,7 +13,13 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       getMe()
         .then(setUser)
-        .catch(() => localStorage.removeItem('token'))
+        .catch((err) => {
+          // Only clear token for real auth failures (401), not transient network errors
+          if (err?.message === 'Unauthorized') {
+            localStorage.removeItem('token');
+          }
+          // If network error, keep token — user stays logged in on reconnect
+        })
         .finally(() => setLoading(false));
     } else {
       setLoading(false);

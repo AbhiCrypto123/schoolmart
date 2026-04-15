@@ -49,13 +49,16 @@ const Furniture = () => {
               {/* Branding Overlays */}
               <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
               <div className="absolute bottom-10 left-10 right-10 flex justify-between items-end z-10 font-heading">
-                 <div>
-                    <span className="text-[12px] font-black text-white uppercase tracking-[0.3em] block mb-3 opacity-80">{heroBlock.badge || "Featured Series"}</span>
-                    <h2 className="text-4xl lg:text-5xl font-black text-white uppercase leading-[0.9] tracking-tighter" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Modular <br/> Classroom Pro." }} />
-                 </div>
-                 <button className="px-8 py-4 bg-white text-gray-900 font-black rounded-2xl text-[12px] uppercase tracking-widest shadow-2xl hover:bg-sm-blue hover:text-white transition-all transform hover:translate-y-[-2px] active:translate-y-0">
-                   Explore Series
-                 </button>
+                  <div style={{ color: heroBlock.textColor || 'white' }}>
+                    <span className="text-[12px] font-black uppercase tracking-[0.3em] block mb-3 opacity-80">{heroBlock.badge || "Featured Series"}</span>
+                    <h2 className="text-4xl lg:text-5xl font-black uppercase leading-[0.9] tracking-tighter" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Modular <br/> Classroom Pro." }} />
+                  </div>
+                  <button 
+                    onClick={() => { if(heroBlock.ctaPath) window.location.href = heroBlock.ctaPath }}
+                    className="px-8 py-4 bg-white text-gray-900 font-black rounded-2xl text-[12px] uppercase tracking-widest shadow-2xl hover:bg-sm-blue hover:text-white transition-all transform hover:translate-y-[-2px] active:translate-y-0"
+                  >
+                    {heroBlock.btnLabel || "Explore Series"}
+                  </button>
               </div>
            </div>
 
@@ -64,7 +67,7 @@ const Furniture = () => {
                  <div className="px-3 py-1 bg-sm-blue text-white font-black rounded-full text-[13px] uppercase tracking-[0.2em] mb-4 w-fit scale-90">
                     <Sofa size={12} className="inline mr-2" /> {heroBlock.badge || "2025 Collection"}
                  </div>
-                 <h1 className="text-4xl font-black font-heading leading-tight mb-4 tracking-tighter text-gray-900 uppercase" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || 'School <br/> <span className="text-sm-blue italic font-serif lowercase tracking-normal">Furniture</span> <br/> Solutions.' }} />
+                 <h1 style={{ color: heroBlock.textColor || undefined }} className="text-4xl font-black font-heading leading-tight mb-4 tracking-tighter text-gray-900 uppercase" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || 'School <br/> <span className="text-sm-blue italic font-serif lowercase tracking-normal">Furniture</span> <br/> Solutions.' }} />
                   <p className="text-gray-400 text-[13px] font-bold uppercase tracking-widest max-w-xs leading-loose">
                      {heroBlock.subtitle || "1200+ ergonomic products designed for inspiring spaces."}
                   </p>
@@ -74,7 +77,7 @@ const Furniture = () => {
                  style={{ backgroundColor: blocks?.action_strip?.bgColor || '#111827' }}
                  className="rounded-[40px] p-8 text-white flex items-center justify-between group overflow-hidden relative border border-gray-800 shadow-2xl transition-transform hover:scale-[1.02]">
                  <div className="flex flex-col gap-2">
-                    <h3 className="text-[13px] font-black uppercase tracking-[0.2em] text-sm-blue">{blocks?.action_strip?.title || 'The 2025 Lookbook.'}</h3>
+                    <h3 style={{ color: blocks?.action_strip?.textColor || undefined }} className="text-[13px] font-black uppercase tracking-[0.2em] text-sm-blue">{blocks?.action_strip?.title || 'The 2025 Lookbook.'}</h3>
                     <span className="text-[13px] font-black text-white/40 uppercase tracking-widest font-heading">{blocks?.action_strip?.subtitle || 'MASTER CATALOGUE'}</span>
                  </div>
                  <span className="p-4 bg-sm-blue text-white rounded-full shadow-lg relative z-10 transition-all group-hover:bg-white group-hover:text-sm-blue">
@@ -95,7 +98,7 @@ const Furniture = () => {
                      <h3 className="text-[11px] font-black uppercase text-gray-400 tracking-[0.2em]">COLLECTIONS</h3>
                   </div>
                   <div className="flex flex-col gap-2 px-2">
-                     {[...new Set([...['Desks', 'Seating', 'Lab Furniture', 'Storage', 'Cafeteria'], ...cats])].map((c, i) => (
+                     {cats.map((c, i) => (
                         <button 
                           key={i} 
                           onClick={() => { setSelectedCat(c); document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' }); }} 

@@ -49,7 +49,7 @@ const LabsLibraries = () => {
               <div className="px-3 py-1 bg-emerald-100 text-emerald-700 font-black rounded-full text-[8px] uppercase tracking-[0.2em] mb-4 w-fit scale-90 relative z-10 border border-emerald-200">
                  <Activity size={12} className="inline mr-2 animate-pulse" /> {heroBlock.badge || "Integrated Lab Solutions"}
               </div>
-              <h1 className="text-4xl lg:text-6xl font-black font-heading leading-[0.95] mb-6 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Composite <br/> <span class=\"text-emerald-500 italic font-serif lowercase tracking-normal\">Skill</span> <br/> Labs." }} />
+              <h1 style={{ color: heroBlock.textColor || undefined }} className="text-4xl lg:text-6xl font-black font-heading leading-[0.95] mb-6 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Composite <br/> <span class=\"text-emerald-500 italic font-serif lowercase tracking-normal\">Skill</span> <br/> Labs." }} />
               <p className="text-gray-400 text-[12px] md:text-[13px] font-bold uppercase tracking-[0.3em] max-w-sm leading-loose relative z-10">
                  {heroBlock.subtitle || "The next generation of multidisciplinary spaces where science meets future-ready architecture."}
               </p>
@@ -67,7 +67,7 @@ const LabsLibraries = () => {
                      <h3 className="text-[11px] font-black uppercase text-gray-400 tracking-[0.2em]">COLLECTIONS</h3>
                   </div>
                   <div className="flex flex-col gap-2 px-2">
-                     {[...new Set([...['Chemistry', 'Physics', 'Biology', 'Composite Labs', 'Robotics'], ...cats])].map((c, i) => (
+                     {cats.map((c, i) => (
                         <button 
                           key={i} 
                           onClick={() => { setSelectedCat(c); document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' }); }} 

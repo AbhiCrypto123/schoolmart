@@ -53,7 +53,7 @@ const Mathematics = () => {
                   <div className="px-4 py-1.5 bg-sm-blue text-white font-black rounded-full text-[11px] uppercase tracking-[0.2em] mb-4 w-fit scale-90 relative z-10">
                      <Hash size={12} className="inline mr-2" /> {heroBlock.badge || "Logic & Symmetry 2025"}
                   </div>
-                  <h1 className="text-4xl lg:text-6xl font-black font-heading leading-[0.95] mb-6 tracking-tighter uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Play <br/> <span class=\"text-sm-blue italic font-serif lowercase tracking-normal\">with</span> <br/> Numbers." }} />
+                  <h1 style={{ color: heroBlock.textColor || undefined }} className="text-4xl lg:text-6xl font-black font-heading leading-[0.95] mb-6 tracking-tighter uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Play <br/> <span class=\"text-sm-blue italic font-serif lowercase tracking-normal\">with</span> <br/> Numbers." }} />
                   <p className="text-gray-500 text-[12px] md:text-[13px] font-bold uppercase tracking-widest max-w-md leading-loose relative z-10">
                      {heroBlock.subtitle || (heroBlock.data?.subtitle) || "We create gamified math labs where abstract concepts become tangible experiences through interactive equipment."}
                   </p>
@@ -71,7 +71,7 @@ const Mathematics = () => {
                         <h3 className="text-[11px] font-black uppercase text-gray-400 tracking-[0.2em]">COLLECTIONS</h3>
                      </div>
                      <div className="flex flex-col gap-2 px-2">
-                        {[...new Set([...['Math Kits', 'Manipulatives', 'Puzzle Tech', 'Visual Aids', 'Games'], ...cats])].map((c, i) => (
+                        {cats.map((c, i) => (
                            <button
                               key={i}
                               onClick={() => { setSelectedCat(c); document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' }); }}

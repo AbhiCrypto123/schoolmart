@@ -1,11 +1,52 @@
 const CMSPage = require('../models/CMSPage');
 const CMSBlock = require('../models/CMSBlock');
 
-// Get all pages
+// ── Canonical page slugs — the only slugs the admin dashboard recognises ─────
+const CANONICAL_SLUGS = new Set([
+  'home', 'furniture', 'architecture', 'digital', 'sports', 'libraries',
+  'environments', 'aboutus', 'contact-us', 'mathematics', 'science', 'labs',
+  'design', 'manufacturing', 'corporate', 'catalogues', 'guides', 'school-sale',
+  'partnerships', 'setup-guide', 'registration', 'login', 'workshops',
+  'fundraising', 'how-it-works', 'pricing', 'shipping-policy', 'cancellation-policy',
+  'replacement-return', 'payments', 'order-rejection-policy', 'seller-help',
+  'sell-on-schoolmart', 'report-issue', 'blog', 'delivery-locations', 'forgot-password'
+]);
+
+// Get all pages — only returns canonical slugs to prevent duplicate stale entries
+// Includes blocks data so admin components (e.g. ProductManager) can read
+// sidebar_categories without needing a separate getPage call per page.
 exports.getAllPages = async (req, res) => {
   try {
     const pages = await CMSPage.findAll({ order: [['title', 'ASC']] });
-    res.json(pages);
+    // Filter to canonical slugs only; de-dupe by title keeping canonical slug
+    const seen = new Set();
+    const filtered = pages.filter(p => {
+      if (!CANONICAL_SLUGS.has(p.slug)) return false;
+      if (seen.has(p.title)) return false;
+      seen.add(p.title);
+      return true;
+    });
+
+    // Attach blocks to each page
+    const allBlocks = await CMSBlock.findAll({ order: [['order', 'ASC']] });
+    const blocksByPage = {};
+    allBlocks.forEach(b => {
+      if (!blocksByPage[b.pageSlug]) blocksByPage[b.pageSlug] = [];
+      blocksByPage[b.pageSlug].push({
+        id: b.id,
+        key: b.key,
+        type: b.type,
+        data: b.data,
+        isVisible: b.isVisible
+      });
+    });
+
+    const result = filtered.map(p => ({
+      ...p.toJSON(),
+      blocks: blocksByPage[p.slug] || []
+    }));
+
+    res.json(result);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -17,8 +58,11 @@ exports.getPageContent = async (req, res) => {
     const { slug } = req.params;
     let page = await CMSPage.findOne({ where: { slug } });
     
-    // Create page if it doesn't exist (helpful for auto-init)
+    // Only auto-create pages for recognised canonical slugs
     if (!page) {
+      if (!CANONICAL_SLUGS.has(slug)) {
+        return res.status(404).json({ message: `Unknown page slug: ${slug}` });
+      }
       page = await CMSPage.create({ 
         slug, 
         title: slug.replace(/-/g, ' ').toUpperCase() 
@@ -63,9 +107,12 @@ exports.updateBlock = async (req, res) => {
     }
 
     if (block) {
-      block.data = data || block.data;
+      block.data = data !== undefined ? data : block.data;
       if (type) block.type = type;
       if (isVisible !== undefined) block.isVisible = isVisible;
+      // Force Sequelize to detect JSONB change — without this, mutations to
+      // nested arrays (like removing a category) are silently skipped.
+      block.changed('data', true);
       await block.save();
     } else {
       block = await CMSBlock.create({ pageSlug, key, type, data, isVisible });
@@ -82,6 +129,18 @@ exports.addBlock = async (req, res) => {
   try {
     const block = await CMSBlock.create(req.body);
     res.status(201).json(block);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Delete a CMS page and all its blocks (admin cleanup)
+exports.deletePage = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    await CMSBlock.destroy({ where: { pageSlug: slug } });
+    await CMSPage.destroy({ where: { slug } });
+    res.json({ message: `Page '${slug}' and all its blocks deleted.` });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -1,6 +1,6 @@
 // src/pages/admin/CMSEditor.jsx
 import { useEffect, useState } from 'react';
-import { getAllPages, getPage, updateBlock, addBlock, deleteBlock, uploadFile } from '../../services/api';
+import { getAllPages, getPage, updateBlock, addBlock, deleteBlock, deletePage, uploadFile, bulkRenameSubcategory } from '../../services/api';
 import { clearCMSCache } from '../../hooks/useCMSBlock';
 import { 
   ChevronDown, ChevronRight, Trash2, Plus, Eye, EyeOff, Save, GripVertical, 
@@ -48,6 +48,166 @@ const SectionTitle = ({ children }) => (
     <div className="h-px bg-indigo-50 flex-1"></div> {children} <div className="h-px bg-indigo-50 flex-1"></div>
   </h4>
 );
+
+// ── Tile Accordion Editor ───────────────────────────────────────────────────
+const TileEditor = ({ t, i, data, set }) => {
+  const [open, setOpen] = useState(false);
+  const [tab, setTab] = useState('card');
+  const [fetching, setFetching] = useState(false);
+  const [fetched, setFetched] = useState(false);
+
+  const update = (field, val) => {
+    const x = [...(data.tiles || [])];
+    x[i] = { ...x[i], [field]: val };
+    set('tiles', x);
+  };
+  const updateInner = (field, val) => {
+    const x = [...(data.tiles || [])];
+    x[i] = { ...x[i], inner: { ...(x[i].inner || {}), [field]: val } };
+    set('tiles', x);
+  };
+  const inner = t.inner || {};
+
+  // Extract slug: /p/immersive-learning → immersive-learning
+  const pageSlug = (t.path || '').replace(/^\/p\//, '').replace(/^\//, '');
+
+  const hasInnerContent = !!(inner.heading || inner.description || inner.content || inner.badge);
+
+  const importFromPage = () => {
+    if (!pageSlug) return;
+    setFetching(true);
+    getPage(pageSlug)
+      .then(page => {
+        const indexed = {};
+        (page.blocks || []).forEach(b => {
+          indexed[b.key] = b.data;
+          if (b.type && b.type !== b.key) indexed[b.type] = b.data;
+        });
+        const hero = indexed?.inner_page_hero || indexed?.page_hero || {};
+        const cta  = indexed?.inner_page_cta || indexed?.page_cta || {};
+        const body = indexed?.text_content || indexed?.page_content || {};
+        const x = [...(data.tiles || [])];
+        x[i] = {
+          ...x[i],
+          inner: {
+            badge:       inner.badge       || hero.badge       || '',
+            heading:     inner.heading     || hero.titleHtml   || hero.title || '',
+            description: inner.description || hero.description || hero.subtitle || '',
+            heroImg:     inner.heroImg     || hero.img         || hero.mediaUrl || '',
+            content:     inner.content     || body.body        || body.content  || '',
+            ctaLabel:    inner.ctaLabel    || cta.actionText   || cta.btnLabel  || '',
+            ctaPath:     inner.ctaPath     || cta.actionLink   || cta.btnLink   || '',
+          }
+        };
+        set('tiles', x);
+        setFetched(true);
+      })
+      .catch(() => setFetched(true))
+      .finally(() => setFetching(false));
+  };
+
+  // Auto-import when Inner tab opens for the first time and fields are empty
+  useEffect(() => {
+    if (tab === 'inner' && open && !hasInnerContent && !fetched && !fetching) {
+      importFromPage();
+    }
+  }, [tab, open]);
+
+  return (
+    <div className="rounded-3xl border border-gray-100 shadow-sm overflow-hidden bg-white">
+      {/* Card Header — clickable to expand */}
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center gap-4 p-5 hover:bg-indigo-50/30 transition-all text-left group"
+      >
+        <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-[10px] font-black text-indigo-600 shrink-0">{i + 1}</div>
+        {t.img && <img src={t.img} alt="" className="w-12 h-12 rounded-xl object-cover border border-gray-100 shrink-0" />}
+        <div className="flex-1 min-w-0">
+          <p className="text-[12px] font-black text-gray-900 uppercase tracking-widest truncate">{t.title || 'Untitled Tile'}</p>
+          {t.subtitle && <p className="text-[10px] text-gray-400 font-medium truncate">{t.subtitle}</p>}
+        </div>
+        <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+        <button
+          onClick={e => { e.stopPropagation(); set('tiles', (data.tiles || []).filter((_, j) => j !== i)); }}
+          className="ml-2 text-red-300 hover:text-red-500 shrink-0"
+        ><Trash2 size={15}/></button>
+      </button>
+
+      {/* Expandable Body */}
+      {open && (
+        <div className="border-t border-gray-50">
+          {/* Tab switcher */}
+          <div className="flex gap-2 p-4 bg-gray-50/50 border-b border-gray-100">
+            <button
+              onClick={() => setTab('card')}
+              className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${tab === 'card' ? 'bg-indigo-600 text-white shadow-lg' : 'bg-white text-gray-400 border border-gray-100 hover:border-indigo-200'}`}
+            >🃏 Card Fields</button>
+            <button
+              onClick={() => { setTab('inner'); if (!hasInnerContent && !fetched) importFromPage(); }}
+              className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${tab === 'inner' ? 'bg-blue-600 text-white shadow-lg' : 'bg-white text-gray-400 border border-gray-100 hover:border-blue-200'}`}
+            >📄 Inner Page Fields</button>
+          </div>
+
+          <div className="p-6 space-y-5">
+            {tab === 'card' && (
+              <>
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="Tile Title"><TextInput value={t.title} onChange={v => update('title', v)} /></Field>
+                  <Field label="Routing Page Link" hint="Where this tile navigates to"><TextInput value={t.path} onChange={v => update('path', v)} placeholder="/p/immersive-learning" /></Field>
+                </div>
+                <Field label="Subtitle"><TextInput value={t.subtitle} onChange={v => update('subtitle', v)} /></Field>
+                <ImageUpload label="Cover Image" value={t.img} onChange={v => update('img', v)} />
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="Tile Height" hint="CSS class: h-48, h-52, h-56, h-64, h-72"><TextInput value={t.height} onChange={v => update('height', v)} placeholder="h-64" /></Field>
+                  <div className="flex items-center gap-2 pt-6">
+                    <input type="checkbox" checked={!!t.featured} onChange={e => update('featured', e.target.checked)} className="w-4 h-4 rounded" />
+                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Featured Tile</span>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {tab === 'inner' && (
+              <>
+                {/* Import from page button */}
+                <div className="flex items-center justify-between bg-blue-50/60 border border-blue-100 rounded-2xl px-5 py-3">
+                  <div>
+                    <p className="text-[11px] font-black text-blue-700 uppercase tracking-widest">
+                      {fetching ? '⏳ Loading from page...' : fetched || hasInnerContent ? '✅ Page data loaded' : `Page: /${pageSlug}`}
+                    </p>
+                    <p className="text-[10px] text-blue-500 mt-0.5">Fields auto-populated from existing page CMS blocks</p>
+                  </div>
+                  <button
+                    onClick={importFromPage}
+                    disabled={fetching}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest disabled:opacity-50 hover:bg-blue-700 transition-all"
+                  >
+                    {fetching ? '...' : '↻ Re-import'}
+                  </button>
+                </div>
+
+                <SectionTitle>Hero Area</SectionTitle>
+                <Field label="Hero Badge" hint="Small label shown above the title"><TextInput value={inner.badge} onChange={v => updateInner('badge', v)} placeholder="Resource Hub" /></Field>
+                <Field label="Page Heading (HTML allowed)" hint="Main heading of the inner page. Use &lt;br/&gt; for line breaks."><TextArea value={inner.heading} onChange={v => updateInner('heading', v)} rows={3} placeholder="Immersive Learning for the Future." /></Field>
+                <Field label="Description / Subtitle"><TextArea value={inner.description} onChange={v => updateInner('description', v)} rows={3} placeholder="Accelerating modern education strategies..." /></Field>
+                <ImageUpload label="Hero Background Image" value={inner.heroImg} onChange={v => updateInner('heroImg', v)} />
+
+                <SectionTitle>Page Content</SectionTitle>
+                <Field label="Body Content (HTML/Markdown supported)" hint="Main content for the inner page body."><TextArea value={inner.content} onChange={v => updateInner('content', v)} rows={8} placeholder="Enter page content..." /></Field>
+
+                <SectionTitle>Call to Action Button</SectionTitle>
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="CTA Button Label"><TextInput value={inner.ctaLabel} onChange={v => updateInner('ctaLabel', v)} placeholder="Schedule Consultation" /></Field>
+                  <Field label="CTA Button Path"><TextInput value={inner.ctaPath} onChange={v => updateInner('ctaPath', v)} placeholder="/contact-us" /></Field>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // ── Block-Specific Form Renderers ───────────────────────────────────────────
 const BlockForms = {
@@ -145,6 +305,12 @@ const BlockForms = {
       </div>
       <Field label="Master Headline (HTML allowed)"><TextArea value={data?.titleHtml} onChange={v => set('titleHtml', v)} rows={3} placeholder='Built <br/> <span class="text-sm-blue">for</span> <br/> Champions.' /></Field>
       
+      <SectionTitle>Hero Colours</SectionTitle>
+      <div className="grid grid-cols-2 gap-4">
+        <ColorInput label="Text Color" value={data?.textColor} onChange={v => set('textColor', v)} />
+        <ColorInput label="Background Overlay Color" value={data?.bgColor} onChange={v => set('bgColor', v)} />
+      </div>
+
       <SectionTitle>Background Media Core</SectionTitle>
       <div className="flex gap-2">
         {['image', 'video'].map(mode => (
@@ -197,26 +363,55 @@ const BlockForms = {
   action_strip: ({ data = {}, set }) => (
     <div className="space-y-6">
       <SectionTitle>Global Action Strip</SectionTitle>
-      <ColorInput label="Strip Background Identity" value={data?.bgColor} onChange={v => set('bgColor', v)} />
+      <div className="grid grid-cols-2 gap-4">
+        <ColorInput label="Strip Background Color" value={data?.bgColor} onChange={v => set('bgColor', v)} />
+        <ColorInput label="Strip Text Color" value={data?.textColor} onChange={v => set('textColor', v)} />
+      </div>
       <div className="grid grid-cols-2 gap-4">
         <Field label="Primary Title"><TextInput value={data?.title} onChange={v => set('title', v)} placeholder="The 2025 Lookbook." /></Field>
-        <Field label="Sub-title DNA"><TextInput value={data?.subtitle} onChange={v => set('subtitle', v)} placeholder="MASTER CATALOGUE" /></Field>
+        <Field label="Sub-title"><TextInput value={data?.subtitle} onChange={v => set('subtitle', v)} placeholder="MASTER CATALOGUE" /></Field>
       </div>
-      <Field label="Action / Download Route"><TextInput value={data?.downloadPath} onChange={v => set('downloadPath', v)} placeholder="/catalogues" /></Field>
+      <Field label="Routing Link" hint="Page this strip links to — e.g. /catalogues or /contact-us"><TextInput value={data?.downloadPath} onChange={v => set('downloadPath', v)} placeholder="/catalogues" /></Field>
     </div>
   ),
 
   sidebar_categories: ({ data = {}, set }) => (
-    <div className="space-y-6 bg-gray-50/50 p-8 rounded-3xl border border-gray-100 shadow-sm">
-      <SectionTitle>Sidebar Category Matrix</SectionTitle>
-      <Field label="Category Names (One per line)" hint="These construct the left-hand navigation filter matrix.">
-        <TextArea 
-          value={(data?.categories || []).join('\n')} 
-          onChange={v => set('categories', v.split('\n').map(s => s.trim()).filter(Boolean))} 
-          rows={6} 
-          placeholder="Desks\nSeating\nLab Furniture\nStorage" 
-        />
-      </Field>
+    <div className="space-y-4">
+      <SectionTitle>Sidebar Category Manager</SectionTitle>
+      <p className="text-[11px] text-gray-400 font-medium">These categories appear in the left sidebar filter. Products must have a matching <strong>subcategory</strong> to appear under each category. Editing a name here will update the filter — make sure product subcategories match exactly.</p>
+      <div className="space-y-2">
+        {(data?.categories || []).map((cat, i) => (
+          <div key={i} className="flex items-center gap-3 bg-white border border-gray-100 rounded-2xl px-4 py-3 shadow-sm group">
+            <div className="w-6 h-6 rounded-lg bg-indigo-50 flex items-center justify-center text-[10px] font-black text-indigo-500 shrink-0">{i + 1}</div>
+            <input
+              type="text"
+              value={cat}
+              onChange={e => {
+                const updated = [...(data.categories || [])];
+                updated[i] = e.target.value;
+                set('categories', updated);
+              }}
+              className="flex-1 bg-transparent text-[12px] font-black text-gray-900 uppercase tracking-widest outline-none border-b border-transparent focus:border-indigo-300 transition-colors py-1"
+              placeholder="Category name..."
+            />
+            <button
+              onClick={() => set('categories', (data.categories || []).filter((_, j) => j !== i))}
+              className="text-red-300 hover:text-red-500 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <Trash2 size={14} />
+            </button>
+          </div>
+        ))}
+      </div>
+      <button
+        onClick={() => set('categories', [...(data?.categories || []), ''])}
+        className="w-full py-4 rounded-2xl border-2 border-dashed border-indigo-100 text-indigo-400 font-black uppercase text-[10px] tracking-widest hover:border-indigo-300 hover:bg-indigo-50 transition-all"
+      >+ Add Category</button>
+      {(data?.categories?.length > 0) && (
+        <div className="mt-2 p-4 bg-amber-50 border border-amber-100 rounded-2xl">
+          <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest">⚠ Tip: Product subcategory names must match exactly (case-insensitive) to appear under each filter.</p>
+        </div>
+      )}
     </div>
   ),
 
@@ -407,36 +602,15 @@ const BlockForms = {
   ),
 
   tiles: ({ data = {}, set }) => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <SectionTitle>Masonry Grid Tiles</SectionTitle>
-      <p className="text-[11px] text-gray-400 font-medium">Each tile links to an inner page. The inner page content is managed from that page's own editor.</p>
-      <div className="space-y-4">
+      <p className="text-[11px] text-gray-400 font-medium">Click a tile card to edit it. Each tile has two sections: <strong>Card Fields</strong> (what shows on the home page grid) and <strong>Inner Page Fields</strong> (content shown when someone clicks through to that tile's page).</p>
+      <div className="space-y-3">
         {(data.tiles || []).map((t, i) => (
-          <div key={i} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm relative group">
-            <button onClick={() => set('tiles', data.tiles.filter((_, j) => j !== i))} className="absolute top-4 right-4 text-red-300 hover:text-red-500"><Trash2 size={16}/></button>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-[10px] font-black text-indigo-600">{i + 1}</div>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t.title || 'Untitled Tile'}</p>
-            </div>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <Field label="Tile Title"><TextInput value={t.title} onChange={v => { const x = [...data.tiles]; x[i] = { ...x[i], title: v }; set('tiles', x); }} /></Field>
-              <Field label="Routing Page Link" hint="Where this tile navigates to"><TextInput value={t.path} onChange={v => { const x = [...data.tiles]; x[i] = { ...x[i], path: v }; set('tiles', x); }} placeholder="/p/immersive-learning" /></Field>
-            </div>
-            <Field label="Subtitle"><TextInput value={t.subtitle} onChange={v => { const x = [...data.tiles]; x[i] = { ...x[i], subtitle: v }; set('tiles', x); }} /></Field>
-            <div className="mt-4">
-              <ImageUpload label="Cover Image" value={t.img} onChange={v => { const x = [...data.tiles]; x[i] = { ...x[i], img: v }; set('tiles', x); }} />
-            </div>
-            <div className="mt-4 grid grid-cols-2 gap-4">
-              <Field label="Tile Height" hint="CSS class: h-48, h-52, h-56, h-64, h-72"><TextInput value={t.height} onChange={v => { const x = [...data.tiles]; x[i] = { ...x[i], height: v }; set('tiles', x); }} placeholder="h-64" /></Field>
-              <div className="flex items-center gap-2 pt-6">
-                <input type="checkbox" checked={!!t.featured} onChange={e => { const x = [...data.tiles]; x[i] = { ...x[i], featured: e.target.checked }; set('tiles', x); }} className="w-4 h-4 rounded" />
-                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Featured Tile</span>
-              </div>
-            </div>
-          </div>
+          <TileEditor key={i} t={t} i={i} data={data} set={set} />
         ))}
       </div>
-      <button onClick={() => set('tiles', [...(data.tiles || []), { title: '', subtitle: '', path: '/', img: '', height: 'h-64' }])}
+      <button onClick={() => set('tiles', [...(data.tiles || []), { title: '', subtitle: '', path: '/', img: '', height: 'h-64', inner: { badge: '', heading: '', description: '', content: '', ctaLabel: '', ctaPath: '' } }])}
         className="w-full py-6 rounded-3xl border-2 border-dashed border-indigo-100 text-indigo-400 font-black uppercase text-[10px] tracking-widest hover:border-indigo-300 hover:bg-indigo-50 transition-all">+ Add Tile</button>
     </div>
   ),
@@ -792,7 +966,293 @@ const BlockForms = {
     </div>
   ),
 
+  workshops_list: ({ data = {}, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Workshop Events</SectionTitle>
+      <p className="text-[11px] text-gray-400 font-medium">Each workshop card shown on the Workshops page. Leave empty to use built-in defaults.</p>
+      {(data?.items || []).map((w, i) => (
+        <div key={i} className="bg-white border border-gray-100 rounded-2xl p-5 space-y-3 relative">
+          <button onClick={() => set('items', (data.items||[]).filter((_,j)=>j!==i))} className="absolute top-3 right-3 text-red-300 hover:text-red-500"><Trash2 size={14}/></button>
+          <div className="grid grid-cols-3 gap-3">
+            <Field label="Day"><TextInput value={w.date?.day} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],date:{...it[i].date,day:v}}; set('items',it); }} placeholder="18"/></Field>
+            <Field label="Month"><TextInput value={w.date?.month} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],date:{...it[i].date,month:v}}; set('items',it); }} placeholder="Jul"/></Field>
+            <Field label="Type"><TextInput value={w.type} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],type:v}; set('items',it); }} placeholder="Masterclass"/></Field>
+          </div>
+          <Field label="Title"><TextInput value={w.title} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],title:v}; set('items',it); }}/></Field>
+          <Field label="Description"><TextArea value={w.desc} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],desc:v}; set('items',it); }} rows={2}/></Field>
+          <div className="grid grid-cols-3 gap-3">
+            <Field label="Location"><TextInput value={w.location} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],location:v}; set('items',it); }}/></Field>
+            <Field label="Duration"><TextInput value={w.duration} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],duration:v}; set('items',it); }}/></Field>
+            <Field label="Price"><TextInput value={w.price} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],price:v}; set('items',it); }} placeholder="₹2,499"/></Field>
+          </div>
+          <div className="flex items-center gap-2"><input type="checkbox" checked={!!w.featured} onChange={e=>{ const it=[...(data.items||[])]; it[i]={...it[i],featured:e.target.checked}; set('items',it); }} className="w-4 h-4 rounded"/><span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Featured (Most Popular badge)</span></div>
+        </div>
+      ))}
+      <button onClick={() => set('items', [...(data?.items||[]), { date:{day:'',month:''}, title:'', type:'', location:'', duration:'', price:'', desc:'' }])} className="w-full py-4 rounded-2xl border-2 border-dashed border-indigo-100 text-indigo-400 font-black uppercase text-[10px] tracking-widest hover:bg-indigo-50 transition-all">+ Add Workshop</button>
+    </div>
+  ),
+
+  how_steps: ({ data = {}, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Process Steps</SectionTitle>
+      {(data?.items || []).map((s, i) => (
+        <div key={i} className="bg-white border border-gray-100 rounded-2xl p-5 space-y-3 relative">
+          <button onClick={() => set('items', (data.items||[]).filter((_,j)=>j!==i))} className="absolute top-3 right-3 text-red-300 hover:text-red-500"><Trash2 size={14}/></button>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Step Number"><TextInput value={s.step} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],step:v}; set('items',it); }} placeholder="01"/></Field>
+            <Field label="Step Title"><TextInput value={s.title} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],title:v}; set('items',it); }}/></Field>
+          </div>
+          <Field label="Description"><TextArea value={s.desc} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],desc:v}; set('items',it); }} rows={2}/></Field>
+        </div>
+      ))}
+      <button onClick={() => set('items', [...(data?.items||[]), { step:'', title:'', desc:'' }])} className="w-full py-4 rounded-2xl border-2 border-dashed border-indigo-100 text-indigo-400 font-black uppercase text-[10px] tracking-widest hover:bg-indigo-50 transition-all">+ Add Step</button>
+    </div>
+  ),
+
+  setup_phases: ({ data = {}, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Setup Phases (Roadmap Cards)</SectionTitle>
+      {(data?.items || []).map((p, i) => (
+        <div key={i} className="bg-white border border-gray-100 rounded-2xl p-5 space-y-3 relative">
+          <button onClick={() => set('items', (data.items||[]).filter((_,j)=>j!==i))} className="absolute top-3 right-3 text-red-300 hover:text-red-500"><Trash2 size={14}/></button>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Phase Number"><TextInput value={p.num} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],num:v}; set('items',it); }} placeholder="01"/></Field>
+            <Field label="Phase Title"><TextInput value={p.title} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],title:v}; set('items',it); }}/></Field>
+          </div>
+          <Field label="Description"><TextArea value={p.desc} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],desc:v}; set('items',it); }} rows={2}/></Field>
+          <Field label="Checklist Steps" hint="One step per line"><TextArea value={(p.steps||[]).join('\n')} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],steps:v.split('\n').map(s=>s.trim()).filter(Boolean)}; set('items',it); }} rows={3}/></Field>
+        </div>
+      ))}
+      <button onClick={() => set('items', [...(data?.items||[]), { num:'', title:'', desc:'', steps:[] }])} className="w-full py-4 rounded-2xl border-2 border-dashed border-indigo-100 text-indigo-400 font-black uppercase text-[10px] tracking-widest hover:bg-indigo-50 transition-all">+ Add Phase</button>
+    </div>
+  ),
+
+  pricing_plans: ({ data = {}, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Pricing Plans</SectionTitle>
+      {(data?.items || []).map((p, i) => (
+        <div key={i} className="bg-white border border-gray-100 rounded-2xl p-5 space-y-3 relative">
+          <button onClick={() => set('items', (data.items||[]).filter((_,j)=>j!==i))} className="absolute top-3 right-3 text-red-300 hover:text-red-500"><Trash2 size={14}/></button>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Plan Name"><TextInput value={p.title} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],title:v}; set('items',it); }} placeholder="Standard"/></Field>
+            <Field label="Price / Label"><TextInput value={p.price} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],price:v}; set('items',it); }} placeholder="₹ Direct"/></Field>
+          </div>
+          <Field label="Features" hint="One per line"><TextArea value={(p.features||[]).join('\n')} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],features:v.split('\n').map(s=>s.trim()).filter(Boolean)}; set('items',it); }} rows={3}/></Field>
+          <Field label="Button Label"><TextInput value={p.cta} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],cta:v}; set('items',it); }} placeholder="Get Quote"/></Field>
+        </div>
+      ))}
+      <button onClick={() => set('items', [...(data?.items||[]), { title:'', price:'', features:[], cta:'Get Quote' }])} className="w-full py-4 rounded-2xl border-2 border-dashed border-indigo-100 text-indigo-400 font-black uppercase text-[10px] tracking-widest hover:bg-indigo-50 transition-all">+ Add Plan</button>
+    </div>
+  ),
+
+  advisory_items: ({ data = {}, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Advisory Focus Cards</SectionTitle>
+      {(data?.items || []).map((a, i) => (
+        <div key={i} className="bg-white border border-gray-100 rounded-2xl p-5 space-y-3 relative">
+          <button onClick={() => set('items', (data.items||[]).filter((_,j)=>j!==i))} className="absolute top-3 right-3 text-red-300 hover:text-red-500"><Trash2 size={14}/></button>
+          <Field label="Title"><TextInput value={a.title} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],title:v}; set('items',it); }}/></Field>
+          <Field label="Description"><TextArea value={a.desc} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],desc:v}; set('items',it); }} rows={2}/></Field>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Stat Value"><TextInput value={a.stats} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],stats:v}; set('items',it); }} placeholder="₹500Cr+"/></Field>
+            <Field label="Stat Label"><TextInput value={a.trend} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],trend:v}; set('items',it); }} placeholder="Capital Advised"/></Field>
+          </div>
+        </div>
+      ))}
+      <button onClick={() => set('items', [...(data?.items||[]), { title:'', desc:'', stats:'', trend:'' }])} className="w-full py-4 rounded-2xl border-2 border-dashed border-indigo-100 text-indigo-400 font-black uppercase text-[10px] tracking-widest hover:bg-indigo-50 transition-all">+ Add Advisory Item</button>
+    </div>
+  ),
+
+  case_studies: ({ data = {}, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Case Studies</SectionTitle>
+      {(data?.items || []).map((c, i) => (
+        <div key={i} className="bg-white border border-gray-100 rounded-2xl p-5 space-y-3 relative">
+          <button onClick={() => set('items', (data.items||[]).filter((_,j)=>j!==i))} className="absolute top-3 right-3 text-red-300 hover:text-red-500"><Trash2 size={14}/></button>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Project Title"><TextInput value={c.title} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],title:v}; set('items',it); }}/></Field>
+            <Field label="Location"><TextInput value={c.location} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],location:v}; set('items',it); }}/></Field>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Outcome"><TextInput value={c.outcome} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],outcome:v}; set('items',it); }} placeholder="30% Enrollment Growth"/></Field>
+            <Field label="Focus Area"><TextInput value={c.focus} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],focus:v}; set('items',it); }} placeholder="Yield Opt"/></Field>
+          </div>
+        </div>
+      ))}
+      <button onClick={() => set('items', [...(data?.items||[]), { title:'', location:'', outcome:'', focus:'' }])} className="w-full py-4 rounded-2xl border-2 border-dashed border-indigo-100 text-indigo-400 font-black uppercase text-[10px] tracking-widest hover:bg-indigo-50 transition-all">+ Add Case Study</button>
+    </div>
+  ),
+
+  blog_posts: ({ data = {}, set }) => (
+    <div className="space-y-4">
+      <SectionTitle>Blog Posts</SectionTitle>
+      {(data?.items || []).map((p, i) => (
+        <div key={i} className="bg-white border border-gray-100 rounded-2xl p-5 space-y-3 relative">
+          <button onClick={() => set('items', (data.items||[]).filter((_,j)=>j!==i))} className="absolute top-3 right-3 text-red-300 hover:text-red-500"><Trash2 size={14}/></button>
+          <Field label="Date"><TextInput value={p.date} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],date:v}; set('items',it); }} placeholder="OCT 24, 2023"/></Field>
+          <Field label="Title"><TextInput value={p.title} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],title:v}; set('items',it); }}/></Field>
+          <Field label="Excerpt"><TextArea value={p.excerpt} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],excerpt:v}; set('items',it); }} rows={2}/></Field>
+          <ImageUpload label="Cover Image" value={p.img} onChange={v=>{ const it=[...(data.items||[])]; it[i]={...it[i],img:v}; set('items',it); }}/>
+        </div>
+      ))}
+      <button onClick={() => set('items', [...(data?.items||[]), { date:'', title:'', excerpt:'', img:'' }])} className="w-full py-4 rounded-2xl border-2 border-dashed border-indigo-100 text-indigo-400 font-black uppercase text-[10px] tracking-widest hover:bg-indigo-50 transition-all">+ Add Blog Post</button>
+    </div>
+  ),
+
+
+  environments_page_content: ({ data = {}, set }) => {
+    const updateField = (path, val) => {
+      const clone = JSON.parse(JSON.stringify(data));
+      const keys = path.split('.');
+      let obj = clone;
+      for (let i = 0; i < keys.length - 1; i++) { if (!obj[keys[i]]) obj[keys[i]] = {}; obj = obj[keys[i]]; }
+      obj[keys[keys.length - 1]] = val;
+      Object.entries(clone).forEach(([k, v]) => set(k, v));
+    };
+    const items = data?.masonryItems || [];
+    return (
+      <div className="space-y-6">
+        <SectionTitle>Environments Page</SectionTitle>
+        <div className="bg-indigo-50/60 rounded-2xl p-4 space-y-3 border border-indigo-100">
+          <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest">Hero Section</p>
+          <Field label="Badge"><TextInput value={data?.badge} onChange={v => set('badge', v)} placeholder="Sensory Hub 2025"/></Field>
+          <Field label="Title HTML"><TextArea value={data?.titleHtml} onChange={v => set('titleHtml', v)} rows={2} placeholder="Atmosphere <br/> <span>is</span> Everything."/></Field>
+          <Field label="Subtitle"><TextInput value={data?.subtitle} onChange={v => set('subtitle', v)}/></Field>
+          <ImageUpload label="Hero Image" value={data?.heroImage} onChange={v => set('heroImage', v)}/>
+        </div>
+        <div className="bg-gray-50 rounded-2xl p-4 space-y-3 border border-gray-100">
+          <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Action Card</p>
+          <Field label="Card Title HTML"><TextInput value={data?.actionCard?.titleHtml} onChange={v => updateField('actionCard.titleHtml', v)}/></Field>
+          <Field label="Button Text"><TextInput value={data?.actionCard?.btnText} onChange={v => updateField('actionCard.btnText', v)} placeholder="Apply Online"/></Field>
+        </div>
+        <div className="bg-gray-50 rounded-2xl p-4 space-y-3 border border-gray-100">
+          <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Info Grid</p>
+          <Field label="Section Title HTML"><TextInput value={data?.infoGrid?.titleHtml} onChange={v => updateField('infoGrid.titleHtml', v)}/></Field>
+          <Field label="Bullet Points" hint="One per line"><TextArea value={(data?.infoGrid?.points || []).join('\n')} onChange={v => updateField('infoGrid.points', v.split('\n').map(s => s.trim()).filter(Boolean))} rows={3}/></Field>
+          <ImageUpload label="Grid Image" value={data?.infoGrid?.img} onChange={v => updateField('infoGrid.img', v)}/>
+        </div>
+        <SectionTitle>Case Study Cards (Masonry Grid)</SectionTitle>
+        <p className="text-[11px] text-gray-400">These cards appear in the grid AND power the individual detail pages at <code>/environments/:slug</code>.</p>
+        {items.map((item, i) => {
+          const upd = (k, v) => { const it = JSON.parse(JSON.stringify(items)); it[i][k] = v; set('masonryItems', it); };
+          const updSpec = (j, k, v) => { const it = JSON.parse(JSON.stringify(items)); if (!it[i].specs) it[i].specs = []; it[i].specs[j] = { ...it[i].specs[j], [k]: v }; set('masonryItems', it); };
+          return (
+            <div key={i} className="bg-white border border-gray-100 rounded-2xl p-5 space-y-4 relative">
+              <button onClick={() => set('masonryItems', items.filter((_, j) => j !== i))} className="absolute top-3 right-3 text-red-300 hover:text-red-500"><Trash2 size={14}/></button>
+              <p className="text-[10px] font-black text-sm-blue uppercase tracking-widest">Card #{i + 1}</p>
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="Title (used as slug)"><TextInput value={item.t} onChange={v => upd('t', v)}/></Field>
+                <Field label="Category Tag"><TextInput value={item.c} onChange={v => upd('c', v)} placeholder="Sound, Nature…"/></Field>
+              </div>
+              <ImageUpload label="Card Image" value={item.img} onChange={v => upd('img', v)}/>
+              <div className="border-t border-gray-100 pt-3 space-y-3">
+                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Detail Page Content</p>
+                <Field label="Badge"><TextInput value={item.badge} onChange={v => upd('badge', v)} placeholder="Case Study 2025"/></Field>
+                <Field label="Description"><TextArea value={item.description} onChange={v => upd('description', v)} rows={2}/></Field>
+                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Specs Grid</p>
+                {(item.specs || []).map((spec, j) => (
+                  <div key={j} className="grid grid-cols-2 gap-2 items-start">
+                    <Field label="Spec Title"><TextInput value={spec.t} onChange={v => updSpec(j, 't', v)}/></Field>
+                    <Field label="Spec Description"><TextInput value={spec.d} onChange={v => updSpec(j, 'd', v)}/></Field>
+                  </div>
+                ))}
+                <button onClick={() => { const it = JSON.parse(JSON.stringify(items)); if (!it[i].specs) it[i].specs = []; it[i].specs.push({ t: '', d: '' }); set('masonryItems', it); }} className="text-[9px] font-black text-indigo-400 uppercase tracking-widest hover:text-indigo-600">+ Add Spec</button>
+                <Field label="Technical Details" hint="One per line"><TextArea value={(item.technicalDetails || []).join('\n')} onChange={v => upd('technicalDetails', v.split('\n').map(s => s.trim()).filter(Boolean))} rows={3}/></Field>
+              </div>
+            </div>
+          );
+        })}
+        <button onClick={() => set('masonryItems', [...items, { t: '', c: '', img: '', badge: '', description: '', specs: [], technicalDetails: [] }])} className="w-full py-4 rounded-2xl border-2 border-dashed border-indigo-100 text-indigo-400 font-black uppercase text-[10px] tracking-widest hover:bg-indigo-50 transition-all">+ Add Case Study Card</button>
+      </div>
+    );
+  },
+
+  guides_page_content: ({ data = {}, set }) => {
+    const updateField = (path, val) => {
+      const clone = JSON.parse(JSON.stringify(data));
+      const keys = path.split('.');
+      let obj = clone;
+      for (let i = 0; i < keys.length - 1; i++) { if (!obj[keys[i]]) obj[keys[i]] = {}; obj = obj[keys[i]]; }
+      obj[keys[keys.length - 1]] = val;
+      Object.entries(clone).forEach(([k, v]) => set(k, v));
+    };
+    const items = data?.caseStudies || [];
+    return (
+      <div className="space-y-6">
+        <SectionTitle>Guides Page</SectionTitle>
+        <div className="bg-indigo-50/60 rounded-2xl p-4 space-y-3 border border-indigo-100">
+          <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest">Hero Section</p>
+          <Field label="Badge"><TextInput value={data?.badge} onChange={v => set('badge', v)} placeholder="Knowledge Base 2025"/></Field>
+          <Field label="Title HTML"><TextArea value={data?.titleHtml} onChange={v => set('titleHtml', v)} rows={2}/></Field>
+          <Field label="Subtitle"><TextInput value={data?.subtitle} onChange={v => set('subtitle', v)}/></Field>
+          <ImageUpload label="Hero Image" value={data?.heroImage} onChange={v => set('heroImage', v)}/>
+        </div>
+        <div className="bg-gray-50 rounded-2xl p-4 space-y-3 border border-gray-100">
+          <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Action Card</p>
+          <Field label="Card Title HTML"><TextInput value={data?.actionCard?.titleHtml} onChange={v => updateField('actionCard.titleHtml', v)}/></Field>
+          <Field label="Button Text"><TextInput value={data?.actionCard?.btnText} onChange={v => updateField('actionCard.btnText', v)}/></Field>
+        </div>
+        <div className="bg-gray-50 rounded-2xl p-4 space-y-3 border border-gray-100">
+          <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Featured Guide</p>
+          <Field label="Title"><TextInput value={data?.featured?.t} onChange={v => updateField('featured.t', v)}/></Field>
+          <Field label="Category"><TextInput value={data?.featured?.c} onChange={v => updateField('featured.c', v)}/></Field>
+          <Field label="Description"><TextArea value={data?.featured?.d} onChange={v => updateField('featured.d', v)} rows={2}/></Field>
+          <Field label="Tags" hint="Comma-separated"><TextInput value={(data?.featured?.tags || []).join(', ')} onChange={v => updateField('featured.tags', v.split(',').map(s => s.trim()).filter(Boolean))}/></Field>
+          <ImageUpload label="Featured Image" value={data?.featured?.img} onChange={v => updateField('featured.img', v)}/>
+        </div>
+        <SectionTitle>Strategy Guide Cards</SectionTitle>
+        <p className="text-[11px] text-gray-400">These cards appear in the masonry grid AND power the detail pages at <code>/guides/:slug</code>.</p>
+        {items.map((item, i) => {
+          const upd = (k, v) => { const it = JSON.parse(JSON.stringify(items)); it[i][k] = v; set('caseStudies', it); };
+          const updStep = (j, k, v) => { const it = JSON.parse(JSON.stringify(items)); if (!it[i].steps) it[i].steps = []; it[i].steps[j] = { ...it[i].steps[j], [k]: v }; set('caseStudies', it); };
+          const updSum = (j, k, v) => { const it = JSON.parse(JSON.stringify(items)); if (!it[i].summaryPoints) it[i].summaryPoints = []; it[i].summaryPoints[j] = { ...it[i].summaryPoints[j], [k]: v }; set('caseStudies', it); };
+          return (
+            <div key={i} className="bg-white border border-gray-100 rounded-2xl p-5 space-y-4 relative">
+              <button onClick={() => set('caseStudies', items.filter((_, j) => j !== i))} className="absolute top-3 right-3 text-red-300 hover:text-red-500"><Trash2 size={14}/></button>
+              <p className="text-[10px] font-black text-sm-blue uppercase tracking-widest">Guide Card #{i + 1}</p>
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="Title (used as slug)"><TextInput value={item.t} onChange={v => upd('t', v)}/></Field>
+                <Field label="Category"><TextInput value={item.c} onChange={v => upd('c', v)}/></Field>
+              </div>
+              <ImageUpload label="Card Image" value={item.img} onChange={v => upd('img', v)}/>
+              <div className="border-t border-gray-100 pt-3 space-y-3">
+                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Detail Page Content</p>
+                <Field label="Badge"><TextInput value={item.badge} onChange={v => upd('badge', v)} placeholder="Strategic Guide 2025"/></Field>
+                <Field label="Intro Paragraph"><TextArea value={item.intro} onChange={v => upd('intro', v)} rows={2}/></Field>
+                <ImageUpload label="Main Hero Image" value={item.mainImg} onChange={v => upd('mainImg', v)}/>
+                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Steps</p>
+                {(item.steps || []).map((step, j) => (
+                  <div key={j} className="bg-gray-50 rounded-xl p-3 space-y-2">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Step {j+1}</span>
+                      <button onClick={() => { const it = JSON.parse(JSON.stringify(items)); it[i].steps = it[i].steps.filter((_, k) => k !== j); set('caseStudies', it); }} className="text-red-300 hover:text-red-500"><Trash2 size={11}/></button>
+                    </div>
+                    <Field label="Step Title"><TextInput value={step.title} onChange={v => updStep(j, 'title', v)}/></Field>
+                    <Field label="Content"><TextArea value={step.content} onChange={v => updStep(j, 'content', v)} rows={2}/></Field>
+                    <Field label="Insight (quote)"><TextInput value={step.insight} onChange={v => updStep(j, 'insight', v)}/></Field>
+                    <Field label="Action Point"><TextInput value={step.action} onChange={v => updStep(j, 'action', v)}/></Field>
+                  </div>
+                ))}
+                <button onClick={() => { const it = JSON.parse(JSON.stringify(items)); if (!it[i].steps) it[i].steps = []; it[i].steps.push({ title: '', content: '', insight: '', action: '' }); set('caseStudies', it); }} className="text-[9px] font-black text-indigo-400 uppercase tracking-widest hover:text-indigo-600">+ Add Step</button>
+                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-2">Summary Points</p>
+                {(item.summaryPoints || []).map((sp, j) => (
+                  <div key={j} className="grid grid-cols-2 gap-2">
+                    <Field label="Label"><TextInput value={sp.t} onChange={v => updSum(j, 't', v)}/></Field>
+                    <Field label="Icon Name"><TextInput value={sp.icon} onChange={v => updSum(j, 'icon', v)} placeholder="ShieldCheck"/></Field>
+                  </div>
+                ))}
+                <button onClick={() => { const it = JSON.parse(JSON.stringify(items)); if (!it[i].summaryPoints) it[i].summaryPoints = []; it[i].summaryPoints.push({ t: '', icon: 'Star' }); set('caseStudies', it); }} className="text-[9px] font-black text-indigo-400 uppercase tracking-widest hover:text-indigo-600">+ Add Summary Point</button>
+              </div>
+            </div>
+          );
+        })}
+        <button onClick={() => set('caseStudies', [...items, { t: '', c: '', img: '', badge: '', intro: '', mainImg: '', steps: [], summaryPoints: [] }])} className="w-full py-4 rounded-2xl border-2 border-dashed border-indigo-100 text-indigo-400 font-black uppercase text-[10px] tracking-widest hover:bg-indigo-50 transition-all">+ Add Guide Card</button>
+      </div>
+    );
+  },
+
   pdf_resource: ({ data = {}, set }) => (
+
     <div className="space-y-4">
       <SectionTitle>PDF / Download Resource</SectionTitle>
       <Field label="Resource Title"><TextInput value={data?.title} onChange={v => set('title', v)} /></Field>
@@ -859,6 +1319,8 @@ export default function CMSEditor() {
   const [pageLoading, setPageLoading] = useState(false);
   const [activeBlockId, setActiveBlockId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [saveToast, setSaveToast] = useState(null);
+  const [originalContent, setOriginalContent] = useState([]);
 
   useEffect(() => {
     getAllPages()
@@ -867,12 +1329,26 @@ export default function CMSEditor() {
       .finally(() => setLoading(false));
   }, []);
 
+  const refreshPages = () => getAllPages().then(setPages).catch(console.error);
+
+  const handleDeletePage = async (e, slug) => {
+    e.stopPropagation();
+    if (!window.confirm(`Delete page "${slug}" and ALL its CMS blocks? This cannot be undone.`)) return;
+    try {
+      await deletePage(slug);
+      setPages(prev => prev.filter(p => p.slug !== slug));
+    } catch (err) {
+      alert('Failed to delete page: ' + err.message);
+    }
+  };
+
   const selectPage = (slug) => {
     setPageLoading(true);
     setSelectedPage(slug);
     getPage(slug)
       .then(p => {
         setContent(p.blocks || []);
+        setOriginalContent(JSON.parse(JSON.stringify(p.blocks || [])));
         if (p.blocks?.length) setActiveBlockId(p.blocks[0].id);
       })
       .catch(console.error)
@@ -881,11 +1357,42 @@ export default function CMSEditor() {
 
   const handleUpdate = async (blockId, data) => {
     try {
+      // ── Detect sidebar_categories renames and propagate to products ──
+      const block = content.find(b => b.id === blockId);
+      if (block && (block.key === 'sidebar_categories' || block.type === 'sidebar_categories')) {
+        const originalBlock = originalContent.find(b => b.id === blockId);
+        if (originalBlock) {
+          const oldCats = originalBlock.data?.categories || [];
+          const newCats = data?.categories || [];
+          const oldSet = new Set(oldCats.map(c => c?.trim()).filter(Boolean));
+          const newSet = new Set(newCats.map(c => c?.trim()).filter(Boolean));
+          const pageTitle = pages.find(p => p.slug === selectedPage)?.title || selectedPage;
+
+          // Compare by index: if old[i] disappeared from the full set and new[i] is fresh, it's a rename
+          for (let i = 0; i < Math.min(oldCats.length, newCats.length); i++) {
+            const o = (oldCats[i] || '').trim();
+            const n = (newCats[i] || '').trim();
+            if (o && n && o !== n && !newSet.has(o) && !oldSet.has(n)) {
+              await bulkRenameSubcategory(pageTitle, o, n);
+            }
+          }
+        }
+        // Snapshot new state so future saves compare against this version
+        setOriginalContent(prev => prev.map(b => b.id === blockId ? { ...b, data: JSON.parse(JSON.stringify(data)) } : b));
+      }
+
       await updateBlock(blockId, data);
+      // Clear specific page + full cache bust so frontend reflects new data immediately
+      clearCMSCache(selectedPage);
       clearCMSCache();
       setContent(content.map(b => b.id === blockId ? { ...b, data, isDirty: false } : b));
+      // Also refresh pages data so ProductManager picks up the new categories
+      refreshPages();
+      // Brief visual confirmation
+      setSaveToast(blockId);
+      setTimeout(() => setSaveToast(null), 2000);
     } catch (e) {
-      alert("Logic Update Failed: " + e.message);
+      alert('Save Failed: ' + e.message);
     }
   };
 
@@ -942,21 +1449,30 @@ export default function CMSEditor() {
                   const meta = getPageMeta(p.slug);
                   const Icon = meta.icon;
                   return (
-                    <button 
-                      key={p.slug}
-                      onClick={() => selectPage(p.slug)}
-                      className="group bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-2xl hover:border-indigo-100 transition-all duration-500 text-left flex flex-col h-full"
-                    >
-                      <div className={`w-16 h-16 rounded-3xl ${meta.color} bg-opacity-10 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500`}>
-                        <Icon className={meta.iconColor} size={32} />
-                      </div>
-                      <div className="mt-auto">
-                        <h4 className="text-lg font-black text-gray-900 uppercase tracking-tighter mb-1 leading-tight group-hover:text-indigo-600 transition-colors uppercase">
-                          {p.title || p.name || p.slug}
-                        </h4>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">/{p.slug}</p>
-                      </div>
-                    </button>
+                    <div key={p.slug} className="relative group">
+                      <button 
+                        onClick={() => selectPage(p.slug)}
+                        className="w-full bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-2xl hover:border-indigo-100 transition-all duration-500 text-left flex flex-col h-full"
+                      >
+                        <div className={`w-16 h-16 rounded-3xl ${meta.color} bg-opacity-10 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500`}>
+                          <Icon className={meta.iconColor} size={32} />
+                        </div>
+                        <div className="mt-auto">
+                          <h4 className="text-lg font-black text-gray-900 uppercase tracking-tighter mb-1 leading-tight group-hover:text-indigo-600 transition-colors">
+                            {p.title || p.name || p.slug}
+                          </h4>
+                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">/{p.slug}</p>
+                        </div>
+                      </button>
+                      {/* Delete button — appears on hover for cleanup of stale pages */}
+                      <button
+                        onClick={(e) => handleDeletePage(e, p.slug)}
+                        title={`Delete page /${p.slug}`}
+                        className="absolute top-3 right-3 w-8 h-8 rounded-xl bg-red-50 text-red-400 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white flex items-center justify-center shadow-sm"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
                   );
                 })}
              </div>
@@ -1081,9 +1597,11 @@ export default function CMSEditor() {
                                <div className="flex items-center gap-3">
                                  <button 
                                    onClick={() => handleUpdate(block.id, block.data)}
-                                   disabled={!block.isDirty}
+                                   disabled={!block.isDirty && saveToast !== block.id}
                                    className={`flex items-center gap-2.5 px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${
-                                     block.isDirty 
+                                     saveToast === block.id
+                                     ? 'bg-green-500 text-white shadow-xl shadow-green-500/20 scale-105'
+                                     : block.isDirty 
                                      ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-600/20 hover:scale-105 active:scale-95' 
                                      : 'bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
                                    }`}>

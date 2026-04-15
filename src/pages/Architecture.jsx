@@ -47,13 +47,11 @@ const Architecture = () => {
            <div className="flex-1 bg-white rounded-[40px] p-8 lg:p-14 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group min-h-[400px]">
               <div className="absolute top-0 right-0 w-32 h-32 bg-sm-blue/5 rounded-full blur-3xl -mr-16 -mt-16" />
               <div className="px-3 py-1 bg-sm-blue text-white font-black rounded-full text-[13px] uppercase tracking-[0.2em] mb-6 w-fit scale-90 relative z-10">
-                 <Stars size={12} className="inline mr-2" /> Global Studio 2025
+                 <Stars size={12} className="inline mr-2" /> {heroBlock.badge || "Global Studio 2025"}
               </div>
-              <h1 className="text-4xl md:text-6xl font-black font-heading leading-tight mb-6 tracking-tighter text-gray-900 uppercase relative z-10">
-                School <br /> Building <br /> Design
-              </h1>
+              <h1 style={{ color: heroBlock.textColor || undefined }} className="text-4xl md:text-6xl font-black font-heading leading-tight mb-6 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || 'School <br /> Building <br /> Design' }} />
               <p className="text-gray-400 text-[13px] font-bold uppercase tracking-widest max-w-sm leading-loose relative z-10">
-                 NEP-READY CAMPUS PLANNING BY EXPERT ARCHITECTS
+                 {heroBlock.subtitle || "NEP-READY CAMPUS PLANNING BY EXPERT ARCHITECTS"}
               </p>
            </div>
 
@@ -80,7 +78,7 @@ const Architecture = () => {
                      <h3 className="text-[11px] font-black uppercase text-gray-400 tracking-[0.2em]">COLLECTIONS</h3>
                   </div>
                   <div className="flex flex-col gap-2 px-2">
-                     {[...new Set([...['3D Plans', 'Site Prep', 'Interior Design', 'Landscape', 'Infrastructure'], ...cats])].map((c, i) => (
+                     {cats.map((c, i) => (
                         <button 
                           key={i} 
                           onClick={() => { setSelectedCat(c); document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' }); }} 

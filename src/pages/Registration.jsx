@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Send, UserPlus, Sparkles, ShieldCheck, Mail, Phone, Lock, Building2, Globe, ArrowRight, CheckCircle2, ChevronDown } from 'lucide-react';
 import { register, verifyOtp, resendOtp } from '../services/api';
+import { useCMSPage } from '../hooks/useCMSBlock';
 
 const Registration = () => {
   const navigate = useNavigate();
@@ -24,7 +25,14 @@ const Registration = () => {
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  const services = [
+  const { blocks } = useCMSPage('registration');
+  const hero = blocks?.registration_hero || {};
+  const fieldData = blocks?.registration_fields || {};
+  const srvData = blocks?.registration_services || {};
+  const typeData = blocks?.registration_school_types || {};
+  const featData = blocks?.registration_features || {};
+
+  const services = srvData.services?.length ? srvData.services : [
     "School design architecture services green schools",
     "Project management planning to completion",
     "Existing school refurbishmentredesign",
@@ -166,24 +174,23 @@ const Registration = () => {
          {/* UNIQUE STORY SIDEBAR */}
          <div className="w-full lg:w-1/4 text-center lg:text-left pt-2 lg:pt-6 lg:sticky lg:top-24">
             <span className="inline-block px-4 py-1.5 bg-blue-50 text-sm-blue font-black rounded-full mb-4 lg:mb-6 text-[12px] lg:text-[13px] uppercase tracking-widest shadow-sm border border-blue-100">
-               <UserPlus size={14} className="inline mr-2 lg:size-4" /> Partner Network
+               <UserPlus size={14} className="inline mr-2 lg:size-4" /> {hero.badge || 'Partner Network'}
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 font-heading leading-[0.85] tracking-tighter mb-4 lg:mb-8 uppercase">
-               Join <br/> The <span className="text-sm-blue italic font-serif opacity-80">Circle.</span>
-            </h1>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 font-heading leading-[0.85] tracking-tighter mb-4 lg:mb-8 uppercase" dangerouslySetInnerHTML={{ __html: hero.heading || 'Join <br/> The <span class="text-sm-blue italic font-serif opacity-80">Circle.</span>' }} />
             <p className="text-sm lg:text-base text-gray-500 leading-relaxed mb-6 lg:mb-8 font-medium px-4 lg:px-0">
-               Get exclusive access to architectural blueprints, customized institutional catalogs, and early-bird campus planning consultancy.
+               {hero.description || 'Get exclusive access to architectural blueprints, customized institutional catalogs, and early-bird campus planning consultancy.'}
             </p>
 
             <div className="hidden lg:grid grid-cols-1 gap-4 text-left">
-               <div className="group border-l-4 border-gray-100 pl-6 py-1 hover:border-sm-blue transition-all">
-                  <h4 className="text-lg font-black text-gray-900 mb-1 leading-none uppercase">Pre-Approved</h4>
-                  <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Pricing for Schools</p>
-               </div>
-               <div className="group border-l-4 border-gray-100 pl-6 py-1 hover:border-sm-blue transition-all">
-                  <h4 className="text-lg font-black text-gray-900 mb-1 leading-none uppercase">Priority</h4>
-                  <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Architect Meetings</p>
-               </div>
+               {(hero.statCards?.length ? hero.statCards : [
+                 { title: 'Pre-Approved', subtitle: 'Pricing for Schools' },
+                 { title: 'Priority', subtitle: 'Architect Meetings' }
+               ]).map((st, i) => (
+                 <div key={i} className="group border-l-4 border-gray-100 pl-6 py-1 hover:border-sm-blue transition-all">
+                    <h4 className="text-lg font-black text-gray-900 mb-1 leading-none uppercase">{st.title}</h4>
+                    <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">{st.subtitle}</p>
+                 </div>
+               ))}
             </div>
          </div>
 
@@ -194,10 +201,10 @@ const Registration = () => {
                <div className="absolute top-0 left-0 right-0 h-3 lg:h-4 bg-gray-900" />
                <div className="mb-6 lg:mb-8">
                   <h2 className="text-lg lg:text-xl font-black text-gray-900 font-heading tracking-tight mb-1 uppercase tracking-[0.1em]">
-                    Partner school Registration Form.
+                    {fieldData.formTitle || 'Partner school Registration Form.'}
                   </h2>
                   <p className="text-gray-400 text-[8px] lg:text-[11px] font-bold uppercase tracking-widest leading-relaxed">
-                    Please Select the services and get information on new products discounts and seasonal offers
+                    {fieldData.formSubtitle || 'Please Select the services and get information on new products discounts and seasonal offers'}
                   </p>
                </div>
                
@@ -227,7 +234,7 @@ const Registration = () => {
                   {/* Fields Section */}
                   <div className="xl:col-span-5 space-y-3 lg:space-y-4">
                     <h3 className="text-base lg:text-xl font-black text-sm-blue uppercase tracking-tight flex items-center gap-2 lg:gap-3">
-                      <Building2 size={20} className="lg:size-6" /> Institutional Info
+                      <Building2 size={20} className="lg:size-6" /> {fieldData.sectionHeading || 'Institutional Info'}
                     </h3>
                     
                     <div className="space-y-2.5 pt-1">
@@ -275,12 +282,16 @@ const Registration = () => {
                             onChange={e => setFormData({...formData, schoolType: e.target.value})}
                           >
                             <option value="" disabled>Select school type</option>
-                            <option value="International school">International school</option>
-                            <option value="CBSE School">CBSE School</option>
-                            <option value="ICSE School">ICSE School</option>
-                            <option value="STATE Board School">STATE Board School</option>
-                            <option value="College University">College University</option>
-                            <option value="Business Educational Partners">Business Educational Partners</option>
+                            {(typeData.options?.length ? typeData.options : [
+                              "International school",
+                              "CBSE School",
+                              "ICSE School",
+                              "STATE Board School",
+                              "College University",
+                              "Business Educational Partners"
+                            ]).map((opt, i) => (
+                              <option key={i} value={opt}>{opt}</option>
+                            ))}
                           </select>
                           <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
                              <ChevronDown size={18} strokeWidth={2.5} />
@@ -300,7 +311,7 @@ const Registration = () => {
                   
                   <div className="xl:col-span-6 space-y-4 lg:space-y-6 mt-6 xl:mt-0 pt-6 xl:pt-0 border-t xl:border-t-0 border-gray-100">
                     <h3 className="text-base lg:text-xl font-black text-sm-blue uppercase tracking-tight flex items-center gap-2 lg:gap-3">
-                       <CheckCircle2 size={20} className="lg:size-6" /> Select Services
+                       <CheckCircle2 size={20} className="lg:size-6" /> {srvData.heading || 'Select Services'}
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-2 pt-2">
                       {services.map((service, idx) => (
@@ -324,7 +335,7 @@ const Registration = () => {
 
                     <div className="mt-8 lg:mt-12 flex justify-center lg:justify-end">
                       <button disabled={loading} className="w-full lg:w-auto px-10 lg:px-12 py-4 lg:py-5 bg-[#004a8e] text-white font-black rounded-2xl lg:rounded-3xl shadow-3xl hover:bg-gray-900 transition-all uppercase tracking-[0.2em] text-[12px] lg:text-[13px] flex items-center justify-center gap-3 active:scale-[0.98]">
-                        {loading ? 'Processing...' : 'SUBMIT'} <Send size={18} />
+                        {loading ? 'Processing...' : (fieldData.submitLabel || 'SUBMIT')} <Send size={18} />
                       </button>
                     </div>
                   </div>
@@ -336,20 +347,22 @@ const Registration = () => {
       {/* DASHBOARD-STYLE PREVIEW BENTO (Unique for Registration) */}
       <div className="max-w-7xl mx-auto px-4 mt-12">
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-24">
-           {[
-             { i: <ShieldCheck size={32} />, t: 'Data Privacy', d: 'Your institutional data is protected by bank-level encryption.', c: 'bg-white text-gray-900' },
-             { i: <Globe size={32} />, t: 'Network Access', d: 'Discover the list of our 1500+ institutional members.', c: 'bg-white text-gray-900' },
-             { i: <Sparkles size={32} />, t: 'Exclusive Docs', d: 'Download 200+ case studies and architectural PDFs.', c: 'bg-white text-gray-900' },
-             { i: <ArrowRight size={32} />, t: 'Direct Entry', d: 'Fast-track your first order with simplified workflow.', c: 'bg-white text-gray-900' },
-           ].map((card, i) => (
-             <div key={i} className={`p-8 rounded-[40px] shadow-sm border border-gray-100 group hover:shadow-3xl transition-all hover:-translate-y-4 cursor-pointer flex flex-col items-center text-center ${card.c}`}>
+           {(featData.cards?.length ? featData.cards : [
+             { icon: 'ShieldCheck', title: 'Data Privacy', description: 'Your institutional data is protected by bank-level encryption.', c: 'bg-white text-gray-900' },
+             { icon: 'Globe', title: 'Network Access', description: 'Discover the list of our 1500+ institutional members.', c: 'bg-white text-gray-900' },
+             { icon: 'Sparkles', title: 'Exclusive Docs', description: 'Download 200+ case studies and architectural PDFs.', c: 'bg-white text-gray-900' },
+             { icon: 'ArrowRight', title: 'Direct Entry', description: 'Fast-track your first order with simplified workflow.', c: 'bg-white text-gray-900' },
+           ]).map((card, i) => {
+             const Icon = { ShieldCheck, Globe, Sparkles, ArrowRight }[card.icon] || ShieldCheck;
+             return (
+             <div key={i} className={`p-8 rounded-[40px] shadow-sm border border-gray-100 group hover:shadow-3xl transition-all hover:-translate-y-4 cursor-pointer flex flex-col items-center text-center ${card.c || 'bg-white text-gray-900'}`}>
                 <div className={`w-20 h-20 bg-gray-50 group-hover:bg-sm-blue group-hover:text-white rounded-[30px] flex items-center justify-center mb-8 group-hover:scale-110 transition-transform shadow-sm`}>
-                   {card.i}
+                   <Icon size={32} />
                 </div>
-                <h3 className="text-lg font-black font-heading mb-2 leading-tight uppercase tracking-tight">{card.t}</h3>
-                <p className="text-gray-400 text-[12px] font-bold uppercase tracking-widest leading-relaxed">{card.d}</p>
+                <h3 className="text-lg font-black font-heading mb-2 leading-tight uppercase tracking-tight">{card.title}</h3>
+                <p className="text-gray-400 text-[12px] font-bold uppercase tracking-widest leading-relaxed">{card.description}</p>
              </div>
-           ))}
+           )})}
         </div>
       </div>
     </main>

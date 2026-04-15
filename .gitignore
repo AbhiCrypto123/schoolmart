@@ -28,3 +28,12 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# server
+server/uploads/
+server/check_topbar.cjs
+server/seedMissingCategories.cjs
+
+# os
+.DS_Store
+Thumbs.db

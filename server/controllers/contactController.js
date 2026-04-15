@@ -59,4 +59,28 @@ exports.getInquiries = async (req, res) => {
   }
 };
 
+// Update inquiry status (Admin)
+exports.updateInquiryStatus = async (req, res) => {
+  try {
+    const inquiry = await Contact.findByPk(req.params.id);
+    if (!inquiry) return res.status(404).json({ message: 'Inquiry not found' });
+    await inquiry.update({ status: req.body.status });
+    res.json({ success: true, data: inquiry });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete inquiry (Admin)
+exports.deleteInquiry = async (req, res) => {
+  try {
+    const inquiry = await Contact.findByPk(req.params.id);
+    if (!inquiry) return res.status(404).json({ message: 'Inquiry not found' });
+    await inquiry.destroy();
+    res.json({ message: 'Inquiry deleted' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
