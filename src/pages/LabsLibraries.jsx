@@ -38,23 +38,39 @@ const LabsLibraries = () => {
       <div className="max-w-7xl mx-auto px-4">
         
         <section className="pt-4 pb-6 grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
-           <div className="lg:col-span-12 bg-white rounded-[40px] p-10 lg:p-14 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group min-h-[350px]">
-              <CMSMedia 
-                mediaType={heroBlock.mediaType} 
-                mediaUrl={heroBlock.mediaUrl} 
-                fallbackImg={heroBlock.img || "https://images.unsplash.com/photo-1541829070764-84a7d30dee62?w=1000&q=80"}
-                className="absolute inset-0 w-full h-full object-cover transition-all duration-1000"
-              />
-              <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-[100px] -mr-40 -mt-40 opacity-60" />
-              <div className="px-3 py-1 bg-emerald-100 text-emerald-700 font-black rounded-full text-[8px] uppercase tracking-[0.2em] mb-4 w-fit scale-90 relative z-10 border border-emerald-200">
-                 <Activity size={12} className="inline mr-2 animate-pulse" /> {heroBlock.badge || "Integrated Lab Solutions"}
-              </div>
-              <h1 style={{ color: heroBlock.textColor || undefined }} className="text-4xl lg:text-6xl font-black font-heading leading-[0.95] mb-6 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Composite <br/> <span class=\"text-emerald-500 italic font-serif lowercase tracking-normal\">Skill</span> <br/> Labs." }} />
-              <p className="text-gray-400 text-[12px] md:text-[13px] font-bold uppercase tracking-[0.3em] max-w-sm leading-loose relative z-10">
-                 {heroBlock.subtitle || "The next generation of multidisciplinary spaces where science meets future-ready architecture."}
-              </p>
-           </div>
-        </section>
+            <div className="lg:col-span-12 bg-white rounded-[40px] p-10 lg:p-14 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group min-h-[350px]">
+               <CMSMedia 
+                 mediaType={heroBlock.mediaType} 
+                 mediaUrl={heroBlock.mediaUrl} 
+                 fallbackImg={heroBlock.img || "https://images.unsplash.com/photo-1541829070764-84a7d30dee62?w=1000&q=80"}
+                 className="absolute inset-0 w-full h-full object-cover transition-all duration-1000"
+               />
+               <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-[100px] -mr-40 -mt-40 opacity-60" />
+               <div className="px-3 py-1 bg-emerald-100 text-emerald-700 font-black rounded-full text-[8px] uppercase tracking-[0.2em] mb-4 w-fit scale-90 relative z-10 border border-emerald-200">
+                  <Activity size={12} className="inline mr-2 animate-pulse" /> {heroBlock.badge || "Integrated Lab Solutions"}
+               </div>
+               <h1 style={{ color: heroBlock.textColor || undefined }} className="text-4xl lg:text-6xl font-black font-heading leading-[0.95] mb-6 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Composite <br/> <span class=\"text-emerald-500 italic font-serif lowercase tracking-normal\">Skill</span> <br/> Labs." }} />
+               <p className="text-gray-400 text-[12px] md:text-[13px] font-bold uppercase tracking-[0.3em] max-w-sm leading-loose relative z-10">
+                  {heroBlock.subtitle || "The next generation of multidisciplinary spaces where science meets future-ready architecture."}
+               </p>
+            </div>
+         </section>
+
+         {blocks?.action_strip && (
+            <section className="mb-8">
+               <Link to={blocks.action_strip.downloadPath || '/catalogues'}
+                 style={{ backgroundColor: blocks.action_strip.bgColor || '#065F46' }}
+                 className="rounded-[40px] p-8 text-white flex items-center justify-between group overflow-hidden relative border border-emerald-900 shadow-2xl transition-transform hover:scale-[1.01]">
+                 <div className="flex flex-col gap-2">
+                    <h3 style={{ color: blocks.action_strip.textColor || undefined }} className="text-[13px] font-black uppercase tracking-[0.2em] text-emerald-100/60">{blocks.action_strip.title || 'Skill Lab Guide 2025.'}</h3>
+                    <span className="text-[14px] font-black text-white uppercase tracking-widest font-heading">{blocks.action_strip.subtitle || 'TECHNICAL SPECIFICATIONS'}</span>
+                 </div>
+                 <span className="p-4 bg-white text-emerald-800 rounded-full shadow-lg relative z-10 transition-all group-hover:bg-emerald-100 group-hover:scale-110">
+                    <Download size={20} />
+                 </span>
+               </Link>
+            </section>
+         )}
 
         {/* CATEGORY NAV & MAIN CONTENT GALLERY */}
         <section className="py-8 border-t border-gray-100 flex flex-col md:flex-row gap-8 items-start">
