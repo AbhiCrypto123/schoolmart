@@ -77,19 +77,21 @@ const DigitalInfra = () => {
                  </p>
               </div>
 
-              <div className="bg-[#0A0A0A] rounded-[30px] p-6 text-white flex items-center justify-between group overflow-hidden relative border border-gray-800 shadow-xl transition-all hover:border-sm-blue/50">
+               <Link to={blocks?.action_strip?.downloadPath || '/catalogues'}
+                 style={{ backgroundColor: blocks?.action_strip?.bgColor || '#0A0A0A' }}
+                 className="rounded-[30px] p-6 text-white flex items-center justify-between group overflow-hidden relative border border-gray-800 shadow-xl transition-all hover:border-sm-blue/50">
                  <div className="flex flex-col gap-1 relative z-10">
-                    <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-sm-blue">
-                        {darkBlock.title}
+                    <h3 style={{ color: blocks?.action_strip?.textColor || undefined }} className="text-[11px] font-black uppercase tracking-[0.3em] text-sm-blue">
+                        {blocks?.action_strip?.title || darkBlock.title}
                     </h3>
                     <span className="text-[13px] font-black text-white uppercase tracking-tight font-heading">
-                        {darkBlock.subtitle}
+                        {blocks?.action_strip?.subtitle || darkBlock.subtitle}
                     </span>
                  </div>
-                 <span className="p-3 bg-sm-blue text-white rounded-full shadow-lg relative z-10 group-hover:scale-110 transition-transform">
-                    <ShieldCheck size={18} />
+                 <span className="p-3 bg-sm-blue text-white rounded-full shadow-lg relative z-10 group-hover:bg-white group-hover:text-sm-blue transition-all group-hover:scale-110">
+                    {blocks?.action_strip?.btnType === 'download' ? <Download size={18} /> : <ShieldCheck size={18} />}
                  </span>
-              </div>
+               </Link>
            </div>
         </section>
 

@@ -1614,7 +1614,47 @@ export default function CMSEditor() {
                       </div>
                     );
                   })}
-               </div>
+                   
+                   {/* Add Block Button */}
+                   <div className="pt-4 pb-20">
+                     <div className="flex items-center gap-4 bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm">
+                       <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 shrink-0">
+                         <Plus size={24} />
+                       </div>
+                       <div className="flex-1">
+                         <h4 className="text-sm font-black text-gray-900 uppercase tracking-widest">Inject New Module</h4>
+                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Expand this page's capabilities with a new block archetype.</p>
+                       </div>
+                       <div className="flex items-center gap-2">
+                         <select 
+                           id="new-block-type"
+                           className="px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-[10px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-indigo-100"
+                         >
+                           {Object.keys(BlockForms).sort().map(type => (
+                             <option key={type} value={type}>{type.replace(/_/g, ' ')}</option>
+                           ))}
+                         </select>
+                         <button 
+                           onClick={async () => {
+                             const type = document.getElementById('new-block-type').value;
+                             if (!type) return;
+                             try {
+                               const newBlock = await addBlock(selectedPage, type, type, {});
+                               setContent([...content, { ...newBlock, data: {}, isDirty: false }]);
+                               setActiveBlockId(newBlock.id);
+                               setTimeout(() => document.getElementById(`block-${newBlock.id}`)?.scrollIntoView({ behavior: 'smooth' }), 100);
+                             } catch (err) {
+                               alert('Failed to add block: ' + err.message);
+                             }
+                           }}
+                           className="px-6 py-3 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-indigo-600/20 hover:scale-105 transition-all"
+                         >
+                           Add to Page
+                         </button>
+                       </div>
+                     </div>
+                   </div>
+                </div>
             </div>
           </div>
         )}
