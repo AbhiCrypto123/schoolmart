@@ -40,8 +40,15 @@ const startServer = async () => {
   await connectDB();
   
   // Sync database (updates tables to match models)
-  await sequelize.sync({ alter: true });
-  console.log('Database synced');
+  try {
+    await sequelize.sync({ alter: true });
+    console.log('Database synced');
+  } catch (err) {
+    console.warn('⚠️  sync({ alter: true }) failed:', err.message);
+    console.log('Retrying with safe sync (no alter)...');
+    await sequelize.sync();
+    console.log('Database synced (safe mode)');
+  }
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
