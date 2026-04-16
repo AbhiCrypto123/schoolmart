@@ -25,17 +25,18 @@ const GenericInnerPage = ({ explicitSlug }) => {
   });
   const tileInner = matchingTile?.inner || {};
 
-  // Merge: dedicated page blocks take priority, tile inner is fallback
-  const heroBlock = { 
-    ...Object.keys(tileInner).length ? {
-      badge: tileInner.badge,
-      titleHtml: tileInner.heading,
-      title: tileInner.heading,
-      description: tileInner.description,
-      img: tileInner.heroImg,
-    } : {}, 
-    ...(blocks?.inner_page_hero || blocks?.page_hero || {}) 
-  };
+  // Merge: tileInner (edited via masonry dashboard) takes priority over default page blocks
+  const pageHeroBlock = blocks?.inner_page_hero || blocks?.page_hero || {};
+  const tileInnerMapped = Object.keys(tileInner).length ? {
+    badge: tileInner.badge,
+    titleHtml: tileInner.heading,
+    title: tileInner.heading,
+    description: tileInner.description,
+    subtitle: tileInner.description,
+    img: tileInner.heroImg,
+  } : {};
+  // tileInner overlaid LAST so masonry editor edits always win
+  const heroBlock = { ...pageHeroBlock, ...tileInnerMapped };
 
   const tileBodyContent = tileInner.content || '';
   const tileCtaLabel = tileInner.ctaLabel || '';
