@@ -54,70 +54,76 @@ const ResourcePost = () => {
 
     return (
         <div className="bg-white flex flex-col font-sans">
-            {/* Premium Split Hero */}
-            <section className="relative overflow-hidden pt-4 lg:pt-8 border-t border-gray-100">
-                <div className="max-w-7xl mx-auto flex flex-col lg:flex-row min-h-[450px]">
-                    {/* Left: Content */}
-                    <div className="flex-1 p-6 lg:p-12 flex flex-col justify-center relative z-10">
-                        {/* Standard Flow Back Button */}
-                        <div className="mb-8">
-                            <button 
-                                onClick={() => navigate(-1)}
-                                className="group flex items-center gap-2 text-gray-400 hover:text-sm-blue transition-all"
-                            >
-                                <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center group-hover:border-sm-blue group-hover:bg-sm-blue/5">
-                                    <ArrowLeft size={16} />
-                                </div>
-                                <span className="text-[11px] font-black uppercase tracking-widest">Back</span>
-                            </button>
+        <div className="bg-white flex flex-col font-sans">
+            {/* NEW: Premium Full-Width Hero Section */}
+            <section className="relative w-full min-h-[550px] flex items-center overflow-hidden bg-gray-900">
+                {/* Background Image with optimized overlay */}
+                <div className="absolute inset-0 z-0">
+                    <img 
+                        src={resource.image} 
+                        alt={resource.title} 
+                        className="w-full h-full object-cover opacity-60 scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 to-transparent" />
+                </div>
+
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full relative z-10 pt-20 pb-16">
+                    {/* Back button with glass effect */}
+                    <button 
+                        onClick={() => navigate(-1)}
+                        className="group flex items-center gap-3 text-white/60 hover:text-white transition-all mb-12"
+                    >
+                        <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/20 transition-all">
+                            <ArrowLeft size={18} />
                         </div>
-                        
-                        <div className="mb-6 inline-flex self-start items-center gap-2 px-4 py-1.5 bg-sm-blue/10 rounded-full border border-sm-blue/20">
-                            <div className="w-2 h-2 rounded-full bg-sm-blue animate-pulse" />
-                            <span className="text-[10px] font-black text-sm-blue uppercase tracking-widest">
-                                {heroBlock.badge || 'Resource Hub'}
+                        <span className="text-[12px] font-black uppercase tracking-[0.3em]">Institutional Hub</span>
+                    </button>
+
+                    <div className="max-w-3xl">
+                        {/* Dynamic Badge */}
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-sm-blue rounded-full border border-white/20 mb-8 shadow-2xl animate-fade-in">
+                            <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                            <span className="text-[11px] font-black text-white uppercase tracking-[0.2em]">
+                                {heroBlock.badge || 'Resource Center'}
                             </span>
                         </div>
-                        
-                        <h1 className="text-4xl lg:text-5xl font-black text-gray-900 font-heading leading-tight mb-4 uppercase tracking-tight"
-                             dangerouslySetInnerHTML={{ __html: resource.title }} />
 
-                        <p className="text-lg lg:text-xl text-gray-500 font-medium leading-relaxed max-w-xl mb-10">
+                        {/* Master Title */}
+                        <h1 
+                            className="text-5xl lg:text-7xl font-black text-white leading-[1.1] mb-8 uppercase tracking-tight drop-shadow-2xl"
+                            dangerouslySetInnerHTML={{ __html: resource.title }} 
+                        />
+
+                        {/* Subtitle */}
+                        <p className="text-xl lg:text-2xl text-white/80 font-medium leading-relaxed mb-12 max-w-2xl border-l-4 border-sm-blue pl-6">
                             {resource.subtitle}
                         </p>
-                        <div className="flex flex-wrap gap-4">
-                            <button className="px-8 py-4 bg-sm-blue text-white font-black rounded-2xl text-[13px] uppercase tracking-[0.2em] shadow-xl hover:bg-blue-700 transition-all flex items-center gap-3 active:scale-[0.98]">
-                                {heroBlock.btn1Label || 'Download Guide'} <Download size={18} />
+
+                        {/* Actions */}
+                        <div className="flex flex-wrap gap-6">
+                            <button className="px-10 py-5 bg-white text-gray-900 font-black rounded-2xl text-[14px] uppercase tracking-[0.2em] shadow-2xl hover:bg-sm-blue hover:text-white transition-all flex items-center gap-4 active:scale-95 group">
+                                {heroBlock.btn1Label || 'Download Guide'} 
+                                <Download size={20} className="group-hover:translate-y-1 transition-transform" />
                             </button>
-                            <button className="px-8 py-4 bg-white text-gray-900 border-2 border-gray-200 font-black rounded-2xl text-[13px] uppercase tracking-[0.2em] hover:bg-gray-50 transition-all flex items-center gap-3">
-                                {heroBlock.btn2Label || 'Share'} <Share2 size={18} />
+                            <button className="px-10 py-5 bg-transparent text-white border-2 border-white/30 backdrop-blur-md font-black rounded-2xl text-[14px] uppercase tracking-[0.2em] hover:bg-white/10 transition-all flex items-center gap-4">
+                                {heroBlock.btn2Label || 'Share Post'} <Share2 size={20} />
                             </button>
                         </div>
                     </div>
 
-                    {/* Right: Large Image with Overlays */}
-                    <div className="lg:w-[45%] relative">
-                        <div className="absolute inset-0 bg-gray-100">
-                            <img 
-                                src={resource.image} 
-                                alt={resource.title} 
-                                className="w-full h-full object-cover"
-                            />
-                            {/* Gradient Overlay for integration */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent hidden lg:block" />
-                        </div>
-                        
-                        {/* Status Badge */}
-                        <div className="absolute bottom-10 right-10 bg-white/90 backdrop-blur-md p-6 rounded-3xl shadow-2xl border border-white/40 max-w-[200px] animate-float">
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2 bg-green-500 rounded-lg text-white">
-                                    <MapPin size={16} />
+                    {/* Floating Floating Logic Badge - Only shown if active */}
+                    <div className="absolute bottom-16 right-6 lg:right-12 hidden md:block">
+                        <div className="bg-white/10 backdrop-blur-xl p-8 rounded-[40px] border border-white/20 shadow-2xl max-w-[280px] hover:scale-105 transition-transform duration-500">
+                            <div className="flex items-center gap-4 mb-3">
+                                <div className="p-3 bg-sm-blue rounded-2xl text-white shadow-lg">
+                                    <MapPin size={20} />
                                 </div>
-                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                <span className="text-[11px] font-black text-white/60 uppercase tracking-widest leading-none">
                                     {heroBlock.cardLabel || 'Global Standard'}
                                 </span>
                             </div>
-                            <p className="text-gray-900 font-bold text-sm leading-tight">
+                            <p className="text-white font-bold text-lg leading-tight">
                                 {heroBlock.cardText || 'Implementing NEP 2020 Compliance'}
                             </p>
                         </div>
