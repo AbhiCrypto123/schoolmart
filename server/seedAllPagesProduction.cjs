@@ -1,7 +1,12 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
 async function seedAll() {
-  const connectionString = 'postgresql://postgres:AnkvVIDqtWkaFfhvhlwMBOmDHBRAtxxf@metro.proxy.rlwy.net:21904/railway';
+  const connectionString = process.argv[2];
+  if (!connectionString) {
+    console.error('Please provide the connection string as an argument.');
+    process.exit(1);
+  }
+
   const sequelize = new Sequelize(connectionString, {
     dialect: 'postgres',
     logging: false,
@@ -9,6 +14,11 @@ async function seedAll() {
   });
 
   const CMSPage = sequelize.define('CMSPage', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
     slug: { type: DataTypes.STRING, unique: true, allowNull: false },
     title: { type: DataTypes.STRING, allowNull: false }
   }, { tableName: 'CMSPages' });
@@ -66,4 +76,7 @@ async function seedAll() {
   }
 }
 
-seedAll();
+seedAll().catch(err => {
+  console.error('FATAL ERROR:', err);
+  process.exit(1);
+});
