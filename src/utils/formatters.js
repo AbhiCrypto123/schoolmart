@@ -11,7 +11,7 @@ export const formatImgUrl = (url) => {
 
   // Auto-fix stale localhost URLs stored in DB
   if (cleanUrl.includes('localhost:5000')) {
-    const backendBase = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/api$/, '');
+    const backendBase = (import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api')).replace(/\/api$/, '');
     cleanUrl = cleanUrl.replace('http://localhost:5000', backendBase);
   }
 
