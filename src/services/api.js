@@ -175,20 +175,20 @@ export const deletePage = async (slug) => {
 // ─── CMS Blocks ──────────────────────────────────────────────────────────────
 export const updatePage = async (slug, data) => ({ message: 'Updated' });
 
-export const updateBlock = async (blockId, data) => {
+export const updateBlock = async (id, data) => {
   const res = await fetch(`${API_URL}/cms/blocks`, {
     method: 'PUT',
     headers: getHeaders(),
-    body: JSON.stringify({ id: blockId, data })
+    body: JSON.stringify({ id, data })
   });
   return await res.json();
 };
 
-export const addBlock = async (data) => {
+export const addBlock = async (pageSlug, key, type, data = {}) => {
   const res = await fetch(`${API_URL}/cms/blocks`, {
     method: 'POST',
     headers: getHeaders(),
-    body: JSON.stringify(data)
+    body: JSON.stringify({ pageSlug, key, type, data })
   });
   return await res.json();
 };

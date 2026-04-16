@@ -19,13 +19,7 @@ exports.getAllPages = async (req, res) => {
   try {
     const pages = await CMSPage.findAll({ order: [['title', 'ASC']] });
     // Filter to canonical slugs only; de-dupe by title keeping canonical slug
-    const seen = new Set();
-    const filtered = pages.filter(p => {
-      if (!CANONICAL_SLUGS.has(p.slug)) return false;
-      if (seen.has(p.title)) return false;
-      seen.add(p.title);
-      return true;
-    });
+    const filtered = pages.filter(p => CANONICAL_SLUGS.has(p.slug));
 
     // Attach blocks to each page
     const allBlocks = await CMSBlock.findAll({ order: [['order', 'ASC']] });

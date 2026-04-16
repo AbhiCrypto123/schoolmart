@@ -26,26 +26,29 @@ const GenericInnerPage = ({ explicitSlug }) => {
   const tileInner = matchingTile?.inner || {};
 
   // Merge: dedicated page blocks take priority, tile inner is fallback
-  const heroBlock = { ...Object.keys(tileInner).length ? {
-    badge: tileInner.badge,
-    titleHtml: tileInner.heading,
-    title: tileInner.heading,
-    description: tileInner.description,
-    img: tileInner.heroImg,
-  } : {}, ...(blocks?.inner_page_hero || {}) };
+  const heroBlock = { 
+    ...Object.keys(tileInner).length ? {
+      badge: tileInner.badge,
+      titleHtml: tileInner.heading,
+      title: tileInner.heading,
+      description: tileInner.description,
+      img: tileInner.heroImg,
+    } : {}, 
+    ...(blocks?.inner_page_hero || blocks?.page_hero || {}) 
+  };
 
   const tileBodyContent = tileInner.content || '';
   const tileCtaLabel = tileInner.ctaLabel || '';
   const tileCtaPath = tileInner.ctaPath || '';
 
-  const textContent = blocks?.text_content || { title: '', body: tileBodyContent };
+  const textContent = blocks?.text_content || blocks?.page_content || { title: '', body: tileBodyContent };
   const resourceGrid = blocks?.resource_grid || null;
   const catalogGrid = blocks?.catalog_grid || null;
   const portfolioGrid = blocks?.portfolio_grid || null;
   const lookbookGrid = blocks?.lookbook_grid || null;
   const jobListings = blocks?.job_listings || null;
   const masonryGrid = blocks?.masonry_grid || null;
-  const innerPageCta = blocks?.inner_page_cta || (tileCtaLabel ? { title: tileCtaLabel, actionLink: tileCtaPath, actionText: tileCtaLabel } : null);
+  const innerPageCta = blocks?.inner_page_cta || blocks?.page_cta || (tileCtaLabel ? { title: tileCtaLabel, actionLink: tileCtaPath, actionText: tileCtaLabel } : null);
   const pageTitle = (slug || '').replace(/-/g, ' ').toUpperCase();
   const tileTitle = matchingTile?.title || pageTitle;
 

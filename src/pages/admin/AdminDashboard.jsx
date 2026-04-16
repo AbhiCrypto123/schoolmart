@@ -35,7 +35,7 @@ export default function AdminDashboard() {
         setRecentQuotes(q.slice(0, 4));
         setRecentContacts(c.slice(0, 4));
         setRecentUsers(u.users || []);
-        setPages(pgs.slice(0, 8));
+        setPages(pgs);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
