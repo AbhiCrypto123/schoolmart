@@ -212,6 +212,39 @@ const TileEditor = ({ t, i, data, set }) => {
 // ── Block-Specific Form Renderers ───────────────────────────────────────────
 const BlockForms = {
 
+  masonry_grid: ({ data = {}, set }) => {
+    const items = data.items || [];
+    return (
+      <div className="space-y-4">
+        <SectionTitle>Masonry Case Studies Grid</SectionTitle>
+        <Field label="Grid Title"><TextInput value={data.title} onChange={v => set('title', v)} placeholder="Case Studies" /></Field>
+        {items.map((item, i) => (
+          <div key={i} className="bg-gray-50 p-6 rounded-2xl space-y-4 relative border border-gray-100 shadow-sm">
+             <button onClick={() => set('items', items.filter((_, j) => j !== i))} className="absolute top-4 right-4 text-red-300 hover:text-red-500 transition-colors"><Trash2 size={16}/></button>
+             <p className="text-[10px] font-black text-sm-blue uppercase tracking-widest">Case Study #{i + 1}</p>
+             <div className="grid grid-cols-2 gap-4">
+                <Field label="Tile Title"><TextInput value={item.title} onChange={v => { const it=[...items]; it[i].title=v; set('items', it); }} /></Field>
+                <Field label="Category Label"><TextInput value={item.category} onChange={v => { const it=[...items]; it[i].category=v; set('items', it); }} /></Field>
+             </div>
+             <ImageUpload label="Grid Image" value={item.img} onChange={v => { const it=[...items]; it[i].img=v; set('items', it); }} />
+             
+             <div className="pt-4 border-t border-gray-200 space-y-4">
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Detail Page Content (for click-through)</p>
+                <Field label="Intro Description"><TextArea value={item.description} onChange={v => { const it=[...items]; it[i].description=v; set('items', it); }} rows={3} /></Field>
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="Stat 1 Label"><TextInput value={item.stat1Label} onChange={v => { const it=[...items]; it[i].stat1Label=v; set('items', it); }} /></Field>
+                  <Field label="Stat 1 Value"><TextInput value={item.stat1Value} onChange={v => { const it=[...items]; it[i].stat1Value=v; set('items', it); }} /></Field>
+                </div>
+             </div>
+          </div>
+        ))}
+        <button onClick={() => set('items', [...items, { title: '', category: '', img: '', description: '' }])} className="w-full py-6 border-2 border-dashed border-indigo-100 rounded-2xl text-indigo-400 font-black uppercase text-[11px] tracking-widest hover:bg-indigo-50 transition-all shadow-sm">
+           + Add Case Study Module
+        </button>
+      </div>
+    );
+  },
+
   topbar: ({ data = {}, set }) => (
     <div className="space-y-6">
       <SectionTitle>Top Bar Appearance</SectionTitle>

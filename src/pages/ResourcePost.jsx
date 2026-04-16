@@ -35,7 +35,14 @@ const ResourcePost = () => {
     const heroBlock = blocks?.page_hero || {};
     const contentBlock = blocks?.page_content || {};
     const specsBlock = blocks?.resource_specs || {};
-    const fallback = RESOURCE_DATA[slug] || RESOURCE_DATA['immersive-learning'];
+    const fallback = RESOURCE_DATA[slug] || {
+        title: (slug || '').replace(/-/g, ' ').toUpperCase(),
+        subtitle: `In-depth technical analysis and implementation roadmap for ${slug?.replace(/-/g, ' ')}.`,
+        image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80',
+        content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">Our experts are currently compiling the latest institutional standards and procurement guidelines for this resource module.</p>`,
+        specs: ['Compliance Check', 'Value Engineering', 'Standardization'],
+        tags: ['Institutional', 'Guide', '2025 Spec']
+    };
     const resource = {
         title: heroBlock.titleHtml || heroBlock.title || fallback.title,
         subtitle: heroBlock.subtitle || fallback.subtitle,

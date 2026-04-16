@@ -44,13 +44,17 @@ const GuidePost = () => {
 
   // Load data from the guides listing page CMS
   const { blocks, loading } = useCMSPage('guides');
-  const d = blocks?.guides_page_content || {};
-  const items = d.caseStudies || [];
+  
+  // Consolidate all possible items (legacy caseStudies AND new masonry_grid)
+  const legacyItems = blocks?.guides_page_content?.caseStudies || [];
+  const dynamicItems = blocks?.masonry_grid?.items || [];
+  const allItems = [...legacyItems, ...dynamicItems];
 
   // Find the matching item by slug
-  const matchedItem = items.find(r =>
-    r.t && r.t.toLowerCase().replace(/\s+/g, '-') === slug
-  );
+  const matchedItem = allItems.find(r => {
+    const title = r.t || r.title || '';
+    return title.toLowerCase().replace(/\s+/g, '-') === slug;
+  });
 
   const guideData = {
     title: matchedItem?.t || DEFAULT_DATA.title,

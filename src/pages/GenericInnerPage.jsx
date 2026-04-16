@@ -44,6 +44,7 @@ const GenericInnerPage = ({ explicitSlug }) => {
   const portfolioGrid = blocks?.portfolio_grid || null;
   const lookbookGrid = blocks?.lookbook_grid || null;
   const jobListings = blocks?.job_listings || null;
+  const masonryGrid = blocks?.masonry_grid || null;
   const innerPageCta = blocks?.inner_page_cta || (tileCtaLabel ? { title: tileCtaLabel, actionLink: tileCtaPath, actionText: tileCtaLabel } : null);
   const pageTitle = (slug || '').replace(/-/g, ' ').toUpperCase();
   const tileTitle = matchingTile?.title || pageTitle;
@@ -295,6 +296,40 @@ const GenericInnerPage = ({ explicitSlug }) => {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* E. MASONRY GRID (Used for Case Studies like Environments/Guides) */}
+          {masonryGrid && (
+            <div className="pt-4 border-t border-gray-100">
+               <div className="flex items-center justify-between py-4 mb-8">
+                  <h2 className="text-[14px] font-black text-gray-900 uppercase tracking-[0.2em] font-heading">{masonryGrid.title || 'Case Studies'}</h2>
+                  <div className="h-[1px] flex-grow mx-8 bg-gray-100" />
+               </div>
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {(masonryGrid.items || []).map((item, i) => (
+                      <div key={i} className="group flex flex-col">
+                        <div 
+                          className="relative overflow-hidden rounded-[30px] border border-gray-100 cursor-pointer aspect-[4/5] bg-white hover:shadow-2xl transition-all duration-500"
+                          onClick={() => window.location.href = `/${slug}/${item.title?.toLowerCase().replace(/\s+/g, '-')}`}
+                        >
+                           <img 
+                              src={item.img} 
+                              alt={item.title} 
+                              className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110" 
+                           />
+                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-8 flex flex-col justify-end">
+                              <span className="text-emerald-400 text-[10px] font-black uppercase tracking-widest mb-1">{item.category}</span>
+                              <h4 className="text-white text-lg font-black uppercase tracking-tight">{item.title}</h4>
+                           </div>
+                        </div>
+                        <div className="mt-4 px-2">
+                           <span className="text-emerald-500 text-[10px] font-black uppercase tracking-widest leading-none mb-1 block">{item.category}</span>
+                           <h3 className="text-sm font-black text-gray-900 uppercase tracking-tighter leading-tight">{item.title}</h3>
+                        </div>
+                      </div>
+                  ))}
+               </div>
             </div>
           )}
 

@@ -33,19 +33,23 @@ const EnvironmentPost = () => {
 
   // Load data from the environments listing page CMS
   const { blocks, loading } = useCMSPage('environments');
-  const d = blocks?.environments_page_content || {};
-  const items = d.masonryItems || [];
+  
+  // Consolidate all possible masonry items (legacy environments_page_content AND new masonry_grid)
+  const legacyItems = blocks?.environments_page_content?.masonryItems || [];
+  const dynamicItems = blocks?.masonry_grid?.items || [];
+  const allItems = [...legacyItems, ...dynamicItems];
 
   // Find the matching item by slug
-  const matchedItem = items.find(m =>
-    m.t && m.t.toLowerCase().replace(/\s+/g, '-') === slug
-  );
+  const matchedItem = allItems.find(m => {
+    const title = m.t || m.title || '';
+    return title.toLowerCase().replace(/\s+/g, '-') === slug;
+  });
 
   const postData = {
-    title: matchedItem?.t || DEFAULT_DATA.title,
+    title: matchedItem?.t || (slug || '').replace(/-/g, ' ').toUpperCase(),
     badge: matchedItem?.badge || DEFAULT_DATA.badge,
     mainImg: matchedItem?.img || DEFAULT_DATA.mainImg,
-    description: matchedItem?.description || DEFAULT_DATA.description,
+    description: matchedItem?.description || `Engineering the specific sensory and structural environment for ${slug?.replace(/-/g, ' ')}.`,
     specs: matchedItem?.specs?.length ? matchedItem.specs : DEFAULT_DATA.specs,
     technicalDetails: matchedItem?.technicalDetails?.length ? matchedItem.technicalDetails : DEFAULT_DATA.technicalDetails,
   };
