@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCMSBlock } from '../hooks/useCMSBlock';
 import { formatImgUrl } from '../utils/formatters';
+import { handleProductClick } from '../utils/navigation';
 
 const DEFAULTS = {
     heading: 'FEATURED PRODUCTS',
@@ -83,11 +84,9 @@ const ProductCarousel = () => {
                 <div className="embla__container flex -ml-2">
                     {items.map((item, i) => (
                         <div key={i} className="embla__slide flex-[0_0_70%] sm:flex-[0_0_35%] lg:flex-[0_0_25%] min-w-0 pl-2">
-                            <a 
-                                href={`https://schoolmart.store/search?q=${encodeURIComponent(item.title)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="block group/card relative bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1"
+                            <div 
+                                onClick={() => handleProductClick(item, (path) => window.location.href = path, true)}
+                                className="block group/card relative bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 cursor-pointer"
                             >
                                 <div className="aspect-square relative overflow-hidden bg-gray-50">
                                     <img 
@@ -112,7 +111,7 @@ const ProductCarousel = () => {
                                         ₹{item.price}
                                     </div>
                                 </div>
-                            </a>
+                            </div>
                         </div>
                     ))}
                 </div>

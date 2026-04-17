@@ -5,6 +5,7 @@ import { getProducts } from '../services/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { FlaskConical, Beaker, Atom, Microscope, Dna, Zap, ArrowRight, ArrowUpRight, Download, Eye, FileText, Activity, Layers, CheckCircle2, Stars, ChevronDown } from 'lucide-react';
 import CMSMedia from '../components/ui/CMSMedia';
+import { handleProductClick } from '../utils/navigation';
 import CatalogueCard from '../components/CatalogueCard';
 
 const LabsLibraries = () => {
@@ -103,13 +104,7 @@ const LabsLibraries = () => {
                     <CatalogueCard 
                       key={i}
                       work={work} 
-                      onClick={() => {
-                        if (work.ctaLink && (work.ctaLink.startsWith('http') || work.ctaLink.startsWith('www'))) {
-                          window.open(work.ctaLink, '_blank');
-                        } else {
-                          navigate(`/product/${work.slug}`);
-                        }
-                      }} 
+                      onClick={() => handleProductClick(work, navigate, true)} 
                     />
                   ))}
                </div>

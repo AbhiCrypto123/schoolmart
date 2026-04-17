@@ -4,6 +4,7 @@ import { useCMSPage } from '../hooks/useCMSBlock';
 import { getProducts } from '../services/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { Sofa, GraduationCap, Library, FlaskConical, Building2, ArrowRight, Download, Filter, ChevronDown, CheckCircle2, Award, FileText, Stars } from 'lucide-react';
+import { handleProductClick } from '../utils/navigation';
 import CMSMedia from '../components/ui/CMSMedia';
 import CatalogueCard from '../components/CatalogueCard';
 
@@ -118,13 +119,7 @@ const Furniture = () => {
                     <CatalogueCard 
                       key={i}
                       work={work} 
-                      onClick={() => {
-                        if (work.ctaLink && (work.ctaLink.startsWith('http') || work.ctaLink.startsWith('www'))) {
-                          window.open(work.ctaLink, '_blank');
-                        } else {
-                          navigate(`/product/${work.slug}`);
-                        }
-                      }} 
+                      onClick={() => handleProductClick(work, navigate, true)} 
                       themeColor="bg-sm-blue"
                       ringColor="ring-blue-500"
                       textColor="text-blue-400"

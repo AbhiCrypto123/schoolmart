@@ -5,6 +5,7 @@ import { getProducts } from '../services/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { Compass, Box, Layers, Calculator, Square, PieChart, ArrowRight, ArrowUpRight, Download, Eye, FileText, CheckCircle2, Stars, Hash, Circle, Triangle, Ruler, ChevronRight, ChevronDown } from 'lucide-react';
 import CMSMedia from '../components/ui/CMSMedia';
+import { handleProductClick } from '../utils/navigation';
 import CatalogueCard from '../components/CatalogueCard';
 import SidebarWidget from '../components/SidebarWidget';
 
@@ -107,13 +108,7 @@ const Mathematics = () => {
                         <CatalogueCard
                            key={i}
                            work={work}
-                           onClick={() => {
-                              if (work.ctaLink && (work.ctaLink.startsWith('http') || work.ctaLink.startsWith('www'))) {
-                                 window.open(work.ctaLink, '_blank');
-                              } else {
-                                 navigate(`/product/${work.slug}`);
-                              }
-                           }}
+                           onClick={() => handleProductClick(work, navigate, true)}
                            themeColor="bg-sm-blue"
                            ringColor="ring-blue-500"
                            textColor="text-blue-400"

@@ -135,40 +135,50 @@ const ResourceTiles = () => {
               <ProductCarousel />
             </div>            {/* Masonry Tiles Grid */}
             <div className="columns-2 lg:columns-3 gap-1.5 space-y-1.5">
-              {activeTiles.map((tile) => (
-                <Link
-                  key={tile.title}
-                  to={tile.path}
-                  className={`block break-inside-avoid bg-white rounded-2xl overflow-hidden relative group shadow-sm transition-all duration-300 mb-4 ${tile.featured ? 'border-2 border-sm-yellow shadow-sm-yellow/20 ring-4 ring-sm-yellow/5' : 'border border-gray-200'} h-full`}
-                >
-                  <div className={`${tile.height} relative overflow-hidden bg-gray-50`}>
-                    <img
-                      src={tile.img}
-                      alt={tile.title}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      onError={(e) => {
-                        e.target.src = 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80';
-                      }}
-                    />
+              {activeTiles.map((tile) => {
+                const isExternal = tile.path?.startsWith('http') || tile.path?.startsWith('www');
+                const path = tile.path?.startsWith('www') ? `https://${tile.path}` : tile.path;
+                
+                const TileWrapper = isExternal ? 'a' : Link;
+                const wrapperProps = isExternal 
+                  ? { href: path, target: "_blank", rel: "noopener noreferrer" } 
+                  : { to: path };
 
-                    {/* Explore Badge */}
-                    <div className="absolute top-3 right-3 px-4 py-1.5 bg-white shadow-xl rounded-full flex items-center gap-2 z-10 group-hover:bg-sm-blue transition-all duration-300">
-                      <span className="text-[11px] text-sm-blue font-black uppercase tracking-widest group-hover:text-white transition-colors duration-300">Explore</span>
-                      <ArrowRight size={14} className="text-sm-blue group-hover:text-white transition-colors duration-300" />
+                return (
+                  <TileWrapper
+                    key={tile.title}
+                    {...wrapperProps}
+                    className={`block break-inside-avoid bg-white rounded-2xl overflow-hidden relative group shadow-sm transition-all duration-300 mb-4 ${tile.featured ? 'border-2 border-sm-yellow shadow-sm-yellow/20 ring-4 ring-sm-yellow/5' : 'border border-gray-200'} h-full`}
+                  >
+                    <div className={`${tile.height} relative overflow-hidden bg-gray-50`}>
+                      <img
+                        src={tile.img}
+                        alt={tile.title}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        onError={(e) => {
+                          e.target.src = 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80';
+                        }}
+                      />
+
+                      {/* Explore Badge */}
+                      <div className="absolute top-3 right-3 px-4 py-1.5 bg-white shadow-xl rounded-full flex items-center gap-2 z-10 group-hover:bg-sm-blue transition-all duration-300">
+                        <span className="text-[11px] text-sm-blue font-black uppercase tracking-widest group-hover:text-white transition-colors duration-300">Explore</span>
+                        <ArrowRight size={14} className="text-sm-blue group-hover:text-white transition-colors duration-300" />
+                      </div>
+                      
+                      {/* Overlay Content */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-5">
+                        <h3 className="text-white font-black text-[18px] font-heading leading-tight uppercase tracking-wide mb-1 group-hover:text-sm-yellow transition-colors duration-300">
+                          {tile.title}
+                        </h3>
+                        <p className="text-white/90 text-[12px] font-bold leading-relaxed uppercase tracking-widest truncate">
+                          {tile.subtitle}
+                        </p>
+                      </div>
                     </div>
-                    
-                    {/* Overlay Content */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-5">
-                      <h3 className="text-white font-black text-[18px] font-heading leading-tight uppercase tracking-wide mb-1 group-hover:text-sm-yellow transition-colors duration-300">
-                        {tile.title}
-                      </h3>
-                      <p className="text-white/90 text-[12px] font-bold leading-relaxed uppercase tracking-widest truncate">
-                        {tile.subtitle}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                  </TileWrapper>
+                );
+              })}
             </div>
 
 

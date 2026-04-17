@@ -501,13 +501,13 @@ export default function ProductManager({ fixedPage, liveCategories }) {
                   value={editing.ctaLabel || ''}
                   onChange={e => setEditing({ ...editing, ctaLabel: e.target.value })}
                   className="px-3 py-2 text-xs border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="Quote Label"
+                  placeholder="Button Label (e.g. Buy Now)"
                 />
                 <input
                   value={editing.ctaLink || ''}
                   onChange={e => setEditing({ ...editing, ctaLink: e.target.value })}
                   className="px-3 py-2 text-xs border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="Quote Link"
+                  placeholder="External Link / Redirect"
                 />
                 <input
                   value={editing.chatLabel || ''}
