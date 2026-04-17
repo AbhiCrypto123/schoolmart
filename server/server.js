@@ -6,11 +6,30 @@ const { connectDB, sequelize } = require('./config/db');
 const app = express();
 
 // Middleware — explicit CORS for Vercel ↔ Railway cross-origin
+const allowedOrigins = [
+  'https://schoolmart-ashen.vercel.app',
+  'https://schoolmart.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: true,
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      // If you want to be more permissive during development, you can just return true here
+      // return callback(null, true); 
+      var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
 app.options('*', cors());   // handle all OPTIONS preflight requests
 app.use(express.json({ limit: '10mb' }));

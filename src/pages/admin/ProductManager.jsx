@@ -43,7 +43,8 @@ const downloadProductTemplate = () => {
     'stat1_label', 'stat1_value', 'stat2_label', 'stat2_value', 'stat3_label', 'stat3_value',
     'feature1_name', 'feature1_spec', 'feature2_name', 'feature2_spec', 'feature3_name', 'feature3_spec'
   ];
-  const blob = new Blob([headers.join(',')], { type: 'text/csv' });
+  const csvContent = "\ufeff" + headers.join(',') + "\n";
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.setAttribute('hidden', '');
