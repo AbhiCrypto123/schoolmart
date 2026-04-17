@@ -5,7 +5,7 @@ import { clearCMSCache } from '../../hooks/useCMSBlock';
 import { 
   ChevronDown, ChevronRight, Trash2, Plus, Eye, EyeOff, Save, GripVertical, 
   Image as ImageIcon, Link2, Type, List, ToggleLeft, Upload, Layers, Palette, Video,
-  Globe, FileText, Lock, MessageSquare, Box, Package, Search
+  Globe, FileText, Lock, MessageSquare, Box, Package, Search, Sparkles
 } from 'lucide-react';
 import ProductManager from './ProductManager';
 import ImageUpload from '../../components/admin/ImageUpload';
