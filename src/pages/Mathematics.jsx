@@ -62,15 +62,15 @@ const Mathematics = () => {
             {blocks?.action_strip && (
                <section className="mb-6">
                   <Link to={blocks.action_strip.downloadPath || '/catalogues'}
-                    style={{ backgroundColor: blocks.action_strip.bgColor || '#111827' }}
-                    className="rounded-[40px] p-8 text-white flex items-center justify-between group overflow-hidden relative border border-gray-800 shadow-2xl transition-transform hover:scale-[1.01]">
-                    <div className="flex flex-col text-left">
-                       <h3 style={{ color: blocks.action_strip.textColor || undefined }} className="text-[13px] font-black uppercase tracking-[0.2em]">{blocks.action_strip.title || 'The 2025 Lookbook.'}</h3>
-                       <span style={{ color: blocks.action_strip.textColor || undefined }} className="text-[14px] font-black uppercase tracking-widest font-heading">{blocks.action_strip.subtitle || 'MASTER CATALOGUE'}</span>
-                    </div>
-                    <span className="p-4 bg-sm-blue text-white rounded-full shadow-lg relative z-10 transition-all group-hover:bg-white group-hover:text-sm-blue">
-                       <Download size={20} />
-                    </span>
+                     style={{ backgroundColor: blocks.action_strip.bgColor || '#111827' }}
+                     className="rounded-[40px] p-8 text-white flex items-center justify-between group overflow-hidden relative border border-gray-800 shadow-2xl transition-transform hover:scale-[1.01]">
+                     <div className="flex flex-col text-left">
+                        <h3 style={{ color: blocks.action_strip.textColor || undefined }} className="text-[13px] font-black uppercase tracking-[0.2em]">{blocks.action_strip.title || 'The 2025 Lookbook.'}</h3>
+                        <span style={{ color: blocks.action_strip.textColor || undefined }} className="text-[14px] font-black uppercase tracking-widest font-heading">{blocks.action_strip.subtitle || 'MASTER CATALOGUE'}</span>
+                     </div>
+                     <span className="p-4 bg-sm-blue text-white rounded-full shadow-lg relative z-10 transition-all group-hover:bg-white group-hover:text-sm-blue">
+                        <Download size={20} />
+                     </span>
                   </Link>
                </section>
             )}
@@ -101,26 +101,26 @@ const Mathematics = () => {
                </div>
 
                {/* MAIN CONTENT GALLERY */}
-                <div className="flex-1 min-w-0">
-                   <div id="product-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start scroll-mt-48">
-                      {filteredItems.map((work, i) => (
-                         <CatalogueCard
-                            key={i}
-                            work={work}
-                            onClick={() => {
-                               if (work.ctaLink && (work.ctaLink.startsWith('http') || work.ctaLink.startsWith('www'))) {
+               <div className="flex-1 min-w-0">
+                  <div id="product-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start scroll-mt-48">
+                     {filteredItems.map((work, i) => (
+                        <CatalogueCard
+                           key={i}
+                           work={work}
+                           onClick={() => {
+                              if (work.ctaLink && (work.ctaLink.startsWith('http') || work.ctaLink.startsWith('www'))) {
                                  window.open(work.ctaLink, '_blank');
-                               } else {
+                              } else {
                                  navigate(`/product/${work.slug}`);
-                               }
-                            }}
-                            themeColor="bg-sm-blue"
-                            ringColor="ring-blue-500"
-                            textColor="text-blue-400"
-                         />
-                      ))}
-                   </div>
-                </div>
+                              }
+                           }}
+                           themeColor="bg-sm-blue"
+                           ringColor="ring-blue-500"
+                           textColor="text-blue-400"
+                        />
+                     ))}
+                  </div>
+               </div>
             </section>
 
 

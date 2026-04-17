@@ -54,77 +54,80 @@ const ResourcePost = () => {
 
     return (
         <div className="bg-white flex flex-col font-sans">
-            {/* NEW: Premium Full-Width Hero Section */}
-            <section className="relative w-full min-h-[550px] flex items-center overflow-hidden bg-gray-900">
-                {/* Background Image with optimized overlay */}
-                <div className="absolute inset-0 z-0">
-                    <img 
-                        src={resource.image} 
-                        alt={resource.title} 
-                        className="w-full h-full object-cover opacity-60 scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 to-transparent" />
-                </div>
-
-                <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full relative z-10 pt-20 pb-16">
-                    {/* Back button with glass effect */}
+            <section className="pt-8 lg:pt-16 pb-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center bg-[#F8FAFC]">
+                {/* LEFT CONTENT */}
+                <div className="lg:col-span-7 px-6 lg:pl-12 lg:pr-0 animate-in fade-in slide-in-from-left-12 duration-1000">
                     <button 
                         onClick={() => navigate(-1)}
-                        className="group flex items-center gap-3 text-white/60 hover:text-white transition-all mb-12"
+                        className="group flex items-center gap-3 text-gray-400 hover:text-sm-blue transition-all mb-10"
                     >
-                        <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/20 transition-all">
+                        <div className="w-10 h-10 rounded-full bg-white border border-gray-100 shadow-sm flex items-center justify-center group-hover:scale-110 group-hover:border-sm-blue transition-all">
                             <ArrowLeft size={18} />
                         </div>
-                        <span className="text-[12px] font-black uppercase tracking-[0.3em]">Institutional Hub</span>
+                        <span className="text-[11px] font-black uppercase tracking-[0.3em]">Institutional Hub</span>
                     </button>
 
-                    <div className="max-w-3xl">
-                        {/* Dynamic Badge */}
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-sm-blue rounded-full border border-white/20 mb-8 shadow-2xl animate-fade-in">
-                            <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                            <span className="text-[11px] font-black text-white uppercase tracking-[0.2em]">
-                                {heroBlock.badge || 'Resource Center'}
-                            </span>
+                    <div className="flex items-center gap-4 mb-10">
+                        <div className="w-12 h-12 bg-sm-blue/10 rounded-2xl flex items-center justify-center animate-pulse">
+                            <Sparkles size={20} className="text-sm-blue" />
                         </div>
-
-                        {/* Master Title */}
-                        <h1 
-                            className="text-5xl lg:text-7xl font-black text-white leading-[1.1] mb-8 uppercase tracking-tight drop-shadow-2xl"
-                            dangerouslySetInnerHTML={{ __html: resource.title }} 
-                        />
-
-                        {/* Subtitle */}
-                        <p className="text-xl lg:text-2xl text-white/80 font-medium leading-relaxed mb-12 max-w-2xl border-l-4 border-sm-blue pl-6">
-                            {resource.subtitle}
-                        </p>
-
-                        {/* Actions */}
-                        <div className="flex flex-wrap gap-6">
-                            <button className="px-10 py-5 bg-white text-gray-900 font-black rounded-2xl text-[14px] uppercase tracking-[0.2em] shadow-2xl hover:bg-sm-blue hover:text-white transition-all flex items-center gap-4 active:scale-95 group">
-                                {heroBlock.btn1Label || 'Download Guide'} 
-                                <Download size={20} className="group-hover:translate-y-1 transition-transform" />
-                            </button>
-                            <button className="px-10 py-5 bg-transparent text-white border-2 border-white/30 backdrop-blur-md font-black rounded-2xl text-[14px] uppercase tracking-[0.2em] hover:bg-white/10 transition-all flex items-center gap-4">
-                                {heroBlock.btn2Label || 'Share Post'} <Share2 size={20} />
-                            </button>
-                        </div>
+                        <span className="text-[12px] font-black uppercase tracking-[0.4em] text-gray-400">
+                            {heroBlock.badge || "Resource Center"}
+                        </span>
                     </div>
 
-                    {/* Floating Floating Logic Badge - Only shown if active */}
-                    <div className="absolute bottom-16 right-6 lg:right-12 hidden md:block">
-                        <div className="bg-white/10 backdrop-blur-xl p-8 rounded-[40px] border border-white/20 shadow-2xl max-w-[280px] hover:scale-105 transition-transform duration-500">
-                            <div className="flex items-center gap-4 mb-3">
-                                <div className="p-3 bg-sm-blue rounded-2xl text-white shadow-lg">
-                                    <MapPin size={20} />
-                                </div>
-                                <span className="text-[11px] font-black text-white/60 uppercase tracking-widest leading-none">
-                                    {heroBlock.cardLabel || 'Global Standard'}
-                                </span>
+                    <h1 
+                        className="text-6xl lg:text-[100px] font-black text-gray-900 leading-[0.85] mb-12 uppercase tracking-tighter drop-shadow-sm font-heading"
+                        dangerouslySetInnerHTML={{ __html: resource.title }} 
+                    />
+
+                    <p className="text-xl lg:text-2xl text-gray-500 font-medium leading-relaxed mb-12 max-w-2xl border-l-4 border-sm-blue pl-6">
+                        {resource.subtitle}
+                    </p>
+
+                    <div className="flex flex-wrap gap-6 pt-6 border-t border-gray-100">
+                        <button className="px-12 py-5 bg-gray-900 text-white font-black rounded-3xl text-[13px] uppercase tracking-[0.2em] shadow-2xl hover:bg-sm-blue transition-all flex items-center gap-4 active:scale-95 group">
+                            {heroBlock.btn1Label || 'Download Guide'} 
+                            <Download size={20} className="group-hover:translate-y-1 transition-transform" />
+                        </button>
+                        <button className="px-12 py-5 bg-white text-gray-900 border border-gray-100 font-black rounded-3xl text-[13px] uppercase tracking-[0.2em] hover:bg-gray-50 transition-all flex items-center gap-4 shadow-sm">
+                            {heroBlock.btn2Label || 'Share Post'} <Share2 size={20} />
+                        </button>
+                    </div>
+                </div>
+
+                {/* RIGHT COMPOSITION */}
+                <div className="lg:col-span-5 relative h-[500px] lg:h-[750px] animate-in fade-in zoom-in-95 duration-1000 delay-300 fill-mode-forwards opacity-0 pr-6 lg:pr-12">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[80%] bg-sm-blue/5 rounded-full blur-[120px] -z-10" />
+                    
+                    <div className="relative w-full h-full flex items-center justify-center">
+                        {/* Back Image (Offset) */}
+                        <div className="absolute top-10 right-0 w-3/4 h-2/3 rounded-[60px] overflow-hidden shadow-xl rotate-[6deg] opacity-40 blur-[2px] transition-all duration-700">
+                            <img src={resource.image} className="w-full h-full object-cover" alt="Context" />
+                        </div>
+                        
+                        {/* Front Central Image */}
+                        <div className="relative w-[90%] h-3/4 rounded-[60px] overflow-hidden shadow-2xl border-[20px] border-white z-10 transition-transform hover:scale-[1.02] duration-700">
+                            <img 
+                                src={resource.image} 
+                                alt={resource.title} 
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+
+                        {/* Floater Element */}
+                        <div className="absolute -left-4 bottom-20 bg-white p-8 rounded-[40px] shadow-2xl z-20 animate-bounce-slow flex items-center gap-5 border border-gray-50 max-w-[260px]">
+                            <div className="w-14 h-14 bg-sm-blue/10 rounded-2xl flex items-center justify-center text-sm-blue shadow-inner">
+                                <MapPin size={24} />
                             </div>
-                            <p className="text-white font-bold text-lg leading-tight">
-                                {heroBlock.cardText || 'Implementing NEP 2020 Compliance'}
-                            </p>
+                            <div>
+                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                                    {heroBlock.cardLabel || 'Global Standard'}
+                                </p>
+                                <p className="text-[15px] font-black text-gray-900 uppercase leading-tight">
+                                    {heroBlock.cardText || 'NEP 2025 Compliance'}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
