@@ -364,6 +364,19 @@ export default function ProductManager({ fixedPage, liveCategories }) {
             <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Card Name *</label>
             <input required value={editing.name || ''} onChange={e => setEditing({ ...editing, name: e.target.value })} className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g. STEM Hub Setup" />
           </div>
+
+          <div className="col-span-2 space-y-1">
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Routing Page (External Link) *</label>
+            <input 
+              required
+              value={editing.ctaLink || ''} 
+              onChange={e => setEditing({ ...editing, ctaLink: e.target.value })} 
+              className="w-full px-4 py-2.5 bg-gray-50 border border-blue-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-blue-600" 
+              placeholder="e.g. https://schoolmart.store/your-product.html" 
+            />
+            <p className="text-[9px] text-gray-400">Users will be redirected to this link when they click the card.</p>
+          </div>
+
           {!fixedPage && (
             <div className="space-y-1">
               <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Assigned Page *</label>
@@ -387,18 +400,36 @@ export default function ProductManager({ fixedPage, liveCategories }) {
               </select>
               <ChevronDown className="absolute right-4 top-3 text-gray-400 pointer-events-none" size={16} />
             </div>
-            {fixedPage && (
-              <p className="text-[9px] text-gray-400 mt-1">
-                * If you need a new subcategory tab, add it to the <b>"Category Sidebar Tabs"</b> block above first.
-              </p>
-            )}
           </div>
         </div>
 
+        <ImageUpload
+          label="Card Image *"
+          value={editing.image || editing.images?.[0] || ''}
+          onChange={url => setEditing({ ...editing, image: url, images: [url] })}
+        />
+
         <div className="space-y-1">
-          <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Description (Execution Strategy text)</label>
-          <textarea value={editing.description || ''} onChange={e => setEditing({ ...editing, description: e.target.value })} rows={3} className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y" placeholder="Short description..." />
+          <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Button Label (Optional)</label>
+          <input
+            value={editing.ctaLabel || ''}
+            onChange={e => setEditing({ ...editing, ctaLabel: e.target.value })}
+            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="e.g. View on Store (Default: REQUEST QUOTE)"
+          />
         </div>
+
+        {/* Collapsible Advanced Info */}
+        <details className="group border border-gray-100 rounded-2xl bg-gray-50/30">
+          <summary className="px-5 py-3 text-xs font-black uppercase tracking-widest text-gray-400 cursor-pointer list-none flex items-center justify-between hover:bg-gray-50 transition-colors">
+            <span>Advanced (Internal Page Data)</span>
+            <ChevronDown size={14} className="group-open:rotate-180 transition-transform" />
+          </summary>
+          <div className="p-5 space-y-5">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Description (Execution Strategy text)</label>
+              <textarea value={editing.description || ''} onChange={e => setEditing({ ...editing, description: e.target.value })} rows={3} className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y" placeholder="Short description..." />
+            </div>
 
         {/* STATS */}
         <div className="space-y-2 pt-2">
@@ -470,45 +501,9 @@ export default function ProductManager({ fixedPage, liveCategories }) {
           </div>
         </div>
 
-        {/* ADVANCED LABELS */}
-        <div className="space-y-4 py-4 border-y border-gray-100">
-          <div className="flex items-center gap-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Advanced Labels & Actions</label>
-            <div className="h-px flex-1 bg-gray-100"></div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <p className="text-[10px] text-gray-400 font-bold uppercase">Section Headings</p>
-              <input
-                value={editing.featuresTitle || ''}
-                onChange={e => setEditing({ ...editing, featuresTitle: e.target.value })}
-                className="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500"
-                placeholder="Features Title (Default: KEY FEATURES...)"
-              />
-              <input
-                value={editing.executionTitle || ''}
-                onChange={e => setEditing({ ...editing, executionTitle: e.target.value })}
-                className="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500"
-                placeholder="Execution Title (Default: EXECUTION STRATEGY)"
-              />
-            </div>
-
             <div className="space-y-2">
               <p className="text-[10px] text-gray-400 font-bold uppercase">Button Commands</p>
               <div className="grid grid-cols-2 gap-2">
-                <input
-                  value={editing.ctaLabel || ''}
-                  onChange={e => setEditing({ ...editing, ctaLabel: e.target.value })}
-                  className="px-3 py-2 text-xs border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="Button Label (e.g. Buy Now)"
-                />
-                <input
-                  value={editing.ctaLink || ''}
-                  onChange={e => setEditing({ ...editing, ctaLink: e.target.value })}
-                  className="px-3 py-2 text-xs border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="External Link / Redirect"
-                />
                 <input
                   value={editing.chatLabel || ''}
                   onChange={e => setEditing({ ...editing, chatLabel: e.target.value })}
@@ -524,8 +519,8 @@ export default function ProductManager({ fixedPage, liveCategories }) {
               </div>
             </div>
           </div>
-          <p className="text-[9px] text-gray-400 italic">* Leave these empty to use Global Defaults from Settings</p>
-        </div>
+          <p className="text-[9px] text-gray-400 italic">* Use these only if you want to populate the redundant product page.</p>
+        </details>
 
         <ImageUpload
           label="Card Image"
