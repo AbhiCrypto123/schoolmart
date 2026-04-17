@@ -54,7 +54,7 @@ const ResourcePost = () => {
 
     return (
         <div className="bg-white flex flex-col font-sans">
-            <section className="pt-4 lg:pt-8 pb-12 bg-[#F9FAFB]">
+            <section className="pt-0 pb-12 bg-[#F9FAFB]">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12">
                    {/* Back Navigation */}
                    <button 

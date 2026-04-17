@@ -153,54 +153,54 @@ const TileEditor = ({ t, i, data, set }) => {
               <>
                 <div className="grid grid-cols-2 gap-4">
                   <Field label="Tile Title"><TextInput value={t.title} onChange={v => update('title', v)} /></Field>
-                  <Field label="Routing Page Link" hint="Where this tile navigates to"><TextInput value={t.path} onChange={v => update('path', v)} placeholder="/p/immersive-learning" /></Field>
+                  <Field label="Routing Slug" hint="Internal path for this card"><TextInput value={t.path} onChange={v => update('path', v)} placeholder="/p/interactive-panels" /></Field>
                 </div>
-                <Field label="Subtitle"><TextInput value={t.subtitle} onChange={v => update('subtitle', v)} /></Field>
-                <ImageUpload label="Cover Image" value={t.img} onChange={v => update('img', v)} />
                 <div className="grid grid-cols-2 gap-4">
-                  <Field label="Tile Height" hint="CSS class: h-48, h-52, h-56, h-64, h-72"><TextInput value={t.height} onChange={v => update('height', v)} placeholder="h-64" /></Field>
-                  <div className="flex items-center gap-2 pt-6">
-                    <input type="checkbox" checked={!!t.featured} onChange={e => update('featured', e.target.checked)} className="w-4 h-4 rounded" />
-                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Featured Tile</span>
-                  </div>
+                    <Field label="Tile Height / Span" hint="e.g. h-64, h-[500px], row-span-2">
+                        <TextInput value={t.span || t.height} onChange={v => update('span', v)} placeholder="h-64" />
+                    </Field>
+                    <div className="pt-6 flex items-center gap-3">
+                        <input type="checkbox" checked={!!t.isFeatured} onChange={e => update('isFeatured', e.target.checked)} className="w-5 h-5 rounded-lg border-gray-200 text-indigo-600 focus:ring-indigo-500" />
+                        <span className="text-[11px] font-black text-gray-500 uppercase tracking-widest">Featured Card Style</span>
+                    </div>
                 </div>
+                <Field label="Subtitle / Short Blurb"><TextInput value={t.subtitle} onChange={v => update('subtitle', v)} /></Field>
+                <ImageUpload label="Grid Card Image" value={t.img} onChange={v => update('img', v)} />
               </>
             )}
-
             {tab === 'inner' && (
-              <>
-                {/* Import from page button */}
-                <div className="flex items-center justify-between bg-blue-50/60 border border-blue-100 rounded-2xl px-5 py-3">
-                  <div>
-                    <p className="text-[11px] font-black text-blue-700 uppercase tracking-widest">
-                      {fetching ? '⏳ Loading from page...' : fetched || hasInnerContent ? '✅ Page data loaded' : `Page: /${pageSlug}`}
+              <div className="space-y-6">
+                <div className="bg-blue-50/50 p-6 rounded-[2rem] border border-blue-100/50 space-y-4">
+                    <p className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-2 flex items-center gap-2">
+                        <Sparkles size={14} /> Inner Page Hero Logic
                     </p>
-                    <p className="text-[10px] text-blue-500 mt-0.5">Fields auto-populated from existing page CMS blocks</p>
-                  </div>
-                  <button
-                    onClick={importFromPage}
-                    disabled={fetching}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest disabled:opacity-50 hover:bg-blue-700 transition-all"
-                  >
-                    {fetching ? '...' : '↻ Re-import'}
-                  </button>
+                    <div className="grid grid-cols-2 gap-4">
+                        <Field label="Inner Badge"><TextInput value={inner.badge} onChange={v => updateInner('badge', v)} placeholder="Institutional Insight" /></Field>
+                        <Field label="Hero Headline (HTML)"><TextInput value={inner.heading} onChange={v => updateInner('heading', v)} /></Field>
+                    </div>
+                    <Field label="Hero Subtitle"><TextArea value={inner.description} onChange={v => updateInner('description', v)} rows={2} /></Field>
+                    <ImageUpload label="Hero Floating Image" value={inner.heroImg} onChange={v => updateInner('heroImg', v)} />
+                    <div className="grid grid-cols-2 gap-4">
+                        <Field label="Btn 1 Label"><TextInput value={inner.btn1Label} onChange={v => updateInner('btn1Label', v)} /></Field>
+                        <Field label="Btn 2 Label"><TextInput value={inner.btn2Label} onChange={v => updateInner('btn2Label', v)} /></Field>
+                    </div>
                 </div>
 
-                <SectionTitle>Hero Area</SectionTitle>
-                <Field label="Hero Badge" hint="Small label shown above the title"><TextInput value={inner.badge} onChange={v => updateInner('badge', v)} placeholder="Resource Hub" /></Field>
-                <Field label="Page Heading (HTML allowed)" hint="Main heading of the inner page. Use &lt;br/&gt; for line breaks."><TextArea value={inner.heading} onChange={v => updateInner('heading', v)} rows={3} placeholder="Immersive Learning for the Future." /></Field>
-                <Field label="Description / Subtitle"><TextArea value={inner.description} onChange={v => updateInner('description', v)} rows={3} placeholder="Accelerating modern education strategies..." /></Field>
-                <ImageUpload label="Hero Background Image" value={inner.heroImg} onChange={v => updateInner('heroImg', v)} />
-
-                <SectionTitle>Page Content</SectionTitle>
-                <Field label="Body Content (HTML/Markdown supported)" hint="Main content for the inner page body."><TextArea value={inner.content} onChange={v => updateInner('content', v)} rows={8} placeholder="Enter page content..." /></Field>
-
-                <SectionTitle>Call to Action Button</SectionTitle>
-                <div className="grid grid-cols-2 gap-4">
-                  <Field label="CTA Button Label"><TextInput value={inner.ctaLabel} onChange={v => updateInner('ctaLabel', v)} placeholder="Schedule Consultation" /></Field>
-                  <Field label="CTA Button Path"><TextInput value={inner.ctaPath} onChange={v => updateInner('ctaPath', v)} placeholder="/contact-us" /></Field>
+                <div className="bg-gray-50 p-6 rounded-[2rem] border border-gray-100 space-y-4">
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2 flex items-center gap-2">
+                        <List size={14} /> Specs & Taxonomy
+                    </p>
+                    <Field label="Technical Specs (Comma separated)" hint="e.g. 4K UHD, Multi-Touch, Android"><TextInput value={(inner.specs || []).join(', ')} onChange={v => updateInner('specs', v.split(',').map(s => s.trim()).filter(Boolean))} /></Field>
+                    <Field label="Categories (Comma separated)" hint="e.g. Technology, Education"><TextInput value={(inner.tags || []).join(', ')} onChange={v => updateInner('tags', v.split(',').map(s => s.trim()).filter(Boolean))} /></Field>
                 </div>
-              </>
+
+                <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm space-y-4">
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2 flex items-center gap-2">
+                        <FileText size={14} /> Main Article Content
+                    </p>
+                    <TextArea value={inner.content} onChange={v => updateInner('content', v)} rows={12} placeholder="Write the main page content here (HTML supported)..." />
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -692,8 +692,33 @@ const BlockForms = {
           <TileEditor key={i} t={t} i={i} data={data} set={set} />
         ))}
       </div>
-      <button onClick={() => set('tiles', [...(data.tiles || []), { title: '', subtitle: '', path: '/', img: '', height: 'h-64', inner: { badge: '', heading: '', description: '', content: '', ctaLabel: '', ctaPath: '' } }])}
-        className="w-full py-6 rounded-3xl border-2 border-dashed border-indigo-100 text-indigo-400 font-black uppercase text-[10px] tracking-widest hover:border-indigo-300 hover:bg-indigo-50 transition-all">+ Add Tile</button>
+      <button onClick={async () => {
+          const name = prompt('Tile / Inner Page Title:');
+          if (!name) return;
+          const safeSlug = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+          const finalPath = `/p/${safeSlug}`;
+          const finalCmsSlug = `resource-${safeSlug}`;
+          
+          try {
+            // Auto-create the inner page in backend
+            await createPage(finalCmsSlug, name);
+            
+            // Add the tile to home page list
+            set('tiles', [...(data.tiles || []), { 
+              title: name, 
+              subtitle: 'Institutional Insight ' + new Date().getFullYear(), 
+              path: finalPath, 
+              img: '', 
+              span: 'h-64', 
+              inner: { badge: 'Institutional Insight', heading: name, description: '', content: '', specs: [], tags: [] } 
+            }]);
+            
+            alert(`Tile added and page "${finalCmsSlug}" created!`);
+          } catch (err) {
+            alert('Failed to initialize tile page: ' + err.message);
+          }
+        }}
+        className="w-full py-6 rounded-3xl border-2 border-dashed border-indigo-100 text-indigo-400 font-black uppercase text-[10px] tracking-widest hover:border-indigo-300 hover:bg-indigo-50 transition-all">+ Add New Tile & Auto-Create Page</button>
     </div>
   ),
 
