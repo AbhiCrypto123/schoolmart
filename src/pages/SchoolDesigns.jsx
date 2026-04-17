@@ -37,44 +37,41 @@ const SchoolDesigns = () => {
   return (
     <main className="min-h-screen bg-gray-50 pt-6 pb-4">
       <div className="max-w-7xl mx-auto px-4">
-        {/* MODERN BESPOKE HERO - COMPACT PACKED */}
-        <section className="pt-4 pb-6 flex flex-col lg:flex-row gap-4 items-stretch">
-           {/* TEXT BLOCK - LEFT */}
-           <div className="flex-1 bg-white rounded-[40px] p-8 lg:p-14 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group">
+        <section className="relative h-[550px] lg:h-[650px] w-full rounded-[60px] overflow-hidden mb-12 group">
+           {/* Background Image / Video */}
+           <div className="absolute inset-0 z-0">
               <CMSMedia 
                 mediaType={heroBlock.mediaType} 
                 mediaUrl={heroBlock.mediaUrl} 
-                fallbackImg={heroBlock.img} 
-                className="absolute inset-0 w-full h-full object-cover opacity-5 group-hover:opacity-10 transition-all duration-1000"
+                fallbackImg={heroBlock.img || "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80"}
+                className="w-full h-full object-cover transition-transform duration-[3s] group-hover:scale-110"
               />
-              <div className="absolute top-0 right-0 w-32 h-32 bg-sm-blue/5 rounded-full blur-3xl -mr-16 -mt-16" />
-              <div className="px-3 py-1 bg-gray-900 text-white font-black rounded-full text-[8px] uppercase tracking-[0.2em] mb-6 w-fit scale-90 relative z-10">
-                 <Stars size={12} className="inline mr-2" /> {heroBlock.badge || "Design Studio 2024"}
-              </div>
-              <h1 style={{ color: heroBlock.textColor || undefined }} className="text-4xl md:text-6xl font-black font-heading leading-[0.9] mb-6 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Imagine <br/> <span class=\"text-sm-blue italic font-serif lowercase tracking-normal\">the</span> <br/> Infinite." }} />
-              <p className="text-gray-400 text-[12px] md:text-[13px] font-bold uppercase tracking-widest max-w-xs leading-loose relative z-10">
-                 {heroBlock.subtitle || "We create non-linear, adaptive spaces where students explore, discover, and flourish."}
-              </p>
+              <div className="absolute inset-0 bg-gradient-to-tr from-black/95 via-black/30 to-transparent z-10" />
            </div>
 
-           {/* FEATURE BLOCKS - RIGHT */}
-           <div className="lg:w-[450px] grid grid-cols-2 lg:grid-cols-1 gap-4">
-              {(blocks?.feature_blocks?.blocks || [
-                { title: 'Curated \n Kindergarten \n Design.', bgColor: '#0057A8', textColor: '#FFFFFF' },
-                { title: 'Execution \n Portfolio \n Excellence.', subtitle: '2020-2025', bgColor: '#FACC15', textColor: '#111827' }
-              ]).map((fb, i) => (
-                <div key={i} style={{ backgroundColor: fb.bgColor || '#0057A8', color: fb.textColor || '#fff' }} className="rounded-[40px] p-8 flex flex-col justify-between group overflow-hidden relative shadow-lg">
-                   <h3 className="text-[12px] font-black uppercase tracking-[0.2em] relative z-10 leading-relaxed" dangerouslySetInnerHTML={{ __html: (fb.title || '').replace(/\n/g, '<br/>') }} />
-                   {fb.subtitle ? (
-                     <div className="flex items-center justify-between mt-4">
-                       <span className="text-[7px] font-black uppercase tracking-widest opacity-40">{fb.subtitle}</span>
-                       <ArrowRight className="opacity-30 group-hover:opacity-100 transition-colors relative z-10" size={24} />
-                     </div>
-                   ) : (
-                     <ArrowUpRight className="self-end opacity-50 group-hover:opacity-100 transition-colors relative z-10" size={24} />
-                   )}
-                </div>
-              ))}
+           {/* Content Overlay */}
+           <div className="absolute inset-0 z-20 flex flex-col justify-end p-8 lg:p-24">
+              <div className="max-w-4xl">
+                 <div className="flex items-center gap-4 mb-8 translate-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-forwards">
+                    <span className="h-[2px] w-12 bg-sm-blue rounded-full" />
+                    <div className="px-6 py-2 bg-white/10 backdrop-blur-md border border-white/20 text-white font-black rounded-full text-[12px] uppercase tracking-[0.3em]">
+                       {heroBlock.badge || "Studio 2025"}
+                    </div>
+                 </div>
+
+                 <h1 className="text-5xl lg:text-[110px] font-black font-heading leading-[0.85] mb-8 tracking-tighter text-white uppercase drop-shadow-2xl translate-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200 fill-mode-forwards" 
+                    dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Imagine <br/> <span class=\"text-sm-blue italic font-serif lowercase tracking-normal\">the</span> <br/> Infinite." }} />
+                 
+                 <div className="flex flex-col lg:flex-row items-start lg:items-center gap-10 translate-y-8 animate-in fade-in slide-in-from-bottom-12 duration-700 delay-500 fill-mode-forwards">
+                    <p className="text-white/70 text-[14px] lg:text-[16px] font-medium uppercase tracking-widest max-w-md leading-relaxed border-l-2 border-sm-blue pl-6">
+                       {heroBlock.subtitle || "We create non-linear, adaptive spaces where students explore and flourish."}
+                    </p>
+                    
+                    <button className="px-10 py-5 bg-white text-black font-black uppercase text-[12px] tracking-widest rounded-full hover:bg-sm-blue hover:text-white transition-all shadow-2xl flex items-center gap-3 active:scale-95 group/btn">
+                       View Portfolio <ArrowRight size={16} className="transition-transform group-hover/btn:translate-x-2" />
+                    </button>
+                 </div>
+              </div>
            </div>
         </section>
 
