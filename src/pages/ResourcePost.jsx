@@ -54,12 +54,12 @@ const ResourcePost = () => {
 
     return (
         <div className="bg-white flex flex-col font-sans">
-            <section className="pt-10 lg:pt-20 pb-16 bg-[#F9FAFB]">
+            <section className="pt-4 lg:pt-8 pb-12 bg-[#F9FAFB]">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12">
                    {/* Back Navigation */}
                    <button 
                        onClick={() => navigate(-1)}
-                       className="group flex items-center gap-3 text-gray-400 hover:text-sm-blue transition-all mb-12 animate-in fade-in slide-in-from-left-4 duration-700"
+                       className="group flex items-center gap-3 text-gray-400 hover:text-sm-blue transition-all mb-6 animate-in fade-in slide-in-from-left-4 duration-700"
                    >
                        <div className="w-10 h-10 rounded-full bg-white border border-gray-100 shadow-sm flex items-center justify-center group-hover:scale-110 group-hover:border-sm-blue transition-all">
                            <ArrowLeft size={18} />
