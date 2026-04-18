@@ -8,6 +8,7 @@ import CMSMedia from '../components/ui/CMSMedia';
 import { handleProductClick } from '../utils/navigation';
 import CatalogueCard from '../components/CatalogueCard';
 import SidebarWidget from '../components/SidebarWidget';
+import PageLoader from '../components/PageLoader';
 
 const Architecture = () => {
   const navigate = useNavigate();
@@ -39,6 +40,8 @@ const Architecture = () => {
 
 
 
+
+  if (loading) return <PageLoader />;
 
   return (
     <main className="min-h-screen bg-gray-50 pt-6 pb-4">

@@ -1,10 +1,15 @@
-// src/pages/Home.jsx
 import BannerSection from '../components/BannerSection';
 import ResourceTiles from '../components/ResourceTiles';
 import CTASection from '../components/CTASection';
 import ClientLogos from '../components/ClientLogos';
+import { useCMSPage } from '../hooks/useCMSBlock';
+import PageLoader from '../components/PageLoader';
 
 const Home = () => {
+  const { loading } = useCMSPage('home');
+
+  if (loading) return <PageLoader />;
+
   return (
     <main className="min-h-screen space-y-0 pb-4">
       {/* Promotional Banner */}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useCMSPage } from '../hooks/useCMSBlock';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, Facebook, Linkedin, Star, MapPin, ChevronRight, Info, Award, Download, FileText, Send, Share2, Bookmark, CheckCircle2, History, Users, Scale, MessageSquare, Globe, ArrowRight, Zap, Target, Search, ChevronDown, Rocket, Building2, TrendingUp, Handshake } from 'lucide-react';
+import PageLoader from '../components/PageLoader';
 
 const PropertyListingCard = ({ item }) => {
   // Description split into bullet points (by newline or period)
@@ -93,17 +94,20 @@ const PropertyListingCard = ({ item }) => {
 
 
 const SchoolSale = () => {
-  const { blocks, loading } = useCMSPage('school-sale');
+  const { blocks, loading } = useCMSPage('school_sale');
   const [selectedCity, setSelectedCity] = useState('All Cities');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const listings = blocks?.school_sale_listings?.items || [
+  // Shield against static flicker: Only use fallbacks if loading is finished AND no data was found
+  const listings = (loading) ? [] : (blocks?.school_sale_listings?.items || [
     { title: 'Super Star School at West Hyd', location: 'HYDERABAD', price: '12cr', type: 'SALE' },
     { title: 'Academic Excellence Hub', location: 'CHENNAI', price: '25cr', type: 'LEASE' },
     { title: 'Premier Global Academy', location: 'BANGALORE', price: '18cr', type: 'SALE' },
-  ];
+  ]);
   const heroBlock = blocks?.hero || blocks?.inner_page_hero || {};
   const advisoryBlock = blocks?.advisory || {};
+  
+  if (loading) return <PageLoader />;
   
   // Dynamic Cities from listings + defaults
   const categoryBlock = blocks?.sidebar_categories || {};

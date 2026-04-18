@@ -7,6 +7,7 @@ import { Zap, Activity, Trophy, Shield, Target, ArrowRight, ArrowUpRight, Award,
 import CMSMedia from '../components/ui/CMSMedia';
 import { handleProductClick } from '../utils/navigation';
 import CatalogueCard from '../components/CatalogueCard';
+import PageLoader from '../components/PageLoader';
 
 const Sports = () => {
   const navigate = useNavigate();
@@ -35,6 +36,8 @@ const Sports = () => {
 
 
 
+
+  if (loading) return <PageLoader />;
 
   return (
     <main className="min-h-screen bg-gray-50 pt-6 pb-4">
