@@ -107,7 +107,8 @@ const Registration = () => {
       if (res.success === false || res.message) {
         // If it's not a success and we have a message, it's an error
         if (res.success !== true) {
-           throw new Error(res.message || res.error || 'Registration failed');
+           const internalErr = res.error ? ` (${res.error})` : '';
+           throw new Error(`${res.message}${internalErr}`);
         }
       }
       
