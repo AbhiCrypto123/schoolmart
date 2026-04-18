@@ -103,7 +103,14 @@ const Registration = () => {
         ...submissionData,
         name: submissionData.schoolName || 'Institution User'
       });
-      if (res.error) throw new Error(res.error);
+      
+      if (res.success === false || res.message) {
+        // If it's not a success and we have a message, it's an error
+        if (res.success !== true) {
+           throw new Error(res.message || res.error || 'Registration failed');
+        }
+      }
+      
       setShowOtp(true);
     } catch (err) {
       setError(err.message);
