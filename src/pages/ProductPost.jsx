@@ -6,8 +6,6 @@ import {
     ShieldCheck, Truck, RotateCcw, Award, CheckCircle2,
     Info, Star, Package, MapPin
 } from 'lucide-react';
-    Info, Star, Package, MapPin
-} from 'lucide-react';
 
 const ProductPost = () => {
     const { slug } = useParams();
