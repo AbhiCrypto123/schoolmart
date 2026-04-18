@@ -5,6 +5,24 @@ const { connectDB, sequelize } = require('./config/db');
 
 const app = express();
 
+// DEBUG STORAGE - Move to top for absolute priority
+app.get('/debug-storage', (req, res) => {
+  const path = require('path');
+  const fs = require('fs');
+  const uploadDir = process.env.UPLOAD_DIR || path.join(__dirname, 'uploads');
+  try {
+    const files = fs.readdirSync(uploadDir);
+    res.json({ 
+      uploadDir, 
+      exists: fs.existsSync(uploadDir),
+      files,
+      count: files.length 
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message, uploadDir });
+  }
+});
+
 // Middleware — explicit CORS for Vercel ↔ Railway cross-origin
 const allowedOrigins = [
   'https://schoolmart-ashen.vercel.app',
@@ -53,20 +71,6 @@ if (!fs.existsSync(uploadDir)) {
 console.log('Serving uploads from:', uploadDir);
 app.use('/uploads', express.static(uploadDir));
 
-// Debug route to see what's in the uploads folder
-app.get('/api/cms/debug-uploads', (req, res) => {
-  try {
-    const files = fs.readdirSync(uploadDir);
-    res.json({ 
-      uploadDir, 
-      exists: fs.existsSync(uploadDir),
-      files,
-      count: files.length 
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message, uploadDir });
-  }
-});
 // Basic Route
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to SchoolMart API' });
