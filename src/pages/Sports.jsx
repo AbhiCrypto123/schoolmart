@@ -7,7 +7,6 @@ import { Zap, Activity, Trophy, Shield, Target, ArrowRight, ArrowUpRight, Award,
 import CMSMedia from '../components/ui/CMSMedia';
 import { handleProductClick } from '../utils/navigation';
 import CatalogueCard from '../components/CatalogueCard';
-import CatalogueCard from '../components/CatalogueCard';
 
 const Sports = () => {
   const navigate = useNavigate();
