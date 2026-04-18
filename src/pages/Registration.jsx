@@ -236,66 +236,62 @@ const Registration = () => {
                     </h3>
                     
                     <div className="space-y-2.5 pt-1">
-                      {/* Standard Identity Fields */}
-                      <div className="space-y-1">
-                         <label className="text-[11px] lg:text-sm font-bold text-gray-900 uppercase ml-6 tracking-wider opacity-60">School Name</label>
-                         <input type="text" placeholder="school Name" required value={formData.schoolName} onChange={e => setFormData({...formData, schoolName: e.target.value})} className="w-full bg-white px-6 py-3.5 rounded-3xl border-2 border-gray-100 focus:border-sm-blue outline-none transition-all placeholder:text-gray-200 font-medium text-sm shadow-sm" />
-                      </div>
-
-                      <div className="space-y-1">
-                         <label className="text-[11px] lg:text-sm font-bold text-gray-900 uppercase ml-6 tracking-wider opacity-60">Email id*</label>
-                         <input type="email" placeholder="Email ID*" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full bg-white px-6 py-3.5 rounded-3xl border-2 border-gray-100 focus:border-sm-blue outline-none transition-all placeholder:text-gray-200 font-medium text-sm shadow-sm" />
-                      </div>
-
-                      <div className="space-y-1">
-                         <label className="text-[11px] lg:text-sm font-bold text-gray-900 uppercase ml-6 tracking-wider opacity-60">Create Password*</label>
-                         <input type="password" placeholder="Create Password*" required value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} className="w-full bg-white px-6 py-3.5 rounded-3xl border-2 border-gray-100 focus:border-sm-blue outline-none transition-all placeholder:text-gray-200 font-medium text-sm shadow-sm" />
-                      </div>
-
                       {/* Dynamic CMS Fields */}
-                      {(fieldData.fields || []).map((field, i) => (
-                        <div key={i} className="space-y-1">
-                           <label className="text-[11px] lg:text-sm font-bold text-gray-900 uppercase ml-6 tracking-wider opacity-60">
-                             {field.label} {field.required && <span className="text-red-500">*</span>}
-                           </label>
-                           {field.type === 'textarea' ? (
-                             <textarea 
-                               placeholder={field.placeholder} 
-                               required={field.required}
-                               value={formData[field.label] || ''} 
-                               onChange={e => setFormData({...formData, [field.label]: e.target.value})} 
-                               className="w-full bg-white px-6 py-3.5 rounded-3xl border-2 border-gray-100 focus:border-sm-blue outline-none transition-all placeholder:text-gray-200 font-medium text-sm resize-none shadow-sm"
-                               rows={3}
-                             />
-                           ) : field.type === 'select' ? (
-                             <div className="relative">
-                               <select 
+                      {(fieldData.fields || []).map((field, i) => {
+                         const fieldKey = field.label;
+                         // Smart mapping to sync with auth keys
+                         const handleChange = (val) => {
+                            const updates = { [fieldKey]: val };
+                            const lowerLabel = fieldKey.toLowerCase();
+                            if (lowerLabel.includes('name')) updates.schoolName = val;
+                            if (lowerLabel.includes('email') || field.type === 'email') updates.email = val;
+                            if (lowerLabel.includes('password') || field.type === 'password') updates.password = val;
+                            setFormData(prev => ({ ...prev, ...updates }));
+                         };
+
+                         return (
+                          <div key={i} className="space-y-1">
+                             <label className="text-[11px] lg:text-sm font-bold text-gray-900 uppercase ml-6 tracking-wider opacity-60">
+                               {fieldKey} {field.required && <span className="text-red-500">*</span>}
+                             </label>
+                             {field.type === 'textarea' ? (
+                               <textarea 
+                                 placeholder={field.placeholder} 
                                  required={field.required}
-                                 className="w-full bg-white px-6 py-3.5 rounded-3xl border-2 border-gray-100 focus:border-sm-blue outline-none transition-all text-sm font-medium appearance-none shadow-sm cursor-pointer pr-12"
-                                 value={formData[field.label] || ''}
-                                 onChange={e => setFormData({...formData, [field.label]: e.target.value})}
-                               >
-                                 <option value="" disabled>{field.placeholder || `Select ${field.label}`}</option>
-                                 {(field.options || []).map((opt, idx) => (
-                                   <option key={idx} value={opt}>{opt}</option>
-                                 ))}
-                               </select>
-                               <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                                  <ChevronDown size={18} strokeWidth={2.5} />
+                                 value={formData[fieldKey] || ''} 
+                                 onChange={e => handleChange(e.target.value)} 
+                                 className="w-full bg-white px-6 py-3.5 rounded-3xl border-2 border-gray-100 focus:border-sm-blue outline-none transition-all placeholder:text-gray-200 font-medium text-sm resize-none shadow-sm"
+                                 rows={3}
+                               />
+                             ) : field.type === 'select' ? (
+                               <div className="relative">
+                                 <select 
+                                   required={field.required}
+                                   className="w-full bg-white px-6 py-3.5 rounded-3xl border-2 border-gray-100 focus:border-sm-blue outline-none transition-all text-sm font-medium appearance-none shadow-sm cursor-pointer pr-12"
+                                   value={formData[fieldKey] || ''}
+                                   onChange={e => handleChange(e.target.value)}
+                                 >
+                                   <option value="" disabled>{field.placeholder || `Select ${fieldKey}`}</option>
+                                   {(field.options || []).map((opt, idx) => (
+                                     <option key={idx} value={opt}>{opt}</option>
+                                   ))}
+                                 </select>
+                                 <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                    <ChevronDown size={18} strokeWidth={2.5} />
+                                 </div>
                                </div>
-                             </div>
-                           ) : (
-                             <input 
-                               type={field.type || 'text'} 
-                               placeholder={field.placeholder} 
-                               required={field.required}
-                               value={formData[field.label] || ''} 
-                               onChange={e => setFormData({...formData, [field.label]: e.target.value})} 
-                               className="w-full bg-white px-6 py-3.5 rounded-3xl border-2 border-gray-100 focus:border-sm-blue outline-none transition-all placeholder:text-gray-200 font-medium text-sm shadow-sm" 
-                             />
-                           )}
-                        </div>
-                      ))}
+                             ) : (
+                               <input 
+                                 type={field.type || 'text'} 
+                                 placeholder={field.placeholder} 
+                                 required={field.required}
+                                 value={formData[fieldKey] || ''} 
+                                 onChange={e => handleChange(e.target.value)} 
+                                 className="w-full bg-white px-6 py-3.5 rounded-3xl border-2 border-gray-100 focus:border-sm-blue outline-none transition-all placeholder:text-gray-200 font-medium text-sm shadow-sm" 
+                               />
+                             )}
+                          </div>
+                       )})}
 
                       {/* Fallback Static fields if CMS is empty */}
                       {!(fieldData.fields?.length) && (
