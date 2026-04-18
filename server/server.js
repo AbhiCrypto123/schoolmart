@@ -73,7 +73,7 @@ app.use('/uploads', express.static(uploadDir));
 
 // Basic Route
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to SchoolMart API' });
+  res.json({ message: 'Welcome to SchoolMart API - STORAGE_FIX_ACTIVE' });
 });
 
 // Port
