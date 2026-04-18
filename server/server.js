@@ -18,7 +18,7 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: true, // Allow all origins temporarily to fix the block
+  origin: '*', 
   credentials: true,
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
