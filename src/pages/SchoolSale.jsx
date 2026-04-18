@@ -99,7 +99,7 @@ const SchoolSale = () => {
   const [selectedCity, setSelectedCity] = useState('All Cities');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const listings = blocks?.listings?.items || [
+  const listings = blocks?.school_sale_listings?.items || [
     { title: 'Super Star School at West Hyd', location: 'HYDERABAD', price: '12cr', type: 'SALE' },
     { title: 'Academic Excellence Hub', location: 'CHENNAI', price: '25cr', type: 'LEASE' },
     { title: 'Premier Global Academy', location: 'BANGALORE', price: '18cr', type: 'SALE' },
