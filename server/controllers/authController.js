@@ -55,7 +55,12 @@ exports.register = async (req, res) => {
       return res.status(500).json({ message: 'Email could not be sent' });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('CRITICAL REGISTRATION ERROR:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Server failed to process registration', 
+      error: error.message 
+    });
   }
 };
 
