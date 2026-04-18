@@ -12,14 +12,16 @@ export const formatImgUrl = (url) => {
   const isLocal = window.location.hostname === 'localhost';
   const PRODUCTION_BACKEND = 'https://schoolmart-production.up.railway.app';
 
+  // Fix: Force all railway.app links to HTTPS regardless of where they come from
+  if (cleanUrl.includes('railway.app') && !cleanUrl.startsWith('https://')) {
+    cleanUrl = cleanUrl.replace('http://', 'https://');
+  }
+
   if (cleanUrl.includes('/uploads/')) {
     if (!isLocal) {
-       // On Vercel, always force images to Railway
+       // On Vercel, always force images to Railway HTTPS
        const filename = cleanUrl.split('/uploads/').pop();
        return `${PRODUCTION_BACKEND}/uploads/${filename}`;
-    } else if (cleanUrl.includes('localhost:5000')) {
-       // Keep localhost working for local dev
-       return cleanUrl;
     } else if (cleanUrl.startsWith('/uploads/')) {
        // If relative path on local, prefix with localhost:5000
        return `http://localhost:5000${cleanUrl}`;
