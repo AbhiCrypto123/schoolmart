@@ -53,6 +53,17 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to SchoolMart API - STORAGE_FIX_ACTIVE' });
 });
 
+app.get('/api/dns-test', async (req, res) => {
+  const dns = require('dns');
+  try {
+    dns.lookup('smtp.gmail.com', { all: true }, (err, addresses) => {
+      res.json({ err, addresses, platform: process.platform, node: process.version });
+    });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // Port
 const PORT = process.env.PORT || 5000;
 
