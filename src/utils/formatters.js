@@ -3,21 +3,31 @@
  * Specifically handles Google Drive 'view' links and converts them to 'uc' (export) links.
  */
 export const formatImgUrl = (url) => {
-  const FALLBACK = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800'; // Science lab/Furniture fallback
+  const FALLBACK = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800'; 
   if (!url || typeof url !== 'string' || !url.trim()) return FALLBACK;
   
-  // Clean potential whitespace or extra quotes from CSV bulk loads
   let cleanUrl = url.trim().replace(/^["']|["']$/g, '');
 
-  // Auto-fix stale localhost URLs stored in DB
-  if (cleanUrl.includes('localhost:5000')) {
-    const backendBase = (import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api')).replace(/\/api$/, '');
-    cleanUrl = cleanUrl.replace('http://localhost:5000', backendBase);
+  // 1. Force all internal /uploads/ paths to use the production backend URL if not on localhost
+  const isLocal = window.location.hostname === 'localhost';
+  const PRODUCTION_BACKEND = 'https://sclmart-production.up.railway.app';
+
+  if (cleanUrl.includes('/uploads/')) {
+    if (!isLocal) {
+       // On Vercel, always force images to Railway
+       const filename = cleanUrl.split('/uploads/').pop();
+       return `${PRODUCTION_BACKEND}/uploads/${filename}`;
+    } else if (cleanUrl.includes('localhost:5000')) {
+       // Keep localhost working for local dev
+       return cleanUrl;
+    } else if (cleanUrl.startsWith('/uploads/')) {
+       // If relative path on local, prefix with localhost:5000
+       return `http://localhost:5000${cleanUrl}`;
+    }
   }
 
-  // Handle Google Drive file links
+  // 2. Handle Google Drive file links
   if (cleanUrl.includes('drive.google.com')) {
-    // Extract file ID from /file/d/ID/view or id=ID
     const idMatch = cleanUrl.match(/\/file\/d\/([^/]+)\//) || cleanUrl.match(/id=([^&]+)/);
     if (idMatch && idMatch[1]) {
       return `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
