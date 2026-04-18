@@ -23,6 +23,7 @@ const CMSMedia = ({ mediaType, mediaUrl, fallbackImg, className = "w-full h-full
       src={url}
       className={className}
       alt="Media Content"
+      loading="lazy"
       onError={(e) => {
         if (fallbackImg && e.target.src !== fallbackImg) {
           e.target.src = fallbackImg;

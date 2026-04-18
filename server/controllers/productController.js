@@ -11,16 +11,21 @@ const makeSlug = (name) => {
   return `${base}-${suffix}`;
 };
 
-// Get all products
+// Get products with filtering support
 exports.getProducts = async (req, res) => {
   try {
+    const { category, subcategory, slug, limit } = req.query;
+    const { Op } = require('sequelize');
+    const where = {};
+    
+    if (category) where.category = category;
+    if (subcategory) where.subcategory = { [Op.iLike]: subcategory };
+    if (slug) where.slug = slug;
+    
     const products = await Product.findAll({
-      include: [
-        {
-          model: Category,
-          include: [{ model: Category, as: 'parent' }]
-        }
-      ]
+      where,
+      limit: limit ? parseInt(limit) : undefined,
+      order: [['createdAt', 'DESC']]
     });
     res.json(products);
   } catch (error) {

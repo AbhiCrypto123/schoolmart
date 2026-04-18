@@ -6,7 +6,7 @@ import { getPage } from '../services/api';
 const cache = {};      // { [slug]: { data, version, ts } }
 let cacheVersion = 0;
 const listeners = new Set();
-const CACHE_TTL_MS = 60_000; // 60 s — always re-fetch after 1 minute
+const CACHE_TTL_MS = 1800_000; // 30 minutes - keep it in memory longer
 
 // ── Cross-tab invalidation via BroadcastChannel ─────────────────────────────
 const bc = typeof BroadcastChannel !== 'undefined'
@@ -42,7 +42,7 @@ export function clearCMSCache(slug) {
 
 export function useCMSPage(slug) {
   const [blocks, setBlocks] = useState(cache[slug]?.data || null);
-  const [loading, setLoading] = useState(!cache[slug]);
+  const [loading, setLoading] = useState(!cache[slug]?.data); // Only 'load' if we have absolutely nothing
   const [ver, setVer] = useState(cacheVersion);
 
   useEffect(() => {
@@ -54,26 +54,30 @@ export function useCMSPage(slug) {
       && entry.version === ver
       && (Date.now() - entry.ts) < CACHE_TTL_MS;
 
-    if (isFresh) {
+    if (isFresh && entry.data) {
       setBlocks(entry.data);
       setLoading(false);
     } else {
-      setLoading(true);
+      // If we have data but it's just 'stale', don't show the loading screen (SWR)
+      if (!cache[slug]?.data) setLoading(true);
+
       getPage(slug)
         .then(page => {
           const indexed = {};
           (page.blocks || []).forEach(b => {
-            if (b.isVisible !== false) {
-              indexed[b.key] = b.data;
-              if (b.type && b.type !== b.key) {
-                indexed[b.type] = b.data;
-              }
-            }
+             if (b.isVisible !== false) {
+               indexed[b.key] = b.data;
+               if (b.type && b.type !== b.key) {
+                 indexed[b.type] = b.data;
+               }
+             }
           });
           cache[slug] = { data: indexed, version: cacheVersion, ts: Date.now() };
           setBlocks(indexed);
         })
-        .catch(() => setBlocks({}))
+        .catch(() => {
+           if (!cache[slug]?.data) setBlocks({});
+        })
         .finally(() => setLoading(false));
     }
 

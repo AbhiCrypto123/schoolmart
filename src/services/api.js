@@ -84,32 +84,25 @@ export const resendOtp = async (email) => {
 
 // ─── Products ────────────────────────────────────────────────────────────────
 export const getProducts = async (params = {}) => {
-  const res = await fetch(`${API_URL}/products`);
+  const query = new URLSearchParams();
+  if (params.category) query.append('category', params.category);
+  if (params.subcategory) query.append('subcategory', params.subcategory);
+  if (params.slug) query.append('slug', params.slug);
+  if (params.limit) query.append('limit', params.limit);
+  
+  const res = await fetch(`${API_URL}/products?${query.toString()}`);
   const data = await res.json();
 
-  let filtered = [...data];
+  // If we got an array, process it; if not, return empty array
+  const productsArray = Array.isArray(data) ? data : [];
 
-  if (params.category) {
-    const target = params.category.toUpperCase();
-    filtered = filtered.filter(p => {
-      // Check direct string field first (saved by CMS admin UI)
-      if (p.category?.toUpperCase() === target) return true;
-      // Fallback: check relational Category association
-      const catName = p.Category?.name?.toUpperCase() || '';
-      const parentName = p.Category?.parent?.name?.toUpperCase() || '';
-      return catName === target || parentName === target;
-    });
-  }
-
-  return filtered.map(p => ({
+  return productsArray.map(p => ({
     ...p,
     title: p.name,
-    // Use the direct image field first, then fall back to images array
     image: p.image || p.images?.[0] || 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=400&q=80',
     images: p.images?.length ? p.images : (p.image ? [p.image] : []),
-    // Use direct string category/subcategory first, fall back to relational
-    category: p.category || p.Category?.parent?.name || p.Category?.name || '',
-    subcategory: p.subcategory || (p.Category?.parentId ? p.Category?.name : '') || '',
+    category: p.category || '',
+    subcategory: p.subcategory || '',
   }));
 };
 
