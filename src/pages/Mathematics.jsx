@@ -75,6 +75,7 @@ const Mathematics = () => {
             {blocks?.action_strip && (
                <section className="mb-6">
                   <Link to={blocks.action_strip.downloadPath || '/catalogues'}
+                    target="_blank" rel="noopener noreferrer"
                      style={{ backgroundColor: blocks.action_strip.bgColor || '#111827' }}
                      className="rounded-[40px] p-8 text-white flex items-center justify-between group overflow-hidden relative border border-gray-800 shadow-2xl transition-transform hover:scale-[1.01]">
                      <div className="flex flex-col text-left">

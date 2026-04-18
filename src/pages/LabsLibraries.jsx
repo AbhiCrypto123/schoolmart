@@ -71,6 +71,7 @@ const LabsLibraries = () => {
          {blocks?.action_strip && (
             <section className="mb-8">
                <Link to={blocks.action_strip.downloadPath || '/catalogues'}
+                 target="_blank" rel="noopener noreferrer"
                  style={{ backgroundColor: blocks.action_strip.bgColor || '#065F46' }}
                  className="rounded-[40px] p-8 text-white flex items-center justify-between group overflow-hidden relative border border-emerald-900 shadow-2xl transition-transform hover:scale-[1.01]">
                  <div className="flex flex-col gap-2">

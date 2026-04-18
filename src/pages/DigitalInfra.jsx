@@ -90,6 +90,7 @@ const DigitalInfra = () => {
               </div>
 
                <Link to={blocks?.action_strip?.downloadPath || '/catalogues'}
+                 target="_blank" rel="noopener noreferrer"
                  style={{ backgroundColor: blocks?.action_strip?.bgColor || '#0A0A0A' }}
                  className="rounded-[30px] p-6 text-white flex items-center justify-between group overflow-hidden relative border border-gray-800 shadow-xl transition-all hover:border-sm-blue/50">
                  <div className="flex flex-col gap-1 relative z-10">

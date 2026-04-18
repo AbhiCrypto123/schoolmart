@@ -86,6 +86,7 @@ const Science = () => {
                         dangerouslySetInnerHTML={{ __html: (blocks?.action_strip?.title || blocks?.feature_card?.title || "Security <br/> Performance.").replace(/\n/g, '<br/>') }} />
                      
                      <Link to={blocks?.action_strip?.downloadPath || blocks?.feature_card?.btnPath || "/contact-us"}
+                        target="_blank" rel="noopener noreferrer"
                         className="w-full py-4 bg-white text-emerald-600 font-black rounded-2xl text-[12px] uppercase tracking-widest active:scale-95 transition-all shadow-xl flex items-center justify-center gap-2 group/btn">
                         {blocks?.action_strip?.btnType === 'download' ? <Download size={14} /> : <ArrowUpRight size={14} />} 
                         {blocks?.action_strip?.btnType === 'download' ? 'Download Assets' : 'Explore Labs'}
