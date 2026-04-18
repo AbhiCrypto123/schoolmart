@@ -7,6 +7,7 @@ import {
   Download, Box, Phone, MapPin, ExternalLink, Clock, Layers, FileText
 } from 'lucide-react';
 import { getProducts } from '../services/api';
+import PageLoader from '../components/PageLoader';
 
 const GenericInnerPage = ({ explicitSlug }) => {
   const params = useParams();
@@ -87,11 +88,7 @@ const GenericInnerPage = ({ explicitSlug }) => {
     }
   }, [loading, cats, selectedCat]);
 
-  if (loading) return (
-    <div className="min-h-screen bg-white flex items-center justify-center font-black uppercase tracking-widest text-sm-blue text-sm">
-      Loading Resource Blueprint...
-    </div>
-  );
+  if (loading) return <PageLoader />;
 
   const HeroIcon = getIcon(heroBlock.icon || 'Zap');
   const theme = heroBlock.theme || 'Light';

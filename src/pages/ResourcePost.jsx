@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Share2, MapPin, MessageSquare, Download, Sparkles, Box, FileText } from 'lucide-react';
 import { useCMSPage } from '../hooks/useCMSBlock';
+import PageLoader from '../components/PageLoader';
 
 // Fallback data for slugs not yet in the CMS
 const RESOURCE_DATA = {
@@ -77,6 +78,8 @@ const ResourcePost = () => {
             alert('Link copied to clipboard!');
         }
     };
+
+    if (loading) return <PageLoader />;
 
     return (
         <div className="bg-white flex flex-col font-sans">

@@ -5,6 +5,7 @@ import { Sparkles, Wind, Sun, Leaf, ArrowUpRight, CheckCircle2, Layers, ShieldCh
 import { useCMSPage } from '../hooks/useCMSBlock';
 import CMSMedia from '../components/ui/CMSMedia';
 import CatalogueCard from '../components/CatalogueCard';
+import PageLoader from '../components/PageLoader';
 
 const DEFAULT_CONTENT = {
   hero: {
@@ -47,7 +48,7 @@ const Environments = () => {
   const heroData = blocks?.environments_page_content || d.hero;
   const masonryItems = (d.masonryItems?.length ? d.masonryItems : DEFAULT_CONTENT.masonryItems);
 
-  // Instant fallback rendering
+  if (loading) return <PageLoader />;
 
   return (
     <main className="min-h-screen bg-[#F8FAFC] pb-10">
