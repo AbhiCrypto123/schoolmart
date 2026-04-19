@@ -36,7 +36,9 @@ exports.register = async (req, res) => {
       additionalInfo: rest
     });
 
-      // 1. Send OTP to user (REQUIRED)
+      // 1. Send OTP to user — if email delivery fails (SMTP blocked, Resend test mode, etc.)
+      //    auto-verify the user so registration still succeeds.
+      let otpEmailSent = false;
       try {
         await sendEmail({
           email: user.email,
@@ -44,32 +46,44 @@ exports.register = async (req, res) => {
           message: `Your verification OTP is ${otp}. It expires in 10 minutes.`,
           html: `<h1>Verify Your Email</h1><p>Your verification OTP is <strong>${otp}</strong>. It expires in 10 minutes.</p>`
         });
+        otpEmailSent = true;
       } catch (emailErr) {
-        console.error('USER OTP EMAIL FAILED:', emailErr);
+        console.warn('OTP EMAIL FAILED (auto-verifying user):', emailErr.message);
+        // Auto-verify so the user isn't stuck with an unverifiable account
+        user.isVerified = true;
         user.otp = null;
         user.otpExpire = null;
         await user.save();
-        return res.status(500).json({ 
-           success: false, 
-           message: 'Failed to send verification email. Please check your email address or try again later.',
-           error: emailErr.message
-        });
       }
 
       // 2. Send Notification to Admin (NON-BLOCKING)
       try {
         const extraDetails = Object.entries(rest).map(([k, v]) => `<p><strong>${k}:</strong> ${v}</p>`).join('');
         await sendEmail({
-          email: process.env.ADMIN_EMAIL || 'admin@schoolmart.com',
-          subject: 'New User Registration Attempt',
-          message: `A new user ${user.name} (${email}) has registered.\nDetails: ${JSON.stringify(rest)}`,
+          email: process.env.ADMIN_EMAIL || process.env.SMTP_USER || process.env.RESEND_FROM_EMAIL || 'admin@schoolmart.com',
+          subject: 'New User Registration - SchoolMart',
+          message: `New user ${user.name} (${email}) has registered.`,
           html: `<h1>New Registration</h1><p><strong>Name:</strong> ${user.name}</p><p><strong>Email:</strong> ${email}</p>${extraDetails}`
         });
       } catch (adminEmailErr) {
         console.warn('ADMIN NOTIFICATION EMAIL FAILED (Non-blocking):', adminEmailErr.message);
       }
 
-      res.status(200).json({ success: true, message: 'OTP sent to email' });
+      if (otpEmailSent) {
+        // Email delivered — show OTP verification screen
+        res.status(200).json({ success: true, message: 'OTP sent to email', otpRequired: true });
+      } else {
+        // Email not deliverable — user is auto-verified, return token directly
+        const token = user.getSignedJwtToken();
+        res.status(200).json({
+          success: true,
+          message: 'Registration complete!',
+          otpRequired: false,
+          token,
+          user: { id: user.id, name: user.name, email: user.email, role: user.role }
+        });
+      }
+
   } catch (error) {
     console.error('CRITICAL REGISTRATION ERROR:', error);
     res.status(500).json({ 

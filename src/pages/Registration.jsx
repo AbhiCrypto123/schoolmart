@@ -76,19 +76,17 @@ const Registration = () => {
     setLoading(true);
     setError('');
     try {
-      // Robust mapping: ensure email, name, and password are at the top level
       const submissionData = { ...formData };
       
-      // Attempt to recover from dynamic fields if top-level is missing
-      if (!submissionData.email || submissionData.email === '') {
+      if (!submissionData.email) {
         const emailKey = Object.keys(formData).find(k => k.toLowerCase().includes('email'));
         if (emailKey) submissionData.email = formData[emailKey];
       }
-      if (!submissionData.schoolName || submissionData.schoolName === '') {
+      if (!submissionData.schoolName) {
         const nameKey = Object.keys(formData).find(k => k.toLowerCase().includes('name'));
         if (nameKey) submissionData.schoolName = formData[nameKey];
       }
-      if (!submissionData.password || submissionData.password === '') {
+      if (!submissionData.password) {
         const passKey = Object.keys(formData).find(k => k.toLowerCase().includes('password'));
         if (passKey) submissionData.password = formData[passKey];
       }
@@ -104,14 +102,15 @@ const Registration = () => {
         name: submissionData.schoolName || 'Institution User'
       });
       
-      if (res.success === false || res.message) {
-        // If it's not a success and we have a message, it's an error
-        if (res.success !== true) {
-           const internalErr = res.error ? ` (${res.error})` : '';
-           throw new Error(`${res.message}${internalErr}`);
-        }
+      if (res.otpRequired === false && res.token) {
+        // Email delivery unavailable — backend auto-verified, go straight to dashboard
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('user', JSON.stringify(res.user));
+        setSubmitted(true);
+        setTimeout(() => navigate('/member/dashboard'), 1500);
+        return;
       }
-      
+
       setShowOtp(true);
     } catch (err) {
       setError(err.message);
@@ -119,6 +118,7 @@ const Registration = () => {
       setLoading(false);
     }
   };
+
 
   const handleVerify = async (e) => {
     e.preventDefault();
