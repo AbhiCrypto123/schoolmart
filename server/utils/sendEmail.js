@@ -1,21 +1,57 @@
 // sendEmail.js
-// ─── Strategy ────────────────────────────────────────────────────────────────
-// Railway blocks outbound SMTP (ports 25, 465, 587) at the network level.
-// When RESEND_API_KEY is set (production/Railway), we use Resend's HTTPS API.
-// When it's not set, we fall back to SMTP/Nodemailer (local development).
+// ─── Email Delivery Strategy ─────────────────────────────────────────────────
+// 1. Brevo API   — if BREVO_API_KEY is set (recommended for Railway/production)
+//                  Requires only sender email verification, no custom domain.
+// 2. Resend API  — if RESEND_API_KEY is set (requires verified domain for non-owner recipients)
+// 3. SMTP        — fallback for local development
 // ─────────────────────────────────────────────────────────────────────────────
 
 const sendEmail = async (options) => {
-  // ── PRODUCTION: Resend API (works over HTTPS port 443 — never blocked) ────
+  const senderName = 'SchoolMart';
+
+  // ── 1. BREVO (Sendinblue) — HTTPS API, no domain needed, just sender email ─
+  if (process.env.BREVO_API_KEY) {
+    const fromEmail = process.env.BREVO_FROM_EMAIL
+      || process.env.SMTP_USER
+      || 'raikantisathvik@gmail.com';
+
+    console.log('[sendEmail] Using Brevo → to:', options.email, '| from:', fromEmail);
+
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': process.env.BREVO_API_KEY.replace(/^["']|["']$/g, ''),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sender: { name: senderName, email: fromEmail },
+        to: [{ email: options.email }],
+        subject: options.subject,
+        htmlContent: options.html,
+        textContent: options.message,
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.message || `Brevo API error ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('[sendEmail] Brevo delivered, messageId:', data.messageId);
+    return data;
+  }
+
+  // ── 2. RESEND — HTTPS API, requires verified domain for arbitrary recipients ─
   if (process.env.RESEND_API_KEY) {
     const { Resend } = require('resend');
     const resend = new Resend(process.env.RESEND_API_KEY);
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
 
-    const fromEmail = process.env.RESEND_FROM_EMAIL || `SchoolMart <onboarding@resend.dev>`;
-    console.log('[sendEmail] Using Resend API → to:', options.email);
+    console.log('[sendEmail] Using Resend → to:', options.email, '| from:', fromEmail);
 
     const { data, error } = await resend.emails.send({
-      from: fromEmail,
+      from: `${senderName} <${fromEmail}>`,
       to: options.email,
       subject: options.subject,
       html: options.html,
@@ -31,7 +67,7 @@ const sendEmail = async (options) => {
     return data;
   }
 
-  // ── LOCAL DEV: Nodemailer / Gmail SMTP ────────────────────────────────────
+  // ── 3. SMTP / Nodemailer — local development only ─────────────────────────
   const { resolve4 } = require('dns').promises;
   const nodemailer = require('nodemailer');
 
@@ -40,7 +76,6 @@ const sendEmail = async (options) => {
   const hostname = process.env.SMTP_HOST || 'smtp.gmail.com';
   const port = parseInt(process.env.SMTP_PORT || '587', 10);
 
-  // Resolve to IPv4 to avoid ENETUNREACH with IPv6
   let resolvedHost = hostname;
   try {
     const addresses = await resolve4(hostname);
@@ -49,10 +84,10 @@ const sendEmail = async (options) => {
       console.log(`[sendEmail] DNS: ${hostname} → ${resolvedHost} (IPv4)`);
     }
   } catch (dnsErr) {
-    console.warn('[sendEmail] IPv4 DNS fallback to hostname:', dnsErr.message);
+    console.warn('[sendEmail] IPv4 DNS fallback:', dnsErr.message);
   }
 
-  console.log('[sendEmail] SMTP Connecting:', { host: resolvedHost, port, user });
+  console.log('[sendEmail] SMTP → host:', resolvedHost, '| port:', port, '| user:', user);
 
   const transporter = nodemailer.createTransport({
     host: resolvedHost,
@@ -67,7 +102,7 @@ const sendEmail = async (options) => {
   });
 
   const info = await transporter.sendMail({
-    from: `"SchoolMart" <${user}>`,
+    from: `"${senderName}" <${user}>`,
     to: options.email,
     subject: options.subject,
     text: options.message,
