@@ -50,7 +50,11 @@ app.use('/uploads', express.static(uploadDir));
 
 // Basic Route
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to SchoolMart API - STORAGE_FIX_ACTIVE' });
+  res.json({ 
+    message: 'SchoolMart API - ACTIVE',
+    version: '1.2.5',
+    timestamp: '2026-04-18_17:33'
+  });
 });
 
 app.get('/api/dns-test', async (req, res) => {
