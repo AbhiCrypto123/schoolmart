@@ -7,7 +7,6 @@ import {
   Download, Box, Phone, MapPin, ExternalLink, Clock, Layers, FileText
 } from 'lucide-react';
 import { getProducts } from '../services/api';
-import { getProducts } from '../services/api';
 
 const GenericInnerPage = ({ explicitSlug }) => {
   const params = useParams();

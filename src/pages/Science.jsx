@@ -19,22 +19,22 @@ const Science = () => {
    const heroBlock = blocks?.inner_page_hero || {};
 
    // Priority 1: Auto-select first CMS category if available
-   useEffect(() => {
-     if (sidebarCategories.categories?.length && !selectedCat) {
-       setSelectedCat(sidebarCategories.categories[0]);
-     }
-   }, [sidebarCategories]);
-   
-   useEffect(() => {
+  useEffect(() => {
+    if (!loading) {
+      if (sidebarCategories.categories?.length && !selectedCat) {
+        setSelectedCat(sidebarCategories.categories[0]);
+      } else if (!sidebarCategories.categories?.length && !selectedCat && items.length > 0) {
+        setSelectedCat(items[0].subcategory);
+      }
+    }
+  }, [sidebarCategories, loading, items, selectedCat]);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
-    getProducts({ category: 'Science' }).then(res => {
-         const fetchedItems = res || [];
-         setItems(fetchedItems);
-         const firstCat = sidebarCategories.categories?.[0] || 
-                         (fetchedItems.length > 0 ? fetchedItems[0].subcategory : '');
-         if (firstCat) setSelectedCat(firstCat);
-      });
-   }, [sidebarCategories]);
+    getProducts({ category: 'Science'  }).then(res => {
+      setItems(res || []);
+    });
+  }, []);
 
    const sidebarResources = blocks?.sidebar_resources || {};
    const sidebarTrending = blocks?.sidebar_trending || {};

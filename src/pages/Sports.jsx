@@ -19,21 +19,21 @@ const Sports = () => {
 
   // Priority 1: Auto-select first CMS category if available
   useEffect(() => {
-    if (sidebarCategories.categories?.length && !selectedCat) {
-      setSelectedCat(sidebarCategories.categories[0]);
+    if (!loading) {
+      if (sidebarCategories.categories?.length && !selectedCat) {
+        setSelectedCat(sidebarCategories.categories[0]);
+      } else if (!sidebarCategories.categories?.length && !selectedCat && items.length > 0) {
+        setSelectedCat(items[0].subcategory);
+      }
     }
-  }, [sidebarCategories]);
+  }, [sidebarCategories, loading, items, selectedCat]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    getProducts({ category: 'Sports' }).then(res => {
-      const fetchedItems = res || [];
-      setItems(fetchedItems);
-      const firstCat = sidebarCategories.categories?.[0] || 
-                      (fetchedItems.length > 0 ? fetchedItems[0].subcategory : '');
-      if (firstCat) setSelectedCat(firstCat);
+    getProducts({ category: 'Sports'  }).then(res => {
+      setItems(res || []);
     });
-  }, [sidebarCategories]);
+  }, []);
 
   const cats = sidebarCategories.categories || [];
   // Only filter if we have items AND a selected category is set (prevents flicker)
