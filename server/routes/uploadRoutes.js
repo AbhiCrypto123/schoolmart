@@ -36,18 +36,14 @@ const upload = multer({
 // Single File Upload
 router.post('/', upload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
-  const protocol = req.protocol;
-  const host = req.get('host');
-  const url = `${protocol}://${host}/uploads/${req.file.filename}`;
+  const url = `/uploads/${req.file.filename}`;
   res.json({ url, filename: req.file.filename, message: 'Upload successful' });
 });
 
 // Multiple Files Upload
 router.post('/bulk', upload.array('files', 20), (req, res) => {
   if (!req.files || req.files.length === 0) return res.status(400).json({ message: 'No files uploaded' });
-  const protocol = req.protocol;
-  const host = req.get('host');
-  const urls = req.files.map(f => `${protocol}://${host}/uploads/${f.filename}`);
+  const urls = req.files.map(f => `/uploads/${f.filename}`);
   res.json({ urls, message: 'Bulk upload successful' });
 });
 
