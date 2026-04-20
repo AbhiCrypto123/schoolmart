@@ -270,17 +270,18 @@ const Navbar = () => {
           <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-y-4 gap-x-2 pb-2 sm:pb-0">
             {categories.map((cat, index) => {
               const Icon = cat.icon;
+              const isCatActive = isActive(cat.path);
               return (
                 <Link
                   key={cat.name}
                   to={cat.path}
-                  className="flex flex-col items-center group"
+                  className="flex flex-col items-center group relative pt-1"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full ${cat.color} border border-gray-100 flex items-center justify-center mb-1 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}>
-                    <Icon size={20} className="text-gray-600 group-hover:text-sm-blue" />
+                  <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mb-1 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${isCatActive ? 'bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] scale-110 border border-transparent border-b-sm-blue/10' : `${cat.color} border border-gray-100`}`}>
+                    <Icon size={20} className={`transition-colors duration-200 ${isCatActive ? 'text-sm-blue' : 'text-gray-600 group-hover:text-sm-blue'}`} />
                   </div>
-                  <span className="text-sm sm:text-base font-semibold text-gray-700 text-center uppercase tracking-tight whitespace-nowrap group-hover:text-sm-blue transition-colors duration-200">
+                  <span className={`text-sm sm:text-base font-semibold text-center uppercase tracking-tight whitespace-nowrap transition-colors duration-200 ${isCatActive ? 'text-sm-blue' : 'text-gray-700 group-hover:text-sm-blue'}`}>
                     {cat.name}
                   </span>
                 </Link>
