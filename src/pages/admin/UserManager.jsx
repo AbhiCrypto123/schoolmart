@@ -113,7 +113,7 @@ export default function UserManager() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-50">
-                    {users.map(u => (
+                    {(users || []).map(u => (
                       <tr key={u.id} className={`hover:bg-blue-50/30 cursor-pointer transition-colors ${selectedUser?.id === u.id ? 'bg-blue-50/50' : ''}`}
                         onClick={() => setSelectedUser(u)}>
                         <td className="px-4 py-3">
