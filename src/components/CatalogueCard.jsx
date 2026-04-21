@@ -11,14 +11,14 @@ const CatalogueCard = ({ work, isSelected, onClick, onAction, actionText, themeC
       >
         <div className="flex flex-col h-full">
           {/* Image Container */}
-          <div className="aspect-square w-full bg-gray-50 relative overflow-hidden flex items-center justify-center p-3">
+          <div className="aspect-square w-full bg-gray-50 relative overflow-hidden flex items-center justify-center">
             <img 
               src={formatImgUrl(work.image || work.images?.[0] || work.img || "")} 
               alt={work.name || work.title} 
-              className="w-full h-full object-contain transition-all duration-700 group-hover:scale-110" 
+              className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" 
             />
             {/* FLOATING ACTION ICON */}
-            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100">
+            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100 z-10">
                <div className={`w-8 h-8 rounded-full ${themeColor} shadow-xl flex items-center justify-center text-white`}>
                   <ArrowUpRight size={14} />
                </div>
