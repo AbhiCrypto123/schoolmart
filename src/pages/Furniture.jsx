@@ -97,6 +97,16 @@ const Furniture = () => {
            </div>
         </section>
 
+        
+        {/* PAGE DESCRIPTION EXTENSION */}
+        {heroBlock.pageDescription && (
+           <section className="py-8 mb-4 border-b border-gray-100 max-w-5xl">
+              <p className="text-gray-600 font-medium text-[14px] md:text-[15px] leading-relaxed whitespace-pre-wrap">
+                 {heroBlock.pageDescription}
+              </p>
+           </section>
+        )}
+
         {/* CATEGORY NAV & MAIN PRODUCT GRID */}
         <section className="py-8 flex flex-col md:flex-row gap-8 items-start">
             {/* LEFT SIDEBAR CATEGORY */}

@@ -392,6 +392,7 @@ const BlockForms = {
          <Field label="Subtitle Statement"><TextArea value={data?.subtitle} onChange={v => set('subtitle', v)} rows={2} placeholder="Engineering high-performance..." /></Field>
       </div>
       <Field label="Master Headline (HTML allowed)"><TextArea value={data?.titleHtml} onChange={v => set('titleHtml', v)} rows={3} placeholder='Built <br/> <span class="text-sm-blue">for</span> <br/> Champions.' /></Field>
+      <Field label="Below-Hero Page Description (Full Paragraph)"><TextArea value={data?.pageDescription} onChange={v => set('pageDescription', v)} rows={4} placeholder="Type a detailed paragraph about this category..." /></Field>
       
       <SectionTitle>Hero Colours</SectionTitle>
       <div className="grid grid-cols-2 gap-4">
