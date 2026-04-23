@@ -50,7 +50,7 @@ const HowItWorks = () => {
                     <div className="lg:w-1/2">
                         <div className="relative aspect-square rounded-[40px] overflow-hidden shadow-2xl">
                             <img src={hero.img || 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80'} alt="How It Works" className="w-full h-full object-cover" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent" />
+
                             <div className="absolute bottom-10 left-10 text-white">
                                 <h4 className="text-2xl font-black uppercase tracking-tighter">{hero.overlayTitle || 'NEP 2020 Compliant'}</h4>
                                 <p className="opacity-70 text-sm">{hero.overlaySubtitle || "India's first modular infrastructure hub."}</p>

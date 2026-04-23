@@ -322,7 +322,7 @@ const GenericInnerPage = ({ explicitSlug }) => {
                               alt={item.title} 
                               className="w-full h-full object-cover transition-all duration-1000 group-" 
                            />
-                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-8 flex flex-col justify-end">
+                           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity p-8 flex flex-col justify-end">
                               <span className="text-emerald-400 text-[10px] font-black uppercase tracking-widest mb-1">{item.category}</span>
                               <h4 className="text-white text-lg font-black uppercase tracking-tight">{item.title}</h4>
                            </div>

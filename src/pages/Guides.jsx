@@ -87,7 +87,7 @@ const Guides = () => {
                     fallbackImg={d.heroImage} 
                     className="w-full h-full object-cover transition-all duration-1000 group-"
                  />
-                  <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+
               </div>
 
               <div className="bg-white rounded-[40px] p-8 text-gray-900 flex flex-col justify-between shadow-sm border border-gray-100 group relative overflow-hidden min-h-[200px]">

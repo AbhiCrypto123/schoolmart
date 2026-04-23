@@ -83,7 +83,7 @@ const BannerSection = () => {
                   <span className="text-white font-bold text-sm uppercase tracking-wide drop-shadow-lg">School Furniture</span>
                 </div>
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+
               </div>
             </div>
           </div>

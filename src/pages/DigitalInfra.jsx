@@ -65,7 +65,7 @@ const DigitalInfra = () => {
                 className="w-full h-full object-cover transition-all duration-1000 group-"
               />
               {/* Branding Overlays */}
-              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+
               <div className="absolute bottom-10 left-10 right-10 flex justify-between items-end z-10 font-heading">
                  <div style={{ color: heroBlock.textColor || 'white' }}>
                     <span className="text-[12px] font-black uppercase tracking-[0.3em] block mb-3 opacity-80">{heroBlock.badge || "Network Infrastructure"}</span>

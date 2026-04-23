@@ -77,7 +77,7 @@ const Architecture = () => {
                 className="w-full h-full object-cover transition-transform duration-1000"
               />
               {/* Subtle Overlay to match the clean look */}
-              <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+
            </div>
         </section>
 
