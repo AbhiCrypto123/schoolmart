@@ -11,7 +11,7 @@ const PropertyListingCard = ({ item }) => {
     .filter(p => p.length > 0);
 
   return (
-    <div className="bg-white border border-gray-100 rounded-[40px] shadow-sm overflow-hidden flex flex-col group hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 relative p-6 mb-8 break-inside-avoid">
+    <div className="bg-white border border-gray-200 rounded-[40px] overflow-hidden flex flex-col group transition-all duration-500 relative p-6 mb-8 break-inside-avoid">
        {/* HEADER - BADGE & LOCATION */}
        <div className="flex items-center justify-between mb-8">
            <div className="px-4 py-2 bg-sm-blue/5 rounded-full border border-sm-blue/10">

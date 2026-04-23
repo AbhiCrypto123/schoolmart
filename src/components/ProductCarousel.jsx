@@ -86,13 +86,13 @@ const ProductCarousel = () => {
                         <div key={i} className="embla__slide flex-[0_0_70%] sm:flex-[0_0_35%] lg:flex-[0_0_25%] min-w-0 pl-2">
                             <div 
                                 onClick={() => handleProductClick(item, (path) => window.location.href = path, true)}
-                                className="block group/card relative bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 cursor-pointer"
+                                className="block group/card relative bg-white border border-gray-200 rounded-3xl overflow-hidden transition-all duration-500 cursor-pointer"
                             >
                                 <div className="aspect-square relative overflow-hidden bg-gray-50">
                                     <img 
                                         src={formatImgUrl(item.img)} 
                                         alt={item.title} 
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110" 
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110"
                                         onError={(e) => {
                                             e.target.src = 'https://images.unsplash.com/photo-1592078615290-033ee584e267?w=600&q=80';
                                         }}
