@@ -369,9 +369,8 @@ export default function ProductManager({ fixedPage, liveCategories }) {
           </div>
 
           <div className="col-span-2 space-y-1">
-            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Routing Page (External Link) *</label>
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Routing Page (External Link)</label>
             <input 
-              required
               value={editing.ctaLink || ''} 
               onChange={e => setEditing({ ...editing, ctaLink: e.target.value })} 
               className="w-full px-4 py-2.5 bg-gray-50 border border-blue-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-blue-600" 
