@@ -261,7 +261,7 @@ export default function ProductManager({ fixedPage, liveCategories }) {
 
   // Auto-build list of pages and subcategories for the dropdowns
   const assignablePages = pagesData
-    .filter(p => ['furniture', 'architecture', 'digital', 'sports', 'libraries', 'labs', 'mathematics', 'science', 'design'].includes(p.slug || p.pageSlug))
+    .filter(p => ['furniture', 'architecture', 'school-building-design', 'digital', 'sports', 'libraries', 'labs', 'mathematics', 'gamified-math-labs', 'science', 'science-is-fun', 'design'].includes(p.slug || p.pageSlug))
     .map(p => {
       const pSlug = p.slug || p.pageSlug;
       const pTitle = p.title || p.pageTitle;
