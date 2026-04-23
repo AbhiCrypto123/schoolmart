@@ -78,13 +78,13 @@ const DigitalInfra = () => {
            </div>
 
            <div className="lg:col-span-4 flex flex-col gap-4">
-              <div className="flex-grow bg-gray-50 rounded-[30px] p-8 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group min-h-[220px]">
+              <div className="flex-grow rounded-[30px] p-8 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group min-h-[220px]" style={{ backgroundColor: heroBlock.bgColor || '#f9fafb' }}>
                  <div className="absolute top-0 right-0 w-48 h-48 bg-sm-blue/5 rounded-full blur-[80px] -mr-20 -mt-20" />
                  
-                 <div className="px-3 py-1 bg-sm-blue text-white font-black rounded-full text-[11px] uppercase tracking-[0.2em] mb-4 w-fit relative z-10 scale-90 origin-left">
+                 <div className="px-3 py-1 text-white font-black rounded-full text-[11px] uppercase tracking-[0.2em] mb-4 w-fit relative z-10 scale-90 origin-left" style={{ backgroundColor: heroBlock.textColor || '#003DCC' }}>
                     <Zap size={14} className="inline mr-2" /> {heroBlock.badge || "Digital Transformation 2025"}
                  </div>
-                 <h1 className="text-3xl lg:text-4xl font-black font-heading leading-tight mb-4 tracking-tighter text-gray-900 uppercase relative z-10" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || 'Future <br/> Digital.' }} />
+                 <h1 className="text-3xl lg:text-4xl font-black font-heading leading-tight mb-4 tracking-tighter uppercase relative z-10" style={{ color: heroBlock.textColor || '#111827' }} dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || 'Future <br/> Digital.' }} />
                  <p style={{ color: heroBlock.textColor || undefined }} className={`text-[12px] font-bold uppercase tracking-widest max-w-xs leading-relaxed relative z-10 ${heroBlock.textColor ? 'opacity-80' : 'text-gray-400'}`}>
                     {heroBlock.subtitle || "Cutting-edge Ed-Tech and campus-wide smart infrastructure."}
                  </p>
