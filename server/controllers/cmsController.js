@@ -3,8 +3,8 @@ const CMSBlock = require('../models/CMSBlock');
 
 // ── Canonical page slugs — the only slugs the admin dashboard recognises ─────
 const CANONICAL_SLUGS = new Set([
-  'home', 'furniture', 'architecture', 'digital', 'sports', 'libraries',
-  'environments', 'aboutus', 'contact-us', 'mathematics', 'science', 'labs',
+  'home', 'furniture', 'school-building-design', 'digital', 'sports', 'libraries',
+  'environments', 'aboutus', 'contact-us', 'gamified-math-labs', 'science-is-fun', 'labs',
   'design', 'manufacturing', 'corporate', 'catalogues', 'guides', 'school-sale',
   'partnerships', 'setup-guide', 'registration', 'login', 'workshops',
   'fundraising', 'how-it-works', 'pricing', 'shipping-policy', 'cancellation-policy',

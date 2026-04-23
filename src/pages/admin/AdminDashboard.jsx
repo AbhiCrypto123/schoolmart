@@ -64,9 +64,9 @@ export default function AdminDashboard() {
   ];
 
   const PAGE_ICONS = {
-    home: '🏠', furniture: '🪑', architecture: '🏗️', digital: '💻', sports: '🏅',
+    home: '🏠', furniture: '🪑', 'school-building-design': '🏗️', digital: '💻', sports: '🏅',
     libraries: '📚', environments: '🌿', aboutus: 'ℹ️', 'contact-us': '📞',
-    mathematics: '📐', science: '🔬', labs: '🧪', design: '🎨',
+    'gamified-math-labs': '📐', 'science-is-fun': '🔬', labs: '🧪', design: '🎨',
     manufacturing: '🏭', corporate: '🏢', catalogues: '📁', guides: '📖',
     registration: '📝', login: '🔐',
   };
