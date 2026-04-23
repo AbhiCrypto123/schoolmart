@@ -65,12 +65,7 @@ const Furniture = () => {
                     <span className="text-[12px] font-black uppercase tracking-[0.3em] block mb-3 opacity-80">{heroBlock.badge || "Featured Series"}</span>
                     <h2 className="text-4xl lg:text-5xl font-black uppercase leading-[0.9] tracking-tighter" dangerouslySetInnerHTML={{ __html: heroBlock.titleHtml || "Modular <br/> Classroom Pro." }} />
                   </div>
-                  <button 
-                    onClick={() => { if(heroBlock.ctaPath) window.location.href = heroBlock.ctaPath }}
-                    className="px-8 py-4 bg-white text-gray-900 font-black rounded-2xl text-[12px] uppercase tracking-widest shadow-2xl hover:bg-sm-blue hover:text-white transition-all transform hover:translate-y-[-2px] active:translate-y-0"
-                  >
-                    {heroBlock.btnLabel || "Explore Series"}
-                  </button>
+                  
               </div>
            </div>
 
