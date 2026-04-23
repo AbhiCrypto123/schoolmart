@@ -86,8 +86,14 @@ const LabsLibraries = () => {
         
         {/* PAGE DESCRIPTION EXTENSION */}
         {heroBlock.pageDescription && (
-           <section className="pb-6 border-b border-gray-100 max-w-5xl">
-              <p className="text-gray-600 font-medium text-[14px] md:text-[15px] leading-relaxed whitespace-pre-wrap">
+           <section 
+             className={`pb-6 ${heroBlock.pageDescriptionBgColor ? 'p-6 md:p-10 mb-8 rounded-[40px] text-center w-full shadow-lg border-0' : 'border-b border-gray-100 max-w-5xl'}`}
+             style={{ backgroundColor: heroBlock.pageDescriptionBgColor || 'transparent' }}
+           >
+              <p 
+                className={`${heroBlock.pageDescriptionBgColor ? 'text-lg md:text-xl font-bold' : 'text-gray-600 font-medium text-[14px] md:text-[15px]'} leading-relaxed whitespace-pre-wrap max-w-4xl mx-auto`}
+                style={{ color: heroBlock.pageDescriptionTextColor || undefined }}
+              >
                  {heroBlock.pageDescription}
               </p>
            </section>
