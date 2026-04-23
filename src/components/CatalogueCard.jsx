@@ -64,7 +64,7 @@ const CatalogueCard = ({ work, isSelected, onClick, onAction, actionText, themeC
                    </button>
                 )}
                 
-                {showExplore && (
+                {showExplore && !isNonRoutable && (
                    <span className="text-[11px] text-gray-300 font-black uppercase tracking-widest group-hover:translate-x-1 transition-transform flex items-center gap-1 shrink-0 ml-auto">
                       Explore <ArrowRight size={10} className="text-gray-300" />
                    </span>
