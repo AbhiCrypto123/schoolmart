@@ -74,7 +74,7 @@ const Architecture = () => {
                 mediaType={heroBlock.mediaType} 
                 mediaUrl={heroBlock.mediaUrl} 
                 fallbackImg={heroBlock.img || "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80"}
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-1000"
               />
               {/* Subtle Overlay to match the clean look */}
               <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />

@@ -20,7 +20,7 @@ const CatalogueCard = ({ work, isSelected, onClick, onAction, actionText, themeC
           <img 
             src={formatImgUrl(work.image || work.images?.[0] || work.img || "")} 
             alt={work.name || work.title} 
-            className={`w-full h-full object-cover transition-all duration-700 ${isNonRoutable ? '' : 'group-hover:scale-110'}`} 
+            className="w-full h-full object-cover transition-all duration-700" 
           />
           {/* FLOATING ACTION ICON */}
           {!isNonRoutable && (
