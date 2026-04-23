@@ -56,14 +56,14 @@ const ClassifiedsGrid = () => {
                     className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-white hover:shadow-md border border-transparent hover:border-gray-100 transition-all group"
                 >
                     <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-sm-blue shadow-sm border border-gray-100 group-hover:scale-110 transition-transform">
+                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-sm-blue shadow-sm border border-gray-100 group- transition-transform">
                             <ItemIcon size={18} />
                         </div>
                         <span className="text-[13px] font-black uppercase tracking-tight text-gray-700">
                             {item}
                         </span>
                     </div>
-                    <ChevronRight size={16} className="text-gray-300 group-hover:text-sm-blue group-hover:translate-x-1 transition-all" />
+                    <ChevronRight size={16} className="text-gray-300 group-hover:text-sm-blue transition-all" />
                 </Link>
             );
         });

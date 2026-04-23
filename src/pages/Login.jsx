@@ -92,7 +92,7 @@ const Login = () => {
 
             <div className="flex items-center gap-6 mt-16">
                {[1, 2, 3, 4].map(i => (
-                 <div key={i} className="w-14 h-14 rounded-full border-4 border-white overflow-hidden bg-gray-100 shadow-xl hover:scale-110 transition-transform cursor-pointer">
+                 <div key={i} className="w-14 h-14 rounded-full border-4 border-white overflow-hidden bg-gray-100 shadow-xl transition-transform cursor-pointer">
                     <img src={`https://i.pravatar.cc/100?u=${i}`} alt="Member" className="w-full h-full object-cover" />
                  </div>
                ))}
@@ -106,7 +106,7 @@ const Login = () => {
          {/* HIGHLIGHT LOGIN BOX */}
          <div className="w-full lg:w-[480px] relative">
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-blue-600 rounded-full blur-[140px] opacity-10 animate-pulse" />
-            <div className="bg-white rounded-[40px] lg:rounded-[60px] p-8 lg:p-14 shadow-3xl relative border border-gray-100 overflow-hidden transform hover:scale-[1.01] transition-transform duration-500">
+            <div className="bg-white rounded-[40px] lg:rounded-[60px] p-8 lg:p-14 shadow-3xl relative border border-gray-100 overflow-hidden transform transition-transform duration-500">
                <div className="absolute top-0 left-0 right-0 h-4 bg-gray-900" />
                <div className="text-center mb-8 lg:mb-10">
                   <div className="w-16 h-16 lg:w-20 lg:h-20 bg-gray-900 text-white rounded-[30px] lg:rounded-[35px] flex items-center justify-center mx-auto mb-6 lg:mb-8 shadow-2xl transition-transform">

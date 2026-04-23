@@ -36,7 +36,7 @@ const SetupGuide = () => {
       <section className="py-16 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {phases.map((phase, i) => (
-            <div key={i} className="bg-white p-8 rounded-[35px] border border-gray-100 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:-translate-y-1 transition-all group flex flex-col h-full">
+            <div key={i} className="bg-white p-8 rounded-[35px] border border-gray-100 shadow-xl shadow-gray-200/50 hover:shadow-2xl transition-all group flex flex-col h-full">
               <span className="text-[12px] font-black uppercase tracking-[0.2em] text-gray-400 mb-1">Phase {phase.num}</span>
               <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight mb-4 min-h-[3rem] line-clamp-2">{phase.title}</h3>
               <p className="text-gray-500 text-[13px] leading-relaxed mb-8 flex-grow">{phase.desc}</p>

@@ -115,7 +115,7 @@ const MemberDashboard = () => {
 
                         {/* Recent Activity Mini-Bento */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                           <div className="bg-gray-900 rounded-[40px] p-8 text-white relative overflow-hidden group hover:scale-[1.02] transition-all">
+                           <div className="bg-gray-900 rounded-[40px] p-8 text-white relative overflow-hidden group transition-all">
                               <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10 blur-2xl" />
                               <h4 className="text-[11px] font-black text-white/40 uppercase tracking-[0.3em] mb-4">Total Quotes</h4>
                               <div className="text-6xl font-black mb-2">12</div>
@@ -179,7 +179,7 @@ const MemberDashboard = () => {
                               <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-4">Confirm New Password</label>
                               <input type="password" placeholder="********" className="w-full bg-gray-50 px-6 py-4 rounded-3xl border-2 border-transparent focus:border-sm-blue outline-none transition-all font-bold text-sm" />
                            </div>
-                           <button className="px-10 py-4 bg-gray-900 text-white font-black rounded-full uppercase text-[12px] tracking-widest hover:bg-sm-blue transition-all shadow-lg active:scale-95">Update Security</button>
+                           <button className="px-10 py-4 bg-gray-900 text-white font-black rounded-full uppercase text-[12px] tracking-widest hover:bg-sm-blue transition-all shadow-lg">Update Security</button>
                         </form>
                      </div>
                   )}

@@ -97,7 +97,7 @@ const Navbar = () => {
                       </Link>
 
                       {/* Dropdown Container with Hover Bridge */}
-                      <div className="absolute top-full left-0 w-52 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 z-50">
+                      <div className="absolute top-full left-0 w-52 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group- group-hover:pointer-events-auto transition-all duration-300 z-50">
                         <div className="bg-white rounded-[20px] shadow-2xl py-3 border border-gray-100 overflow-hidden">
                           {link.dropdown.map((item) => (
                             <Link
@@ -142,7 +142,7 @@ const Navbar = () => {
                     className="ml-4 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-sm-green transition-all shadow-xl group border border-white/20"
                     title="My Dashboard"
                   >
-                    <User size={20} className="group-hover:scale-110 transition-transform" />
+                    <User size={20} className="group- transition-transform" />
                   </Link>
                 ) : null;
               })()}
@@ -278,7 +278,7 @@ const Navbar = () => {
                   className="flex flex-col items-center group relative pt-1"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mb-1 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${isCatActive ? 'bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] scale-110 border border-transparent border-b-sm-blue/10' : `${cat.color} border border-gray-100`}`}>
+                  <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mb-1 transition-all duration-300 group- group-hover:shadow-lg ${isCatActive ? 'bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] scale-110 border border-transparent border-b-sm-blue/10' : `${cat.color} border border-gray-100`}`}>
                     <Icon size={20} className={`transition-colors duration-200 ${isCatActive ? 'text-sm-blue' : 'text-gray-600 group-hover:text-sm-blue'}`} />
                   </div>
                   <span className={`text-sm sm:text-base font-semibold text-center uppercase tracking-tight whitespace-nowrap transition-colors duration-200 ${isCatActive ? 'text-sm-blue' : 'text-gray-700 group-hover:text-sm-blue'}`}>

@@ -157,7 +157,7 @@ const Sports = () => {
         {/* INFO SPLIT GRID - COMPACT */}
         <section className="py-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center border-t border-gray-100 mt-6 pt-12">
            <div className="relative rounded-[40px] overflow-hidden shadow-2xl h-[400px] border border-gray-100">
-              <img src={blocks?.info_split_grid?.image || 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1000&q=80'} alt="Athletic" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+              <img src={blocks?.info_split_grid?.image || 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1000&q=80'} alt="Athletic" className="w-full h-full object-cover transition-transform duration-1000 group-" />
            </div>
             
            <div className="bg-white p-12 lg:p-16 rounded-[40px] shadow-sm border border-gray-100">

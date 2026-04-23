@@ -74,7 +74,7 @@ const Environments = () => {
                 mediaType={heroData?.mediaType} 
                 mediaUrl={heroData?.mediaUrl} 
                 fallbackImg="https://images.unsplash.com/photo-1541829070764-84a7d30dee73?w=800&q=80"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-700 group-"
               />
            </div>
 

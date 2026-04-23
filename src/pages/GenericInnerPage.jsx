@@ -205,7 +205,7 @@ const GenericInnerPage = ({ explicitSlug }) => {
               {(resourceGrid.items || []).map((item, i) => {
                 const ItemIcon = getIcon(item.icon || 'Box');
                 return (
-                  <div key={i} className="bg-gray-50 border border-gray-100 rounded-[35px] p-10 group hover:bg-white hover:shadow-2xl transition-all flex flex-col h-full border hover:scale-[1.02] duration-500">
+                  <div key={i} className="bg-gray-50 border border-gray-100 rounded-[35px] p-10 group hover:bg-white hover:shadow-2xl transition-all flex flex-col h-full border duration-500">
                     <div className={`w-12 h-12 ${item.color || 'bg-sm-blue'} text-white rounded-2xl flex items-center justify-center mb-8 shadow-xl shadow-blue-500/10`}>
                       <ItemIcon size={20} />
                     </div>
@@ -230,9 +230,9 @@ const GenericInnerPage = ({ explicitSlug }) => {
           {catalogGrid && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {(catalogGrid.catalogs || []).map((cat, i) => (
-                <div key={i} className="bg-white border border-gray-100 rounded-[40px] shadow-sm hover:shadow-2xl transition-all group overflow-hidden flex flex-col hover:scale-[1.02] duration-500">
+                <div key={i} className="bg-white border border-gray-100 rounded-[40px] shadow-sm hover:shadow-2xl transition-all group overflow-hidden flex flex-col duration-500">
                   <div className="h-48 relative overflow-hidden shrink-0">
-                     <img src={cat.img} alt={cat.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                     <img src={cat.img} alt={cat.title} className="w-full h-full object-cover group- transition-transform duration-1000" />
                      <div className={`absolute top-4 left-4 ${cat.color} text-white px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest shadow-xl shadow-black/20`}>{cat.subtitle}</div>
                   </div>
                   <div className="p-10 flex flex-col flex-grow">
@@ -262,7 +262,7 @@ const GenericInnerPage = ({ explicitSlug }) => {
               {(lookbookGrid.collections || []).map((coll, i) => (
                 <div key={i} className="flex flex-col md:flex-row items-center gap-12 bg-white border border-gray-100 rounded-[45px] p-12 hover:shadow-2xl transition-all group">
                   <div className={`md:w-1/2 h-80 relative overflow-hidden rounded-[40px] ${i % 2 === 1 ? 'md:order-last' : ''}`}>
-                    <img src={coll.img} alt={coll.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                    <img src={coll.img} alt={coll.title} className="w-full h-full object-cover group- transition-transform duration-1000" />
                   </div>
                   <div className="md:w-1/2 flex flex-col">
                     <span className={`w-fit px-4 py-1.5 ${coll.color} text-white text-[8px] font-black uppercase tracking-widest rounded-full mb-6`}>{coll.subtitle}</span>
@@ -320,7 +320,7 @@ const GenericInnerPage = ({ explicitSlug }) => {
                            <img 
                               src={item.img} 
                               alt={item.title} 
-                              className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110" 
+                              className="w-full h-full object-cover transition-all duration-1000 group-" 
                            />
                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-8 flex flex-col justify-end">
                               <span className="text-emerald-400 text-[10px] font-black uppercase tracking-widest mb-1">{item.category}</span>
@@ -341,9 +341,9 @@ const GenericInnerPage = ({ explicitSlug }) => {
           {portfolioGrid && (
              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {(portfolioGrid.projects || []).map((p, i) => (
-                  <div key={i} className="bg-white border border-gray-100 rounded-[40px] shadow-sm hover:shadow-2xl transition-all group overflow-hidden flex flex-col hover:scale-[1.02] duration-500">
+                  <div key={i} className="bg-white border border-gray-100 rounded-[40px] shadow-sm hover:shadow-2xl transition-all group overflow-hidden flex flex-col duration-500">
                     <div className="h-56 relative overflow-hidden shrink-0">
-                       <img src={p.img} alt={p.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                       <img src={p.img} alt={p.title} className="w-full h-full object-cover group- transition-transform duration-1000" />
                        <div className={`absolute top-4 left-4 ${p.color} text-white px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest shadow-xl shadow-black/20 flex items-center gap-2`}>
                           <MapPin size={10} /> {p.subtitle}
                        </div>
@@ -428,7 +428,7 @@ const GenericInnerPage = ({ explicitSlug }) => {
           <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight mb-4 max-w-2xl px-4 relative z-10">{innerPageCta.title}</h3>
           {innerPageCta.subtitle && <p className="text-[13px] font-black uppercase tracking-widest text-gray-400 mb-10 relative z-10">{innerPageCta.subtitle}</p>}
           <button 
-            className="px-12 py-5 bg-sm-blue text-white font-black rounded-xl text-[12px] uppercase tracking-widest transition-all shadow-xl shadow-blue-500/20 active:scale-95 duration-500 flex items-center gap-4 relative z-10 hover:bg-gray-900"
+            className="px-12 py-5 bg-sm-blue text-white font-black rounded-xl text-[12px] uppercase tracking-widest transition-all shadow-xl shadow-blue-500/20 duration-500 flex items-center gap-4 relative z-10 hover:bg-gray-900"
             onClick={() => window.location.href = innerPageCta.actionLink || '/contact-us'}
           >
             {innerPageCta.actionText || 'Schedule Consultation'}

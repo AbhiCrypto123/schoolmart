@@ -41,7 +41,7 @@ const QuickView = ({ isOpen, onClose, data }) => {
           </div>
           <button 
             onClick={onClose}
-            className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-900 transition-all active:scale-90"
+            className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-900 transition-all"
           >
             <X size={20} />
           </button>
@@ -56,7 +56,7 @@ const QuickView = ({ isOpen, onClose, data }) => {
                 <img 
                   src={data.img || data.image || data.images?.[0]} 
                   alt={data.title || data.name} 
-                  className="w-full h-full object-contain transition-transform duration-700 hover:scale-110"
+                  className="w-full h-full object-contain transition-transform duration-700"
                 />
               </div>
               
@@ -152,7 +152,7 @@ const QuickView = ({ isOpen, onClose, data }) => {
                   <div className="mt-8 flex gap-3">
                     <a 
                       href={ctaLink}
-                      className="flex-1 py-3 bg-gray-900 text-white font-black rounded-xl text-[12px] uppercase tracking-widest hover:bg-sm-blue shadow-xl shadow-gray-200 active:scale-95 transition-all text-center flex items-center justify-center"
+                      className="flex-1 py-3 bg-gray-900 text-white font-black rounded-xl text-[12px] uppercase tracking-widest hover:bg-sm-blue shadow-xl shadow-gray-200 transition-all text-center flex items-center justify-center"
                     >
                       {ctaLabel}
                     </a>

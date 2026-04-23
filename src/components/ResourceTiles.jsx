@@ -154,7 +154,7 @@ const ResourceTiles = () => {
                       <img
                         src={tile.img}
                         alt={tile.title}
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-"
                         onError={(e) => {
                           e.target.src = 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80';
                         }}

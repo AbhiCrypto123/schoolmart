@@ -94,7 +94,7 @@ const Mathematics = () => {
                   <Link to={blocks.action_strip.downloadPath || '/catalogues'}
                     target="_blank" rel="noopener noreferrer"
                      style={{ backgroundColor: blocks.action_strip.bgColor || '#111827' }}
-                     className="rounded-[40px] p-8 text-white flex items-center justify-between group overflow-hidden relative border border-gray-800 shadow-2xl transition-transform hover:scale-[1.01]">
+                     className="rounded-[40px] p-8 text-white flex items-center justify-between group overflow-hidden relative border border-gray-800 shadow-2xl transition-transform">
                      <div className="flex flex-col text-left">
                         <h3 style={{ color: blocks.action_strip.textColor || undefined }} className="text-[13px] font-black uppercase tracking-[0.2em]">{blocks.action_strip.title || 'The 2025 Lookbook.'}</h3>
                         <span style={{ color: blocks.action_strip.textColor || undefined }} className="text-[14px] font-black uppercase tracking-widest font-heading">{blocks.action_strip.subtitle || 'MASTER CATALOGUE'}</span>

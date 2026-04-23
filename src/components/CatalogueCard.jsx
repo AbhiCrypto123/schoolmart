@@ -24,7 +24,7 @@ const CatalogueCard = ({ work, isSelected, onClick, onAction, actionText, themeC
           />
           {/* FLOATING ACTION ICON */}
           {!isNonRoutable && (
-            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100 z-10">
+            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all scale-75 group- z-10">
                <div className={`w-8 h-8 rounded-full ${themeColor} shadow-xl flex items-center justify-center text-white`}>
                   <ArrowUpRight size={14} />
                </div>
@@ -69,7 +69,7 @@ const CatalogueCard = ({ work, isSelected, onClick, onAction, actionText, themeC
                   )}
                   
                   {showExplore && !isNonRoutable && (
-                     <span className="text-[11px] text-gray-300 font-black uppercase tracking-widest group-hover:translate-x-1 transition-transform flex items-center gap-1 shrink-0 ml-auto">
+                     <span className="text-[11px] text-gray-300 font-black uppercase tracking-widest transition-transform flex items-center gap-1 shrink-0 ml-auto">
                         Explore <ArrowRight size={10} className="text-gray-300" />
                      </span>
                   )}

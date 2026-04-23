@@ -61,7 +61,7 @@ const ProductPost = () => {
                             <img 
                                 src={product.image} 
                                 alt={product.name} 
-                                className="w-full h-full object-contain p-12 group-hover:scale-110 transition-transform duration-700"
+                                className="w-full h-full object-contain p-12 group- transition-transform duration-700"
                             />
                             {product.isFeatured && (
                                 <div className="absolute top-8 left-8 px-4 py-2 bg-sm-yellow text-gray-900 font-black rounded-full text-[10px] uppercase tracking-widest shadow-lg">

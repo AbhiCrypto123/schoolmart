@@ -56,7 +56,7 @@ const ResourceSidebar = () => {
                         {r.name}
                      </span>
                   </div>
-                  <ChevronRight size={14} className="text-gray-300 group-hover:text-sm-blue transition-all group-hover:translate-x-1" />
+                  <ChevronRight size={14} className="text-gray-300 group-hover:text-sm-blue transition-all" />
                 </NavLink>
              ))}
           </div>

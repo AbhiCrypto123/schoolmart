@@ -69,13 +69,13 @@ const ProductCarousel = () => {
             {/* Manual Controls - Side Buttons */}
             <button 
                 onClick={scrollPrev} 
-                className="absolute left-0 top-[55%] -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white shadow-2xl border border-gray-100 flex items-center justify-center hover:bg-sm-blue hover:text-white transition-all transform active:scale-90 -ml-4 opacity-0 group-hover/carousel:opacity-100"
+                className="absolute left-0 top-[55%] -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white shadow-2xl border border-gray-100 flex items-center justify-center hover:bg-sm-blue hover:text-white transition-all transform -ml-4 opacity-0 group-hover/carousel:opacity-100"
             >
                 <ChevronLeft size={20} />
             </button>
             <button 
                 onClick={scrollNext} 
-                className="absolute right-0 top-[55%] -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white shadow-2xl border border-gray-100 flex items-center justify-center hover:bg-sm-blue hover:text-white transition-all transform active:scale-90 -mr-4 opacity-0 group-hover/carousel:opacity-100"
+                className="absolute right-0 top-[55%] -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white shadow-2xl border border-gray-100 flex items-center justify-center hover:bg-sm-blue hover:text-white transition-all transform -mr-4 opacity-0 group-hover/carousel:opacity-100"
             >
                 <ChevronRight size={20} />
             </button>

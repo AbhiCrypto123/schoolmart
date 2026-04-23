@@ -76,7 +76,7 @@ const Corporate = () => {
             </p>
             
             <div className="flex flex-wrap gap-4 relative z-10">
-              <button className="px-8 py-4 bg-[#004a8e] text-white font-black rounded-full hover:bg-gray-900 transition-all uppercase tracking-[0.15em] text-[12px] flex items-center gap-3 shadow-lg active:scale-95">
+              <button className="px-8 py-4 bg-[#004a8e] text-white font-black rounded-full hover:bg-gray-900 transition-all uppercase tracking-[0.15em] text-[12px] flex items-center gap-3 shadow-lg">
                 {hero.ctaPitchDeck} <ArrowRight size={16} />
               </button>
               <a href={`https://wa.me/${hero.ctaWhatsapp === 'WhatsApp' ? '919966109191' : hero.ctaWhatsapp}`} target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-white border border-gray-200 text-[#25D366] font-black rounded-full hover:bg-gray-50 transition-all uppercase tracking-[0.15em] text-[12px] flex items-center gap-3 shadow-sm">
@@ -170,7 +170,7 @@ const Corporate = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 w-full justify-center px-4 relative z-10">
-            <a href={`https://wa.me/${cta.whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="px-10 py-5 bg-[#25D366] text-white font-black rounded-full hover:scale-105 transition-all uppercase tracking-[0.2em] text-[12px] flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(37,211,102,0.3)]">
+            <a href={`https://wa.me/${cta.whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="px-10 py-5 bg-[#25D366] text-white font-black rounded-full transition-all uppercase tracking-[0.2em] text-[12px] flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(37,211,102,0.3)]">
                Connect On WhatsApp <MessageCircle size={20} />
             </a>
             <a href={`tel:${cta.phone || cta.whatsappNumber}`} className="px-10 py-5 bg-white border border-gray-200 text-[#004a8e] font-black rounded-full hover:bg-gray-50 transition-all uppercase tracking-[0.2em] text-[12px] flex items-center justify-center gap-3 shadow-sm">

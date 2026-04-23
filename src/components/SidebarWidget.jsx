@@ -106,7 +106,7 @@ const SidebarWidget = ({ title, items: itemsProp = [], type = 'resources' }) => 
                     {label}
                  </span>
               </div>
-              <ChevronRight size={14} className="text-gray-200 group-hover:text-sm-blue transition-all group-hover:translate-x-1" />
+              <ChevronRight size={14} className="text-gray-200 group-hover:text-sm-blue transition-all" />
             </Link>
           );
         })}

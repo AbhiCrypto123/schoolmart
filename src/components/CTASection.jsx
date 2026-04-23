@@ -56,7 +56,7 @@ const CTASection = () => {
                 href={`https://wa.me/${d.whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex items-center justify-center gap-4 px-10 py-5 bg-[#25D366] text-white font-black rounded-2xl hover:scale-105 transition-all active:scale-95 shadow-[0_0_30px_rgba(37,211,102,0.25)]"
+                className="group relative flex items-center justify-center gap-4 px-10 py-5 bg-[#25D366] text-white font-black rounded-2xl transition-all shadow-[0_0_30px_rgba(37,211,102,0.25)]"
               >
                 <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity" />
                 <MessageCircle size={24} className="group-hover:rotate-12 transition-transform" />
@@ -64,7 +64,7 @@ const CTASection = () => {
               </a>
               <a
                 href={`tel:${d.phone}`}
-                className="flex items-center justify-center gap-4 px-10 py-5 bg-white border border-gray-200 text-gray-900 font-black rounded-2xl hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all active:scale-95 shadow-sm"
+                className="flex items-center justify-center gap-4 px-10 py-5 bg-white border border-gray-200 text-gray-900 font-black rounded-2xl hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all shadow-sm"
               >
                 <Phone size={22} />
                 <span className="text-[13px] uppercase tracking-[0.2em] font-black">{d.phoneLabel || 'Call Support'}</span>

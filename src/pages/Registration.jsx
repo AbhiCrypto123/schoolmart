@@ -405,8 +405,8 @@ const Registration = () => {
            ]).map((card, i) => {
              const Icon = { ShieldCheck, Globe, Sparkles, ArrowRight }[card.icon] || ShieldCheck;
              return (
-             <div key={i} className={`p-8 rounded-[40px] shadow-sm border border-gray-100 group hover:shadow-3xl transition-all hover:-translate-y-4 cursor-pointer flex flex-col items-center text-center ${card.c || 'bg-white text-gray-900'}`}>
-                <div className={`w-20 h-20 bg-gray-50 group-hover:bg-sm-blue group-hover:text-white rounded-[30px] flex items-center justify-center mb-8 group-hover:scale-110 transition-transform shadow-sm`}>
+             <div key={i} className={`p-8 rounded-[40px] shadow-sm border border-gray-100 group hover:shadow-3xl transition-all cursor-pointer flex flex-col items-center text-center ${card.c || 'bg-white text-gray-900'}`}>
+                <div className={`w-20 h-20 bg-gray-50 group-hover:bg-sm-blue group-hover:text-white rounded-[30px] flex items-center justify-center mb-8 group- transition-transform shadow-sm`}>
                    <Icon size={32} />
                 </div>
                 <h3 className="text-lg font-black font-heading mb-2 leading-tight uppercase tracking-tight">{card.title}</h3>

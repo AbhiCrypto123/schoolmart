@@ -71,7 +71,7 @@ const Science = () => {
                      mediaType={heroBlock.mediaType}
                      mediaUrl={heroBlock.mediaUrl}
                      fallbackImg={heroBlock.img || "https://images.unsplash.com/photo-1541829070764-84a7d30dee62?w=1000&q=80"}
-                     className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110"
+                     className="w-full h-full object-cover transition-all duration-1000 group-"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                </div>
@@ -81,14 +81,14 @@ const Science = () => {
                   <div 
                     style={{ backgroundColor: blocks?.action_strip?.bgColor || '#059669' }}
                     className="flex-grow rounded-[40px] p-8 text-white flex flex-col justify-between shadow-lg relative overflow-hidden group transition-colors">
-                     <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+                     <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group- transition-transform duration-700" />
                      <span style={{ color: blocks?.action_strip?.textColor || undefined }} className="text-[12px] font-black uppercase tracking-[0.3em] relative z-10">{blocks?.action_strip?.subtitle || "Safety & Tech"}</span>
                      <h3 style={{ color: blocks?.action_strip?.textColor || undefined }} className="text-2xl font-black uppercase tracking-tighter leading-tight mt-10 mb-2 relative z-10" 
                         dangerouslySetInnerHTML={{ __html: (blocks?.action_strip?.title || blocks?.feature_card?.title || "Security <br/> Performance.").replace(/\n/g, '<br/>') }} />
                      
                      <Link to={blocks?.action_strip?.downloadPath || blocks?.feature_card?.btnPath || "/contact-us"}
                         target="_blank" rel="noopener noreferrer"
-                        className="w-full py-4 bg-white text-emerald-600 font-black rounded-2xl text-[12px] uppercase tracking-widest active:scale-95 transition-all shadow-xl flex items-center justify-center gap-2 group/btn">
+                        className="w-full py-4 bg-white text-emerald-600 font-black rounded-2xl text-[12px] uppercase tracking-widest transition-all shadow-xl flex items-center justify-center gap-2 group/btn">
                         {blocks?.action_strip?.btnType === 'download' ? <Download size={14} /> : <ArrowUpRight size={14} />} 
                         {blocks?.action_strip?.btnType === 'download' ? 'Download Assets' : 'Explore Labs'}
                      </Link>

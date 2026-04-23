@@ -81,7 +81,7 @@ const PropertyListingCard = ({ item }) => {
              </div>
               <Link 
                 to={item.ctaLink || "/contact-us"} 
-                className="px-8 py-4 bg-gray-900 text-white font-black rounded-2xl text-[12px] uppercase tracking-widest shadow-lg hover:bg-sm-blue hover:shadow-blue-200 transition-all transform hover:scale-105 active:scale-95 whitespace-nowrap"
+                className="px-8 py-4 bg-gray-900 text-white font-black rounded-2xl text-[12px] uppercase tracking-widest shadow-lg hover:bg-sm-blue hover:shadow-blue-200 transition-all transform whitespace-nowrap"
               >
                  {item.ctaLabel || "View Details"}
               </Link>
@@ -165,7 +165,7 @@ const SchoolSale = () => {
                   className={`w-full bg-[#111827] text-white p-7 rounded-[22px] shadow-2xl flex items-center justify-between group transition-all mb-4 ${selectedCity === 'All Cities' ? 'ring-4 ring-sm-blue/20' : ''}`}
                 >
                    <span className="text-[14px] font-black uppercase tracking-[0.3em]">ALL CITIES</span>
-                   <ChevronRight size={18} className="opacity-40 group-hover:translate-x-1 transition-all" />
+                   <ChevronRight size={18} className="opacity-40 transition-all" />
                 </button>
                 
                 <div className="flex flex-col gap-3">

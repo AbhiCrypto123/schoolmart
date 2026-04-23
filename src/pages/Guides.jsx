@@ -85,7 +85,7 @@ const Guides = () => {
                     mediaType={heroData?.mediaType} 
                     mediaUrl={heroData?.mediaUrl} 
                     fallbackImg={d.heroImage} 
-                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-all duration-1000 group-"
                  />
                   <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
               </div>
@@ -99,7 +99,7 @@ const Guides = () => {
                  <h3 className="text-2xl font-black uppercase tracking-tighter leading-tight mt-10 mb-8 relative z-10 text-gray-900" dangerouslySetInnerHTML={{ __html: d.actionCard?.titleHtml || 'Request <br/> Strategy Audit.' }} />
                  <button 
                    onClick={() => navigate('/registration')}
-                   className="w-full py-4 bg-sm-blue text-white font-black rounded-xl text-[12px] uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-blue-500/20 hover:bg-gray-900 relative z-10"
+                   className="w-full py-4 bg-sm-blue text-white font-black rounded-xl text-[12px] uppercase tracking-widest transition-all shadow-lg shadow-blue-500/20 hover:bg-gray-900 relative z-10"
                  >
                     {d.actionCard?.btnText || 'Join Network'}
                  </button>
@@ -134,7 +134,7 @@ const Guides = () => {
         <section className="my-10">
            <div className="bg-white rounded-[40px] overflow-hidden shadow-sm border border-gray-100 flex flex-col lg:flex-row min-h-[500px] group">
               <div className="flex-1 relative overflow-hidden">
-                 <img src={d.featured?.img} alt="Featured" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                 <img src={d.featured?.img} alt="Featured" className="w-full h-full object-cover transition-transform duration-1000 group-" />
                  <div className="absolute top-6 left-6 flex gap-2">
                     {(d.featured?.tags || []).map((tag, i) => (
                        <span key={i} className="px-3 py-1 bg-white/90 backdrop-blur-sm text-[#004a8e] font-black rounded-full text-[8px] uppercase tracking-widest shadow-sm">

@@ -167,7 +167,7 @@ const GuidePost = () => {
            </p>
            <button 
              onClick={() => navigate('/registration')}
-             className="px-10 py-5 bg-white text-[#004a8e] font-black rounded-full uppercase tracking-[0.2em] shadow-xl hover:scale-105 active:scale-95 transition-all text-[13px]"
+             className="px-10 py-5 bg-white text-[#004a8e] font-black rounded-full uppercase tracking-[0.2em] shadow-xl transition-all text-[13px]"
            >
               Register for Strategic Audit
            </button>

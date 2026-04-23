@@ -22,10 +22,10 @@ const Blog = () => {
                     {posts.map((post, idx) => (
                         <div key={idx} className="group cursor-pointer">
                             {post.img ? (
-                                <img src={post.img} alt={post.title} className="w-full aspect-[16/9] rounded-[32px] mb-6 object-cover group-hover:scale-[1.02] transition-transform duration-700" />
+                                <img src={post.img} alt={post.title} className="w-full aspect-[16/9] rounded-[32px] mb-6 object-cover group- transition-transform duration-700" />
                             ) : (
                                 <div className="aspect-[16/9] bg-gray-100 rounded-[32px] mb-6 overflow-hidden">
-                                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-100 group-hover:scale-105 transition-transform duration-700" />
+                                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-100 group- transition-transform duration-700" />
                                 </div>
                             )}
                             <div className="text-[10px] font-black uppercase tracking-[0.3em] text-sm-blue mb-3">{post.date}</div>

@@ -29,8 +29,8 @@ const Workshops = () => {
             </div>
             <h1 className="text-4xl lg:text-5xl font-black uppercase tracking-tighter text-gray-900 mb-4" dangerouslySetInnerHTML={{ __html: title }} />
             <p className="text-gray-500 text-[13px] font-bold uppercase tracking-widest leading-relaxed max-w-xl mb-8">{subtitle}</p>
-            <button className="px-8 py-3.5 bg-sm-blue text-white font-black rounded-xl text-[13px] uppercase tracking-widest hover:bg-gray-900 transition-all shadow-xl shadow-blue-500/10 active:scale-95 duration-500 group">
-              Register For A Program <ArrowRight size={14} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
+            <button className="px-8 py-3.5 bg-sm-blue text-white font-black rounded-xl text-[13px] uppercase tracking-widest hover:bg-gray-900 transition-all shadow-xl shadow-blue-500/10 duration-500 group">
+              Register For A Program <ArrowRight size={14} className="inline ml-2 transition-transform" />
             </button>
           </div>
           <div className="grid grid-cols-2 gap-4 shrink-0">

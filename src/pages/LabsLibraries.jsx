@@ -74,7 +74,7 @@ const LabsLibraries = () => {
                <Link to={blocks.action_strip.downloadPath || '/catalogues'}
                  target="_blank" rel="noopener noreferrer"
                  style={{ backgroundColor: blocks.action_strip.bgColor || '#065F46' }}
-                 className="rounded-[40px] p-8 text-white flex items-center justify-between group overflow-hidden relative border border-emerald-900 shadow-2xl transition-transform hover:scale-[1.01]">
+                 className="rounded-[40px] p-8 text-white flex items-center justify-between group overflow-hidden relative border border-emerald-900 shadow-2xl transition-transform">
                  <div className="flex flex-col gap-2">
                     <h3 style={{ color: blocks.action_strip.textColor || undefined }} className="text-[13px] font-black uppercase tracking-[0.2em]">{blocks.action_strip.title || 'Skill Lab Guide 2025.'}</h3>
                     <span style={{ color: blocks.action_strip.textColor || undefined }} className="text-[14px] font-black uppercase tracking-widest font-heading">{blocks.action_strip.subtitle || 'TECHNICAL SPECIFICATIONS'}</span>

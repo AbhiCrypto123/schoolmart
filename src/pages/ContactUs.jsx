@@ -182,8 +182,8 @@ const ContactUs = () => {
                             { icon: Globe, color: 'bg-blue-50 text-blue-500', t: 'Registered Hub', s: 'Visit our flagship office.' },
                             { icon: Headphones, color: 'bg-purple-50 text-purple-600', t: '24/7 Support', s: 'Round the clock assistance.' }
                         ].map((item, i) => (
-                            <div key={i} className="p-10 bg-white rounded-[40px] border border-slate-50 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.06)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.12)] transition-all group hover:-translate-y-2 cursor-default">
-                                <div className={`w-14 h-14 ${item.color} rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform`}>
+                            <div key={i} className="p-10 bg-white rounded-[40px] border border-slate-50 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.06)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.12)] transition-all group cursor-default">
+                                <div className={`w-14 h-14 ${item.color} rounded-2xl flex items-center justify-center mb-8 shadow-sm group- transition-transform`}>
                                     <item.icon size={26} />
                                 </div>
                                 <h4 className="text-[17px] font-black text-slate-900 uppercase tracking-tighter mb-2">{item.t}</h4>
@@ -213,7 +213,7 @@ const ContactUs = () => {
                             <div key={i} className="p-10 bg-white rounded-[45px] border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
                                 <h4 className="text-[13px] font-black text-blue-600 uppercase tracking-widest mb-4 flex items-center justify-between">
                                     {faq.q}
-                                    <ChevronRight size={16} className="text-slate-200 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+                                    <ChevronRight size={16} className="text-slate-200 group-hover:text-blue-600 transition-all" />
                                 </h4>
                                 <p className="text-slate-500 text-[14px] font-medium leading-relaxed">
                                     {faq.a}
@@ -245,7 +245,7 @@ const ContactUs = () => {
                         <div className="space-y-4">
                             <button 
                                 onClick={() => navigate('/login')}
-                                className="w-full py-5 bg-blue-600 text-white font-black rounded-full uppercase tracking-widest text-[13px] shadow-2xl hover:bg-gray-900 transition-all flex items-center justify-center gap-3 active:scale-95"
+                                className="w-full py-5 bg-blue-600 text-white font-black rounded-full uppercase tracking-widest text-[13px] shadow-2xl hover:bg-gray-900 transition-all flex items-center justify-center gap-3"
                             >
                                 Authorize My Portal <ArrowUpRight size={18} />
                             </button>

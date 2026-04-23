@@ -62,7 +62,7 @@ const DigitalInfra = () => {
                 mediaType={heroBlock.mediaType} 
                 mediaUrl={heroBlock.mediaUrl} 
                 fallbackImg={heroBlock.img || heroImgFallback}
-                className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105"
+                className="w-full h-full object-cover transition-all duration-1000 group-"
               />
               {/* Branding Overlays */}
               <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />

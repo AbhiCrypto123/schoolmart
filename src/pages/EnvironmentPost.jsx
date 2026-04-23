@@ -214,7 +214,7 @@ const EnvironmentPost = () => {
             </p>
             <button 
               onClick={() => navigate('/registration')}
-              className="px-10 py-4 bg-[#004a8e] text-white font-black rounded-full uppercase tracking-[0.2em] shadow-xl hover:scale-105 transition-all text-[11px]"
+              className="px-10 py-4 bg-[#004a8e] text-white font-black rounded-full uppercase tracking-[0.2em] shadow-xl transition-all text-[11px]"
             >
                Join Network
             </button>
@@ -242,7 +242,7 @@ const EnvironmentPost = () => {
                 <div className="space-y-4">
                     <button 
                         onClick={() => navigate('/login')}
-                        className="w-full py-5 bg-blue-600 text-white font-black rounded-full uppercase tracking-widest text-[13px] shadow-2xl hover:bg-gray-900 transition-all flex items-center justify-center gap-3 active:scale-95"
+                        className="w-full py-5 bg-blue-600 text-white font-black rounded-full uppercase tracking-widest text-[13px] shadow-2xl hover:bg-gray-900 transition-all flex items-center justify-center gap-3"
                     >
                         Authorize My Portal <ArrowUpRight size={18} />
                     </button>

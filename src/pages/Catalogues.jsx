@@ -89,7 +89,7 @@ const Catalogues = () => {
                     <div className="flex flex-wrap gap-3 mt-8 md:mt-0 justify-center">
                        <button 
                          onClick={(e) => handleDownload(e, catalogues[0])}
-                         className="px-8 py-5 bg-[#004a8e] text-white font-black rounded-full text-[13px] uppercase tracking-widest shadow-lg active:scale-95 transition-all flex items-center gap-2"
+                         className="px-8 py-5 bg-[#004a8e] text-white font-black rounded-full text-[13px] uppercase tracking-widest shadow-lg transition-all flex items-center gap-2"
                        >
                           <Download size={14} /> {d.actionStrip?.btn1Text || 'Instant PDF'}
                        </button>
@@ -173,7 +173,7 @@ const Catalogues = () => {
               <div className="space-y-4">
                  <button 
                    onClick={() => navigate('/registration')}
-                   className="w-full py-5 bg-[#004a8e] text-white font-black rounded-full uppercase tracking-widest text-[13px] shadow-2xl hover:bg-gray-900 transition-all flex items-center justify-center gap-3 active:scale-95"
+                   className="w-full py-5 bg-[#004a8e] text-white font-black rounded-full uppercase tracking-widest text-[13px] shadow-2xl hover:bg-gray-900 transition-all flex items-center justify-center gap-3"
                  >
                     Register For Access <ArrowUpRight size={18} />
                  </button>

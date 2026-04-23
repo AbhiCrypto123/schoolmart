@@ -83,11 +83,11 @@ const Libraries = () => {
                      mediaType={heroBlock.mediaType} 
                      mediaUrl={heroBlock.mediaUrl} 
                      fallbackImg={heroBlock.img || "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&q=80"}
-                     className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
+                     className="w-full h-full object-cover transition-all duration-700"
                   />
                </div>
                <div 
-                 className="rounded-[40px] p-8 bg-white text-gray-900 flex flex-col justify-between group overflow-hidden relative border border-gray-100 shadow-sm transition-transform hover:scale-[1.02] min-h-[160px]"
+                 className="rounded-[40px] p-8 bg-white text-gray-900 flex flex-col justify-between group overflow-hidden relative border border-gray-100 shadow-sm transition-transform min-h-[160px]"
                >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-sm-blue/5 rounded-full blur-3xl -mr-16 -mt-16" />
                   <h3 className="text-[13px] font-black uppercase tracking-[0.2em] relative z-10 leading-relaxed text-sm-blue">
@@ -95,7 +95,7 @@ const Libraries = () => {
                   </h3>
                   <Link 
                     to={featureCard.btnPath || '#'}
-                    className="p-4 bg-gray-900 text-white rounded-full self-end mt-4 shadow-xl active:scale-95 z-10 hover:bg-sm-blue transition-all"
+                    className="p-4 bg-gray-900 text-white rounded-full self-end mt-4 shadow-xl z-10 hover:bg-sm-blue transition-all"
                   >
                     <ArrowUpRight size={24} />
                   </Link>

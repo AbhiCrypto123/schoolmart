@@ -13,7 +13,7 @@ const ImageOverlayCard = ({
 }) => {
     return (
         <div
-            className={`relative rounded-3xl overflow-hidden cursor-pointer group bg-white border border-gray-100 shadow-sm transition-all duration-500 hover:shadow-lg hover:-translate-y-1 ${tall ? 'h-64' : 'h-52'} ${className}`}
+            className={`relative rounded-3xl overflow-hidden cursor-pointer group bg-white border border-gray-100 shadow-sm transition-all duration-500 hover:shadow-lg ${tall ? 'h-64' : 'h-52'} ${className}`}
             onClick={onClick}
         >
             {/* Image section with light background */}
@@ -21,7 +21,7 @@ const ImageOverlayCard = ({
                 <img
                     src={img}
                     alt={title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-"
                     onError={(e) => {
                         if (fallback) e.target.src = fallback;
                     }}

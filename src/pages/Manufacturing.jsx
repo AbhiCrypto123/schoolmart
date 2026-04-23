@@ -82,11 +82,11 @@ const Manufacturing = () => {
 
            <div className="lg:col-span-6 grid grid-cols-2 gap-3 h-[400px] lg:h-[500px]">
               <div className="rounded-[30px] lg:rounded-[40px] overflow-hidden border border-gray-100 shadow-sm relative group">
-                 <img src={hero.images[0]} className="w-full h-full object-cover transition-all duration-700 hover:scale-105" alt="Factory Floor" />
+                 <img src={hero.images[0]} className="w-full h-full object-cover transition-all duration-700" alt="Factory Floor" />
               </div>
               <div className="flex flex-col gap-3">
                  <div className="flex-1 rounded-[30px] lg:rounded-[40px] overflow-hidden border border-gray-100 shadow-sm relative group">
-                    <img src={hero.images[1]} className="w-full h-full object-cover transition-all duration-700 hover:scale-105" alt="Robotic Arm" />
+                    <img src={hero.images[1]} className="w-full h-full object-cover transition-all duration-700" alt="Robotic Arm" />
                  </div>
                  <div className="flex-1 bg-[#004a8e] rounded-[30px] lg:rounded-[40px] p-8 flex flex-col justify-end text-white shadow-sm overflow-hidden relative">
                     <span className="text-4xl lg:text-6xl font-black block leading-none mb-1 tracking-tighter">{hero.partnerStat}</span>

@@ -93,7 +93,7 @@ const ResourcePost = () => {
                        onClick={() => navigate(-1)}
                        className="group flex items-center gap-3 text-gray-400 hover:text-sm-blue transition-all mb-12 animate-in fade-in slide-in-from-left-4 duration-700"
                    >
-                       <div className="w-10 h-10 rounded-full bg-white border border-gray-100 shadow-sm flex items-center justify-center group-hover:scale-110 group-hover:border-sm-blue transition-all">
+                       <div className="w-10 h-10 rounded-full bg-white border border-gray-100 shadow-sm flex items-center justify-center group- group-hover:border-sm-blue transition-all">
                            <ArrowLeft size={18} />
                        </div>
                        <span className="text-[11px] font-black uppercase tracking-[0.3em]">Institutional Hub</span>
@@ -126,15 +126,15 @@ const ResourcePost = () => {
                                     href={resource.btn1Path} 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="px-10 py-5 bg-gray-900 text-white font-black rounded-2xl text-[13px] uppercase tracking-[0.2em] shadow-xl hover:bg-sm-blue hover:shadow-sm-blue/20 transition-all flex items-center gap-4 active:scale-95 group"
+                                    className="px-10 py-5 bg-gray-900 text-white font-black rounded-2xl text-[13px] uppercase tracking-[0.2em] shadow-xl hover:bg-sm-blue hover:shadow-sm-blue/20 transition-all flex items-center gap-4 group"
                                 >
                                     {resource.btn1Label} 
-                                    <Download size={18} className="transition-transform group-hover:translate-y-1" />
+                                    <Download size={18} className="transition-transform group-" />
                                 </a>
                              ) : (
-                                <button className="px-10 py-5 bg-gray-900 text-white font-black rounded-2xl text-[13px] uppercase tracking-[0.2em] shadow-xl hover:bg-sm-blue transition-all flex items-center gap-4 active:scale-95 group">
+                                <button className="px-10 py-5 bg-gray-900 text-white font-black rounded-2xl text-[13px] uppercase tracking-[0.2em] shadow-xl hover:bg-sm-blue transition-all flex items-center gap-4 group">
                                     {resource.btn1Label} 
-                                    <Download size={18} className="transition-transform group-hover:translate-y-1" />
+                                    <Download size={18} className="transition-transform group-" />
                                 </button>
                              )}
                              
@@ -157,12 +157,12 @@ const ResourcePost = () => {
                             <img 
                                 src={resource.image} 
                                 alt={resource.title} 
-                                className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
+                                className="w-full h-full object-cover transition-transform duration-[2s] group-"
                                 onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80'; }}
                             />
                             
                             {/* Floating Metadata Card */}
-                            <div className="absolute right-8 bottom-8 bg-white/80 backdrop-blur-xl p-8 rounded-[32px] shadow-2xl border border-white/20 transform hover:scale-105 transition-all duration-500 hidden sm:block">
+                            <div className="absolute right-8 bottom-8 bg-white/80 backdrop-blur-xl p-8 rounded-[32px] shadow-2xl border border-white/20 transform transition-all duration-500 hidden sm:block">
                                <div className="flex items-center gap-4 mb-3">
                                   <div className="w-10 h-10 bg-sm-blue rounded-2xl flex items-center justify-center text-white shadow-lg shadow-sm-blue/30">
                                      <Sparkles size={18} />
@@ -200,7 +200,7 @@ const ResourcePost = () => {
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {resource.specs.map((spec, idx) => (
                                     <div key={idx} className="group p-8 bg-gray-50 border border-gray-100 rounded-[32px] hover:bg-white hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-500">
-                                        <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-sm-blue mb-6 group-hover:scale-110 transition-transform">
+                                        <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-sm-blue mb-6 group- transition-transform">
                                             <Box size={18} />
                                         </div>
                                         <p className="font-black text-[14px] text-gray-900 uppercase tracking-widest leading-snug">{spec}</p>
@@ -235,13 +235,13 @@ const ResourcePost = () => {
                                     <h3 className="text-2xl font-black mb-4 uppercase tracking-tight leading-tight">Expert <br/> Strategic Advice</h3>
                                     <p className="text-white/60 text-[13px] leading-relaxed mb-10 font-medium">Our senior campus planners are available for one-on-one strategy sessions.</p>
                                     
-                                    <Link to="/contact-us" className="w-full py-5 bg-white text-sm-navy font-black rounded-[20px] text-[12px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-sm-yellow hover:text-sm-navy transition-all group-hover:shadow-2xl active:scale-95">
+                                    <Link to="/contact-us" className="w-full py-5 bg-white text-sm-navy font-black rounded-[20px] text-[12px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-sm-yellow hover:text-sm-navy transition-all group-hover:shadow-2xl">
                                         Book Consultation <ArrowRight size={16} />
                                     </Link>
                                 </div>
                                 
                                 {/* Decorative elements */}
-                                <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -mr-24 -mt-24 transition-transform duration-1000 group-hover:scale-150" />
+                                <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -mr-24 -mt-24 transition-transform duration-1000 group-" />
                                 <div className="absolute bottom-0 left-0 w-32 h-32 bg-sm-blue/10 rounded-full -ml-16 -mb-16 blur-2xl" />
                             </div>
                             
