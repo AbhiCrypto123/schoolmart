@@ -308,9 +308,10 @@ export default function ProductManager({ fixedPage, liveCategories }) {
     if (isSaving) return;
     setIsSaving(true);
     try {
+      const payload = { ...editing, name: editing.name || 'Unnamed Card' };
       const pId = editing.id || editing.id;
-      if (pId) await updateProduct(pId, editing);
-      else await createProduct(editing);
+      if (pId) await updateProduct(pId, payload);
+      else await createProduct(payload);
       setEditing(null);
       load();
     } catch (err) {

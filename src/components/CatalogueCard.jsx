@@ -5,7 +5,7 @@ import { formatImgUrl } from '../utils/formatters';
 const CatalogueCard = ({ work, isSelected, onClick, onAction, actionText, themeColor = 'bg-[#004a8e]', ringColor = 'ring-blue-500', textColor = 'text-[#004a8e]', showExplore = true }) => {
   // If ctaLink is missing, empty, or 'none', the card is static.
   const isNonRoutable = !work.ctaLink || work.ctaLink.trim() === '' || work.ctaLink.toLowerCase() === 'none';
-  const hasTitle = Boolean((work.name && work.name.trim() !== '') || (work.title && work.title.trim() !== ''));
+  const hasTitle = Boolean((work.name && work.name.trim() !== '' && work.name !== 'Unnamed Card') || (work.title && work.title.trim() !== '' && work.title !== 'Unnamed Card'));
 
   return (
     <div className={`group break-inside-avoid mb-6 ${isNonRoutable ? '' : 'cursor-pointer'}`}>
