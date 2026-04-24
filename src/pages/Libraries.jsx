@@ -60,7 +60,7 @@ const Libraries = () => {
     <main className="min-h-screen bg-gray-50 pt-6 pb-4">
       <div className="max-w-7xl mx-auto px-4">
         <section className="pt-4 pb-6 grid grid-cols-1 md:grid-cols-12 gap-3 items-stretch">
-           <div className="md:col-span-8 bg-white rounded-[40px] p-6 lg:p-10 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group min-h-[250px]">
+           <div className="md:col-span-8 bg-white rounded-[40px] p-6 lg:p-10 flex flex-col justify-center border border-gray-100 shadow-sm relative overflow-hidden group min-h-[250px]" style={{ backgroundColor: heroBlock.bgColor || undefined }}>
               <div className="absolute top-0 right-0 w-64 h-64 bg-sm-blue/5 rounded-full blur-[100px] -mr-32 -mt-32" />
               <div className="px-3 py-1 bg-gray-900 text-white font-black rounded-full text-[8px] uppercase tracking-[0.2em] mb-4 w-fit scale-90 relative z-10">
                  <Bookmark size={12} className="inline mr-2" /> {heroBlock.badge || "Modern Library Concepts 2025"}
