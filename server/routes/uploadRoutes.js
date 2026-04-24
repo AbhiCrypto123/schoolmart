@@ -60,7 +60,7 @@ router.use((err, req, res, next) => {
 
 // Admin Backup Route: Download all uploads as a compressed tarball
 router.get('/export', (req, res) => {
-  const { exec } = require('child_process');
+  const { spawn } = require('child_process');
   
   if (!fs.existsSync(uploadDir)) {
     return res.status(404).json({ message: 'No uploads found' });
@@ -69,8 +69,8 @@ router.get('/export', (req, res) => {
   res.setHeader('Content-disposition', `attachment; filename=schoolmart_uploads_backup_${Date.now()}.tar.gz`);
   res.setHeader('Content-type', 'application/gzip');
 
-  // Use tar to compress the entire uploads directory to stdout
-  const tar = exec('tar -czf - .', { cwd: uploadDir, maxBuffer: 1024 * 1024 * 500 });
+  // Use spawn for safe binary streaming
+  const tar = spawn('tar', ['-czf', '-', '.'], { cwd: uploadDir });
   
   tar.stdout.pipe(res);
   tar.stderr.on('data', (data) => console.error(`tar stderr: ${data}`));
