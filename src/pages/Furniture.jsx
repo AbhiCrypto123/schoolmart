@@ -1,7 +1,7 @@
 // src/pages/Furniture.jsx
 import React, { useState, useEffect } from 'react';
 import { useCMSPage } from '../hooks/useCMSBlock';
-import { getProducts } from '../services/api';
+import { getProducts, submitQuote } from '../services/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { Sofa, GraduationCap, Library, FlaskConical, Building2, ArrowRight, Download, Filter, ChevronDown, CheckCircle2, Award, FileText, Stars, Calculator } from 'lucide-react';
 import { handleProductClick } from '../utils/navigation';
@@ -16,6 +16,27 @@ const Furniture = () => {
   const actionStrip = blocks?.action_strip || {};
   const [items, setItems] = useState([]);
   const [selectedCat, setSelectedCat] = useState('');
+
+  const [quoteForm, setQuoteForm] = useState({ schoolName: '', phone: '', pinCode: '', requirements: '' });
+  const [quoteStatus, setQuoteStatus] = useState('');
+
+  const handleQuoteSubmit = async (e) => {
+    e.preventDefault();
+    setQuoteStatus('submitting');
+    try {
+      await submitQuote({
+        name: quoteForm.schoolName,
+        phone: quoteForm.phone,
+        message: `PIN: ${quoteForm.pinCode}\nRequirements: ${quoteForm.requirements}\nSource: Furniture Page`
+      });
+      setQuoteStatus('success');
+      setQuoteForm({ schoolName: '', phone: '', pinCode: '', requirements: '' });
+      setTimeout(() => setQuoteStatus(''), 3000);
+    } catch (err) {
+      console.error(err);
+      setQuoteStatus('error');
+    }
+  };
 
   // Priority 1: Auto-select first CMS category if available
   useEffect(() => {
@@ -132,20 +153,51 @@ const Furniture = () => {
                   </div>
                 </div>
                 {/* GET A QUOTE BOX */}
-                <div className="bg-[#2d6a26] rounded-2xl p-6 flex flex-col items-start text-left shadow-xl mt-8 relative overflow-hidden">
-                   <div className="absolute -top-4 -right-4 opacity-10">
-                      <Calculator size={100} className="text-white" />
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden mt-8 border border-gray-100 flex flex-col">
+                   <div className="bg-[#0052a3] text-white text-center py-4">
+                      <h4 className="text-[13px] font-black uppercase tracking-widest">GET A QUOTE</h4>
                    </div>
-                   <h4 className="text-white/90 text-[10px] font-black uppercase tracking-widest mb-3 relative z-10">Furniture Solutions</h4>
-                   <h3 className="text-white text-2xl font-serif font-black uppercase tracking-tight mb-4 leading-none relative z-10">
-                      NEED A CUSTOM QUOTE?
-                   </h3>
-                   <p className="text-white/80 text-[13px] font-medium leading-relaxed mb-6 relative z-10">
-                      Get personalized pricing for bulk furniture orders and institutional setups.
-                   </p>
-                   <Link to="/contact-us" className="px-6 py-3 bg-[#af8c43] text-white rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-white hover:text-[#2d6a26] transition-colors flex items-center gap-2 relative z-10">
-                      REQUEST QUOTE <ArrowRight size={14} />
-                   </Link>
+                   <form onSubmit={handleQuoteSubmit} className="p-6 flex flex-col gap-4">
+                      <input 
+                         type="text" 
+                         required
+                         placeholder="School Name" 
+                         value={quoteForm.schoolName}
+                         onChange={e => setQuoteForm({...quoteForm, schoolName: e.target.value})}
+                         className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-[13px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-sm-blue placeholder:text-gray-400"
+                      />
+                      <input 
+                         type="tel" 
+                         required
+                         placeholder="Phone Number" 
+                         value={quoteForm.phone}
+                         onChange={e => setQuoteForm({...quoteForm, phone: e.target.value})}
+                         className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-[13px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-sm-blue placeholder:text-gray-400"
+                      />
+                      <input 
+                         type="text" 
+                         placeholder="Pin Code" 
+                         value={quoteForm.pinCode}
+                         onChange={e => setQuoteForm({...quoteForm, pinCode: e.target.value})}
+                         className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-[13px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-sm-blue placeholder:text-gray-400"
+                      />
+                      <textarea 
+                         required
+                         placeholder="What are you looking for?" 
+                         rows="3"
+                         value={quoteForm.requirements}
+                         onChange={e => setQuoteForm({...quoteForm, requirements: e.target.value})}
+                         className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-[13px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-sm-blue placeholder:text-gray-400 resize-none"
+                      />
+                      <button 
+                         type="submit" 
+                         disabled={quoteStatus === 'submitting'}
+                         className="mt-2 bg-[#0052a3] text-white text-[13px] font-black uppercase tracking-widest rounded-xl py-4 w-full hover:bg-gray-900 transition-colors disabled:opacity-50"
+                      >
+                         {quoteStatus === 'submitting' ? 'Submitting...' : quoteStatus === 'success' ? 'Submitted!' : 'SUBMIT REQUEST'}
+                      </button>
+                      {quoteStatus === 'error' && <p className="text-red-500 text-xs text-center">Failed to submit. Try again.</p>}
+                   </form>
                 </div>
            </div>
 
